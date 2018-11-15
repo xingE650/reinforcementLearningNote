@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Welcome to my Mickey Mouse Club♂house">
 <meta property="og:description" content="希望能以更新博客的方式激励一下自己，目前是准备读一下强化学习的入门书《Reinforcement Learning Introduction》，然后做一下读书笔记。下面是绪论(Introduction)的内容。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-13T02:37:13.735Z">
+<meta property="og:updated_time" content="2018-11-15T09:26:18.970Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ReinforcementLearningChapter1">
 <meta name="twitter:description" content="希望能以更新博客的方式激励一下自己，目前是准备读一下强化学习的入门书《Reinforcement Learning Introduction》，然后做一下读书笔记。下面是绪论(Introduction)的内容。">
@@ -346,13 +346,13 @@
 <h2 id="RL-vs-Supervised-learning"><a href="#RL-vs-Supervised-learning" class="headerlink" title="RL vs Supervised learning"></a>RL vs Supervised learning</h2><p>监督学习就不赘述了，大致来说，监督学习算法通过带标签的训练集学习得到可以对未知样例的判断“能力”。但是如果让监督学习从交互中学习，按照监督学习的思路，获取正确的而且有意义的行为例子是不可取的，所以它没办法从经验中成长，不适合需要和环境交互的算法。</p>
 <p>举一个不太恰当的例子，监督学习就像考前刷题的你，而强化学习就像每天认真学习的学霸，如果考题和你刷的吻合度比较高，那你就稳了，但是学霸每天学习，数据已经内化为他的能力了，所以他一点都不慌。</p>
 <h2 id="RL-vs-Unsupervised-learning"><a href="#RL-vs-Unsupervised-learning" class="headerlink" title="RL vs Unsupervised learning"></a>RL vs Unsupervised learning</h2><p>有不少人认为监督学习和非监督学习已经把机器学习进行详尽的划分了，他们将强化学习归入后者，因为它们都没有带标签的数据，但是从目的上来看，强化学习是为了最大化reward的，而非监督学习是为了学习到数据之中的隐藏结构，非监督学习的方法并没有从实质解决强化学习的问题。</p>
-<h2 id="exploration-and-exploitation"><a href="#exploration-and-exploitation" class="headerlink" title="exploration and exploitation"></a>exploration and exploitation</h2><p>The agent has to <code>exploit</code> what it has already experienced in order to obtain reward, but it also has to <code>explore</code> in order to make better action selections in the future.</p>
-<p>这个问题有点像梯度下降中使用的随机梯度法(SGD)或者模拟退火法，但是SGD是一种加速算法，或者说如果我头铁不用，我也是有可能得到还可以的结果，但是强化学习如果不学习未知的部分，结果肯定是有问题的，但是如果一直在试错<code>explore</code>，不对“经验”进行总结<code>exploit</code>，也是没办法使算法收敛的。</p>
-<h1 id="Tic-Tac-Toe"><a href="#Tic-Tac-Toe" class="headerlink" title="Tic-Tac-Toe"></a>Tic-Tac-Toe</h1><p>我觉得先分析一个例子可以更好的帮助理解RL的各个属性之间的关系。<code>Tic-Tac-Toe</code>比较像我们小时候玩的井字棋，图我就不画了。</p>
+<h2 id="exploration-and-exploitation"><a href="#exploration-and-exploitation" class="headerlink" title="exploration and exploitation"></a>exploration and exploitation</h2><p>The agent has to <strong><em>exploit</em></strong> what it has already experienced in order to obtain reward, but it also has to <strong><em>explore</em></strong> in order to make better action selections in the future.</p>
+<p>这个问题有点像梯度下降中使用的随机梯度法(SGD)或者模拟退火法，但是SGD是一种加速算法，或者说如果我头铁不用，我也是有可能得到还可以的结果，但是强化学习如果不学习未知的部分，结果肯定是有问题的，但是如果一直在试错 <strong><em>explore</em></strong>，不对“经验”进行总结 <strong><em>exploit</em></strong>，也是没办法使算法收敛的。</p>
+<h1 id="Tic-Tac-Toe"><a href="#Tic-Tac-Toe" class="headerlink" title="Tic-Tac-Toe"></a>Tic-Tac-Toe</h1><p>我觉得先分析一个例子可以更好的帮助理解RL的各个属性之间的关系。<strong><em>Tic-Tac-Toe</em></strong>比较像我们小时候玩的井字棋，图我就不画了。</p>
 <p>强化学习和传统的classical <a href="https://en.wikipedia.org/wiki/Minimax" target="_blank" rel="noopener">minimax</a> solution from game theory以及Classical optimization methods for sequential decision problems, such as dynamic programming有区别，前者是按照有强约束的方式运动的（这里是不会走使自己失败的位置），而后者则是需要有每一步的先验概率才能进行优化。</p>
 <p>强化学习是基于value functions的学习方法，而前面提到的minimax可以认为是基于evolutionary的学习方法，前者是基于value of state来学习的，后者则是通过结果来更新policy，前者对状态的利用优于后者，而后者则是仅利用了结果来修改policy。</p>
-<p>所以我认为强化学习理解的难点应该是在于如果建立value function以及如何收敛value tables，包括收敛的证明？</p>
-<h1 id="Elements-of-RL"><a href="#Elements-of-RL" class="headerlink" title="Elements of RL"></a>Elements of RL</h1><p>Beyond the agent and the environment, one can identify four main subelements of a reinforcement learning system: a <code>policy</code>, a reward <code>signal</code> , a <code>value function</code>, and, optionally, <code>a model of the environment</code>.</p>
+<p>tic-tac-toe的ython代码实现<a href="https://xinge650.github.io/2018/11/14/Tic-Tac-Toe/" target="_blank" rel="noopener">戳这里</a></p>
+<h1 id="Elements-of-RL"><a href="#Elements-of-RL" class="headerlink" title="Elements of RL"></a>Elements of RL</h1><p>Beyond the agent and the environment, one can identify four main subelements of a reinforcement learning system: a <strong><em>policy</em></strong>, a reward <strong><em>signal</em></strong> , a <strong><em>value function</em></strong>, and, optionally, <strong><em>a model of the environment</em></strong>.</p>
 <h2 id="policy"><a href="#policy" class="headerlink" title="policy"></a>policy</h2><p>感觉是从state到action的一个映射关系吧，这里就对应了上面提到的explore和exploit的关系。In general, policies may be stochastic.</p>
 <h2 id="reward"><a href="#reward" class="headerlink" title="reward"></a>reward</h2><p>每个action导致的短期收益。reward会决定policy，使得行为向高reward的方向发展，所以reward一般是state和action的随机函数：In general, reward signals may be stochastic functions of the state of the environment and the actions taken.</p>
 <h2 id="value-function"><a href="#value-function" class="headerlink" title="value function"></a>value function</h2><p>由reward引起的长期收益。value由reward综合而来，而value同时会使reward朝着高的方向发展。value控制action的发展：Action choices are made based on value judgments. We seek actions that bring about states of highest value, not highest reward, because these actions obtain the greatest amount of reward for us over the long run.</p>
@@ -360,6 +360,9 @@
 <h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>总体来说强化学习和之前学过的其他机器学习方法还是区别挺大的，但是绪论有几点疑问：</p>
 <p>1、action、state、reward、value之间的更新方式还是没搞懂？</p>
 <p>2、如何建立value table？</p>
+<p><strong><em>——————-(answers in 11.14)————————-</em></strong></p>
+<p>1、value建立在state之上，每次state更新伴随着value的更新；action分为两种，explore和exploit，前者随机，后者基于reward最大；reward认为是从current state -&gt; next state update时，对应的next value or (next value - current value)</p>
+<p>2、value table建立基于state，原则视问题而定。比如tic-tac-toe问题，X赢对应的value = 1，O赢对应的value = 0，平局对应value = 0.5，当然我是站在X的角度。</p>
 
       
     </div>
@@ -475,7 +478,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
