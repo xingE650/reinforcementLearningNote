@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法1、引入模块123456import matplotlibimport matplotlib.pyplot as plt%matplotlib inlineimport numpy as np# use for showing process barfrom tqdm import tqdm">
+<meta name="keywords" content="Programming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10-armed-Testbed">
+<meta property="og:url" content="http://yoursite.com/2018/11/16/10-armed-Testbed/index.html">
+<meta property="og:site_name" content="Welcome to my Mickey Mouse Club♂house">
+<meta property="og:description" content="通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法1、引入模块123456import matplotlibimport matplotlib.pyplot as plt%matplotlib inlineimport numpy as np# use for showing process barfrom tqdm import tqdm">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fx9zpd7kd9j30c0080wem.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fx9zpe5ei9j30k01400v6.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fx9zpd98xwj30c0080t8z.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fx9zpdbhwjj30c0080t92.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fx9zpd7jw1j30c0080mxm.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fx9ztl22e0j30at07e74f.jpg">
+<meta property="og:updated_time" content="2018-11-16T08:45:23.758Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10-armed-Testbed">
+<meta name="twitter:description" content="通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法1、引入模块123456import matplotlibimport matplotlib.pyplot as plt%matplotlib inlineimport numpy as np# use for showing process barfrom tqdm import tqdm">
+<meta name="twitter:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fx9zpd7kd9j30c0080wem.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/16/10-armed-Testbed/">
+
+
+
+
+
+  <title>10-armed-Testbed | Welcome to my Mickey Mouse Club♂house</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my Mickey Mouse Club♂house</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/10-armed-Testbed/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fx5b09mly4j30kx0i14kq.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my Mickey Mouse Club♂house">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">10-armed-Testbed</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T11:57:23+08:00">
+                2018-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法"><a href="#通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法" class="headerlink" title="通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法"></a>通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法</h1><h2 id="1、引入模块"><a href="#1、引入模块" class="headerlink" title="1、引入模块"></a>1、引入模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="comment"># use for showing process bar</span></span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="2、创建Testbed类，实现基本的action和update-value方法"><a href="#2、创建Testbed类，实现基本的action和update-value方法" class="headerlink" title="2、创建Testbed类，实现基本的action和update value方法"></a>2、创建Testbed类，实现基本的action和update value方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bandit</span>:</span></span><br><span class="line">    <span class="comment"># @k_arm: # of arms</span></span><br><span class="line">    <span class="comment"># @epsilon: probability for exploration in epsilon-greedy algorithm</span></span><br><span class="line">    <span class="comment"># @initial: initial estimation for each action</span></span><br><span class="line">    <span class="comment"># @step_size: constant step size for updating estimations</span></span><br><span class="line">    <span class="comment"># @sample_averages: if True, use sample averages to update estimations instead of constant step size</span></span><br><span class="line">    <span class="comment"># @UCB_param: if not None, use UCB algorithm to select action</span></span><br><span class="line">    <span class="comment"># @gradient: if True, use gradient based bandit algorithm</span></span><br><span class="line">    <span class="comment"># @gradient_baseline: if True, use average reward as baseline for gradient based bandit algorithm</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, k_arm=<span class="number">10</span>, epsilon=<span class="number">0.</span>, initial=<span class="number">0.</span>, step_size=<span class="number">0.1</span>, sample_averages=False, UCB_param=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 gradient=False, gradient_baseline=False, true_reward=<span class="number">0.</span>)</span>:</span></span><br><span class="line">        self.k = k_arm</span><br><span class="line">        self.step_size = step_size</span><br><span class="line">        self.sample_averages = sample_averages</span><br><span class="line">        self.indices = np.arange(self.k)</span><br><span class="line">        self.time = <span class="number">0</span></span><br><span class="line">        self.UCB_param = UCB_param</span><br><span class="line">        self.gradient = gradient</span><br><span class="line">        self.gradient_baseline = gradient_baseline</span><br><span class="line">        self.average_reward = <span class="number">0</span></span><br><span class="line">        self.true_reward = true_reward</span><br><span class="line">        self.epsilon = epsilon</span><br><span class="line">        self.initial = initial</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># real reward for each action</span></span><br><span class="line">        <span class="comment"># true_reward is baseline can be configed</span></span><br><span class="line">        <span class="comment"># np.random.randn(_size()) return standard normal array in the size of _size()</span></span><br><span class="line">        self.q_true = np.random.randn(self.k) + self.true_reward</span><br><span class="line"></span><br><span class="line">        <span class="comment"># estimation for each action</span></span><br><span class="line">        <span class="comment"># here we can modify the serf.initial to export optimistic initial value</span></span><br><span class="line">        self.q_estimation = np.zeros(self.k) + self.initial</span><br><span class="line"></span><br><span class="line">        <span class="comment"># of chosen times for each action</span></span><br><span class="line">        self.action_count = np.zeros(self.k)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># return the index of max-real-reward action</span></span><br><span class="line">        self.best_action = np.argmax(self.q_true)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get an action for this bandit</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">act</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># np.random.rand() return uniform distribution over [0,1)</span></span><br><span class="line">        <span class="comment"># explore</span></span><br><span class="line">        <span class="keyword">if</span> np.random.rand() &lt; self.epsilon:</span><br><span class="line">            <span class="comment"># return np.random.choice(self.indices)</span></span><br><span class="line">            <span class="comment"># I think UCB may choose actions in non-greedy actions</span></span><br><span class="line">            <span class="keyword">if</span> self.UCB_param <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">                <span class="comment"># here is a little different from book, Why?</span></span><br><span class="line">                <span class="comment"># I think he may want to be avoid of zero problem in log and denominator position</span></span><br><span class="line">                UCB_estimation = self.q_estimation + \</span><br><span class="line">                         self.UCB_param * np.sqrt(np.log(self.time + <span class="number">1</span>) / (self.action_count + <span class="number">1e-5</span>))</span><br><span class="line">                q_best = np.max(UCB_estimation)</span><br><span class="line">                <span class="keyword">return</span> np.random.choice([action <span class="keyword">for</span> action, q <span class="keyword">in</span> enumerate(UCB_estimation) <span class="keyword">if</span> q == q_best])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> np.random.choice(self.indices)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.gradient:</span><br><span class="line">            exp_est = np.exp(self.q_estimation)</span><br><span class="line">            self.action_prob = exp_est / np.sum(exp_est)</span><br><span class="line">            <span class="comment"># According to the probability to choose action</span></span><br><span class="line">            <span class="comment"># here use the same method with wiki</span></span><br><span class="line">            <span class="keyword">return</span> np.random.choice(self.indices, p=self.action_prob)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># greey-action</span></span><br><span class="line">        <span class="keyword">return</span> np.argmax(self.q_estimation)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># take an action, update estimation for this action</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(self, action)</span>:</span></span><br><span class="line">        <span class="comment"># generate the reward under N(real reward, 1)</span></span><br><span class="line">        reward = np.random.randn() + self.q_true[action]</span><br><span class="line">        self.time += <span class="number">1</span></span><br><span class="line">        <span class="comment"># average_reward update uses self.time</span></span><br><span class="line">        self.average_reward = (self.time - <span class="number">1.0</span>) / self.time * self.average_reward + reward / self.time</span><br><span class="line">        self.action_count[action] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.sample_averages:</span><br><span class="line">            <span class="comment"># update estimation using sample averages</span></span><br><span class="line">            <span class="comment"># q_estimation update uses action_count</span></span><br><span class="line">            self.q_estimation[action] += <span class="number">1.0</span> / self.action_count[action] * (reward - self.q_estimation[action])</span><br><span class="line">        <span class="comment"># is different with book</span></span><br><span class="line">        <span class="keyword">elif</span> self.gradient:</span><br><span class="line">            one_hot = np.zeros(self.k)</span><br><span class="line">            one_hot[action] = <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> self.gradient_baseline:</span><br><span class="line">                baseline = self.average_reward</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                baseline = <span class="number">0</span></span><br><span class="line">            <span class="comment"># update method is the same as book, here use q_estimation(a) replaces H_t(a)</span></span><br><span class="line">            self.q_estimation = self.q_estimation + self.step_size * (reward - baseline) * (one_hot - self.action_prob)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># update estimation with constant step size</span></span><br><span class="line">            self.q_estimation[action] += self.step_size * (reward - self.q_estimation[action])</span><br><span class="line">        <span class="keyword">return</span> reward</span><br></pre></td></tr></table></figure>
+<h2 id="3、训练Bandit"><a href="#3、训练Bandit" class="headerlink" title="3、训练Bandit"></a>3、训练Bandit</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simulate</span><span class="params">(runs, time, bandits)</span>:</span></span><br><span class="line">    best_action_counts = np.zeros((len(bandits), runs, time))</span><br><span class="line">    rewards = np.zeros(best_action_counts.shape)</span><br><span class="line">    <span class="keyword">for</span> i, bandit <span class="keyword">in</span> enumerate(bandits):</span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> tqdm(range(runs)):</span><br><span class="line">            bandit.reset()</span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> range(time):</span><br><span class="line">                action = bandit.act()</span><br><span class="line">                reward = bandit.step(action)</span><br><span class="line">                rewards[i, r, t] = reward</span><br><span class="line">                <span class="keyword">if</span> action == bandit.best_action:</span><br><span class="line">                    best_action_counts[i, r, t] = <span class="number">1</span></span><br><span class="line">    best_action_counts = best_action_counts.mean(axis=<span class="number">1</span>)</span><br><span class="line">    rewards = rewards.mean(axis=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> best_action_counts, rewards</span><br></pre></td></tr></table></figure>
+<h2 id="4、结果显示（折线图格式）"><a href="#4、结果显示（折线图格式）" class="headerlink" title="4、结果显示（折线图格式）"></a>4、结果显示（折线图格式）</h2><h3 id="1、10-Bandit-Testbed-value-和reward分布"><a href="#1、10-Bandit-Testbed-value-和reward分布" class="headerlink" title="1、10-Bandit-Testbed value 和reward分布"></a>1、10-Bandit-Testbed value 和reward分布</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_2_1</span><span class="params">()</span>:</span></span><br><span class="line">    plt.violinplot(dataset=np.random.randn(<span class="number">200</span>,<span class="number">10</span>) + np.random.randn(<span class="number">10</span>))</span><br><span class="line">    plt.xlabel(<span class="string">"Action"</span>)</span><br><span class="line">    plt.ylabel(<span class="string">"Reward distribution"</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">figure_2_1()</span><br></pre></td></tr></table></figure>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fx9zpd7kd9j30c0080wem.jpg" alt="png"></p>
+<h3 id="2、different-epsilons"><a href="#2、different-epsilons" class="headerlink" title="2、different epsilons"></a>2、different epsilons</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_2_2</span><span class="params">(runs=<span class="number">2000</span>, time=<span class="number">1000</span>)</span>:</span></span><br><span class="line">    epsilons = [<span class="number">0</span>, <span class="number">0.1</span>, <span class="number">0.01</span>]</span><br><span class="line">    bandits = [Bandit(epsilon=eps, sample_averages=<span class="keyword">True</span>) <span class="keyword">for</span> eps <span class="keyword">in</span> epsilons]</span><br><span class="line">    best_action_counts, rewards = simulate(runs, time, bandits)</span><br><span class="line"></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> eps, rewards <span class="keyword">in</span> zip(epsilons, rewards):</span><br><span class="line">        plt.plot(rewards, label=<span class="string">'epsilon = %.02f'</span> % (eps))</span><br><span class="line">    plt.xlabel(<span class="string">'steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'average reward'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">for</span> eps, counts <span class="keyword">in</span> zip(epsilons, best_action_counts):</span><br><span class="line">        plt.plot(counts, label=<span class="string">'epsilon = %.02f'</span> % (eps))</span><br><span class="line">    plt.xlabel(<span class="string">'steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'% optimal action'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br><span class="line"><span class="comment"># figure_2_2()</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fx9zpe5ei9j30k01400v6.jpg" alt="png"></p>
+<h3 id="3、Initial-value-5-VS-Initial-value-0"><a href="#3、Initial-value-5-VS-Initial-value-0" class="headerlink" title="3、Initial value = 5 VS Initial value = 0"></a>3、Initial value = 5 VS Initial value = 0</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_2_3</span><span class="params">(runs=<span class="number">2000</span>, time=<span class="number">1000</span>)</span>:</span></span><br><span class="line">    bandits = []</span><br><span class="line">    bandits.append(Bandit(epsilon=<span class="number">0</span>, initial=<span class="number">5</span>, step_size=<span class="number">0.1</span>))</span><br><span class="line">    bandits.append(Bandit(epsilon=<span class="number">0.1</span>, initial=<span class="number">0</span>, step_size=<span class="number">0.1</span>))</span><br><span class="line">    best_action_counts, _ = simulate(runs, time, bandits)</span><br><span class="line"></span><br><span class="line">    plt.plot(best_action_counts[<span class="number">0</span>], label=<span class="string">'epsilon = 0, q = 5'</span>)</span><br><span class="line">    plt.plot(best_action_counts[<span class="number">1</span>], label=<span class="string">'epsilon = 0.1, q = 0'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'Steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'% optimal action'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br><span class="line"><span class="comment">#figure_2_3()</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fx9zpd98xwj30c0080t8z.jpg" alt="png"></p>
+<h2 id="4、UCB-VS-epsilon-greey"><a href="#4、UCB-VS-epsilon-greey" class="headerlink" title="4、UCB VS epsilon-greey"></a>4、UCB VS epsilon-greey</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_2_4</span><span class="params">(runs=<span class="number">2000</span>, time=<span class="number">1000</span>)</span>:</span></span><br><span class="line">    bandits = []</span><br><span class="line">    bandits.append(Bandit(epsilon=<span class="number">0</span>, UCB_param=<span class="number">2</span>, sample_averages=<span class="keyword">True</span>))</span><br><span class="line">    bandits.append(Bandit(epsilon=<span class="number">0.1</span>, sample_averages=<span class="keyword">True</span>))</span><br><span class="line">    _, average_rewards = simulate(runs, time, bandits)</span><br><span class="line"></span><br><span class="line">    plt.plot(average_rewards[<span class="number">0</span>], label=<span class="string">'UCB c = 2'</span>)</span><br><span class="line">    plt.plot(average_rewards[<span class="number">1</span>], label=<span class="string">'epsilon greedy epsilon = 0.1'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'Steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Average reward'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br><span class="line"><span class="comment">#figure_2_4()</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fx9zpdbhwjj30c0080t92.jpg" alt="png"></p>
+<h2 id="5、softmax-baseline-VS-non-baseline"><a href="#5、softmax-baseline-VS-non-baseline" class="headerlink" title="5、softmax baseline VS non-baseline"></a>5、softmax baseline VS non-baseline</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_2_5</span><span class="params">(runs=<span class="number">2000</span>, time=<span class="number">1000</span>)</span>:</span></span><br><span class="line">    bandits = []</span><br><span class="line">    bandits.append(Bandit(gradient=<span class="keyword">True</span>, step_size=<span class="number">0.1</span>, gradient_baseline=<span class="keyword">True</span>, true_reward=<span class="number">4</span>))</span><br><span class="line">    bandits.append(Bandit(gradient=<span class="keyword">True</span>, step_size=<span class="number">0.1</span>, gradient_baseline=<span class="keyword">False</span>, true_reward=<span class="number">4</span>))</span><br><span class="line">    bandits.append(Bandit(gradient=<span class="keyword">True</span>, step_size=<span class="number">0.4</span>, gradient_baseline=<span class="keyword">True</span>, true_reward=<span class="number">4</span>))</span><br><span class="line">    bandits.append(Bandit(gradient=<span class="keyword">True</span>, step_size=<span class="number">0.4</span>, gradient_baseline=<span class="keyword">False</span>, true_reward=<span class="number">4</span>))</span><br><span class="line">    best_action_counts, _ = simulate(runs, time, bandits)</span><br><span class="line">    labels = [<span class="string">'alpha = 0.1, with baseline'</span>,</span><br><span class="line">              <span class="string">'alpha = 0.1, without baseline'</span>,</span><br><span class="line">              <span class="string">'alpha = 0.4, with baseline'</span>,</span><br><span class="line">              <span class="string">'alpha = 0.4, without baseline'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(bandits)):</span><br><span class="line">        plt.plot(best_action_counts[i], label=labels[i])</span><br><span class="line">    plt.xlabel(<span class="string">'Steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'% Optimal action'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br><span class="line"><span class="comment">#figure_2_5()</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fx9zpd7jw1j30c0080mxm.jpg" alt="png"></p>
+<h3 id="6、epsilon-greey-vs-softmax-vs-UCB-vs-opt-initial"><a href="#6、epsilon-greey-vs-softmax-vs-UCB-vs-opt-initial" class="headerlink" title="6、epsilon-greey vs softmax vs UCB vs opt-initial"></a>6、epsilon-greey vs softmax vs UCB vs opt-initial</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_2_6</span><span class="params">(runs=<span class="number">2000</span>, time=<span class="number">1000</span>)</span>:</span></span><br><span class="line">    labels = [<span class="string">'epsilon-greedy'</span>, <span class="string">'gradient bandit'</span>,</span><br><span class="line">              <span class="string">'UCB'</span>, <span class="string">'optimistic initialization'</span>]</span><br><span class="line">    generators = [<span class="keyword">lambda</span> epsilon: Bandit(epsilon=epsilon, sample_averages=<span class="keyword">True</span>),</span><br><span class="line">                  <span class="keyword">lambda</span> alpha: Bandit(gradient=<span class="keyword">True</span>, step_size=alpha, gradient_baseline=<span class="keyword">True</span>),</span><br><span class="line">                  <span class="keyword">lambda</span> coef: Bandit(epsilon=<span class="number">0</span>, UCB_param=coef, sample_averages=<span class="keyword">True</span>),</span><br><span class="line">                  <span class="keyword">lambda</span> initial: Bandit(epsilon=<span class="number">0</span>, initial=initial, step_size=<span class="number">0.1</span>)]</span><br><span class="line">    parameters = [np.arange(<span class="number">-7</span>, <span class="number">-1</span>, dtype=np.float),</span><br><span class="line">                  np.arange(<span class="number">-5</span>, <span class="number">2</span>, dtype=np.float),</span><br><span class="line">                  np.arange(<span class="number">-4</span>, <span class="number">3</span>, dtype=np.float),</span><br><span class="line">                  np.arange(<span class="number">-2</span>, <span class="number">3</span>, dtype=np.float)]</span><br><span class="line"></span><br><span class="line">    bandits = []</span><br><span class="line">    <span class="keyword">for</span> generator, parameter <span class="keyword">in</span> zip(generators, parameters):</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> parameter:</span><br><span class="line">            bandits.append(generator(pow(<span class="number">2</span>, param)))</span><br><span class="line"></span><br><span class="line">    _, average_rewards = simulate(runs, time, bandits)</span><br><span class="line">    rewards = np.mean(average_rewards, axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> label, parameter <span class="keyword">in</span> zip(labels, parameters):</span><br><span class="line">        l = len(parameter)</span><br><span class="line">        plt.plot(parameter, rewards[i:i+l], label=label)</span><br><span class="line">        i += l</span><br><span class="line">    plt.xlabel(<span class="string">'Parameter(2^x)'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Average reward'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br><span class="line">figure_2_6()</span><br></pre></td></tr></table></figure>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fx9ztl22e0j30at07e74f.jpg" alt="png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/15/softmax-theory/" rel="next" title="softmax-theory">
+                <i class="fa fa-chevron-left"></i> softmax-theory
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fx5b09mly4j30kx0i14kq.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法"><span class="nav-number">1.</span> <span class="nav-text">通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、引入模块"><span class="nav-number">1.1.</span> <span class="nav-text">1、引入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、创建Testbed类，实现基本的action和update-value方法"><span class="nav-number">1.2.</span> <span class="nav-text">2、创建Testbed类，实现基本的action和update value方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、训练Bandit"><span class="nav-number">1.3.</span> <span class="nav-text">3、训练Bandit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、结果显示（折线图格式）"><span class="nav-number">1.4.</span> <span class="nav-text">4、结果显示（折线图格式）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、10-Bandit-Testbed-value-和reward分布"><span class="nav-number">1.4.1.</span> <span class="nav-text">1、10-Bandit-Testbed value 和reward分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、different-epsilons"><span class="nav-number">1.4.2.</span> <span class="nav-text">2、different epsilons</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、Initial-value-5-VS-Initial-value-0"><span class="nav-number">1.4.3.</span> <span class="nav-text">3、Initial value = 5 VS Initial value = 0</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、UCB-VS-epsilon-greey"><span class="nav-number">1.5.</span> <span class="nav-text">4、UCB VS epsilon-greey</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、softmax-baseline-VS-non-baseline"><span class="nav-number">1.6.</span> <span class="nav-text">5、softmax baseline VS non-baseline</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6、epsilon-greey-vs-softmax-vs-UCB-vs-opt-initial"><span class="nav-number">1.6.1.</span> <span class="nav-text">6、epsilon-greey vs softmax vs UCB vs opt-initial</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+</body>
+</html>
