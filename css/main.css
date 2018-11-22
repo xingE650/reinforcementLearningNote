@@ -1819,7 +1819,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #085371;
+  background: #ff293c;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3130,22 +3130,22 @@ ul {
   list-style: none;
 }
 .cb-slideshow li:nth-child(1) span {
-  background-image: url("https://wx3.sinaimg.cn/large/0070VybLly1fx5b098is8j31hc0u0jzz.jpg");
+  background-image: url("https://wx2.sinaimg.cn/large/0070VybLly1fxgvxltcg0j31hc0u0gre.jpg");
 }
 .cb-slideshow li:nth-child(2) span {
-  background-image: url("https://wx3.sinaimg.cn/large/0070VybLly1fx5b095t28j31hc11hdph.jpg");
+  background-image: url("https://wx2.sinaimg.cn/large/0070VybLly1fxgwgzx25lj31hc0spdn4.jpg");
 }
 .cb-slideshow li:nth-child(3) span {
-  background-image: url("https://wx2.sinaimg.cn/large/0070VybLly1fx5b09b17xj31hc0z2tim.jpg");
+  background-image: url("https://wx3.sinaimg.cn/large/0070VybLly1fxgwh3wf3dj316m0u0134.jpg");
 }
 .cb-slideshow li:nth-child(4) span {
-  background-image: url("https://wx4.sinaimg.cn/large/0070VybLly1fx5b09474xj31hc0x6jy5.jpg");
+  background-image: url("https://wx1.sinaimg.cn/large/0070VybLly1fxgw0aqi2bj31bj0u07ek.jpg");
 }
 .cb-slideshow li:nth-child(5) span {
-  background-image: url("https://wx2.sinaimg.cn/large/0070VybLly1fx5b08weitj31hc11otga.jpg");
+  background-image: url("https://wx2.sinaimg.cn/large/0070VybLly1fxgw44bwevj31930u07c8.jpg");
 }
 .cb-slideshow li:nth-child(6) span {
-  background-image: url("https://wx3.sinaimg.cn/large/0070VybLly1fx5b1eraokj31hc0u0gp9.jpg");
+  background-image: url("https://wx1.sinaimg.cn/large/0070VybLly1fxgw3r62bkj316i0u0q9k.jpg");
 }
 .cb-slideshow,
 .cb-slideshow:after {
