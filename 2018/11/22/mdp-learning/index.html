@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="some notation in MDP1.state : S_t 2.action: A_t 3.reward: R_t">
+<meta name="description" content="马尔可夫决策过程(Markov Decision Process, MDP)，是指具有马尔可夫性的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。">
 <meta name="keywords" content="Programming">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mdp-learning">
 <meta property="og:url" content="http://yoursite.com/2018/11/22/mdp-learning/index.html">
 <meta property="og:site_name" content="Welcome to my Mickey Mouse Club♂house">
-<meta property="og:description" content="some notation in MDP1.state : S_t 2.action: A_t 3.reward: R_t">
+<meta property="og:description" content="马尔可夫决策过程(Markov Decision Process, MDP)，是指具有马尔可夫性的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?p(s^{'},r|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?p(s^{'}|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'}|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}">
@@ -100,10 +100,10 @@
 <meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxgoaxpkxuj30gs05hdg3.jpg">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxgolqc69aj30d406bweu.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxgomhk1plj30g90333yj.jpg">
-<meta property="og:updated_time" content="2018-11-22T03:43:03.364Z">
+<meta property="og:updated_time" content="2018-11-23T08:17:12.462Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mdp-learning">
-<meta name="twitter:description" content="some notation in MDP1.state : S_t 2.action: A_t 3.reward: R_t">
+<meta name="twitter:description" content="马尔可夫决策过程(Markov Decision Process, MDP)，是指具有马尔可夫性的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。">
 <meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?p(s^{'},r|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}">
 
 
@@ -352,9 +352,12 @@
       
 
       
-        <h2 id="some-notation-in-MDP"><a href="#some-notation-in-MDP" class="headerlink" title="some notation in MDP"></a>some notation in MDP</h2><p>1.state : S_t</p>
+        <p>马尔可夫决策过程(Markov Decision Process, MDP)，是指具有<a href="https://en.wikipedia.org/wiki/Markov_property" target="_blank" rel="noopener">马尔可夫性</a>的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。</p>
+<a id="more"></a>
+<h2 id="some-notation-in-MDP"><a href="#some-notation-in-MDP" class="headerlink" title="some notation in MDP"></a>some notation in MDP</h2><p>1.state : S_t</p>
 <p>2.action: A_t</p>
-<p>3.reward: R_t<br><a id="more"></a><br>4.a probability of those values occurring at time t, given particular values of the preceding state and action:</p>
+<p>3.reward: R_t</p>
+<p>4.a probability of those values occurring at time t, given particular values of the preceding state and action:</p>
 <p><img src="https://latex.codecogs.com/gif.latex?p(s^{'},r|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}" title="p(s^{'},r|s,a)\doteq Pr\left \{ S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a \right \}"></p>
 <p>上述概率对s’和r分别累加=1</p>
 <p>5.state-transition probability</p>
@@ -380,8 +383,9 @@
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxgn8uvztgj30jj033q2v.jpg" alt="png"></p>
 <h3 id="how-to-update-the-state-in-policy-π"><a href="#how-to-update-the-state-in-policy-π" class="headerlink" title="how to update the state in policy π?"></a>how to update the state in policy π?</h3><p>Bellman equation for v π:</p>
 <p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxgoaxpkxuj30gs05hdg3.jpg" alt="png"></p>
-<p>use dynamic programming, instead of getting average return in some random samples(Monte Carlo method), use some parameters to describle.</p>
+<p>Instead of getting average return in some random samples(Monte Carlo method), use some parameters to describle.</p>
 <p>π(a|s) is the policy π: decide action due to state s</p>
+<p>p(s’,r|s,a) is the transition probability of previous state s and action a, which follows the Markov property</p>
 <h2 id="get-the-optimal-policy-π-and-optimal-policy-value-state"><a href="#get-the-optimal-policy-π-and-optimal-policy-value-state" class="headerlink" title="get the optimal policy π and optimal policy value-state"></a>get the optimal policy π and optimal policy value-state</h2><p>choose the max value in the actions of state s:</p>
 <p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxgolqc69aj30d406bweu.jpg" alt="png"></p>
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxgomhk1plj30g90333yj.jpg" alt="png"></p>
@@ -500,7 +504,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

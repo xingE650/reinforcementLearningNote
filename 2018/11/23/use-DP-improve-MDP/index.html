@@ -79,14 +79,27 @@
 
 
 
+<meta name="description" content="上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。">
 <meta name="keywords" content="Programming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Welcome to my Mickey Mouse Club♂house">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="use-DP-improve-MDP">
+<meta property="og:url" content="http://yoursite.com/2018/11/23/use-DP-improve-MDP/index.html">
 <meta property="og:site_name" content="Welcome to my Mickey Mouse Club♂house">
+<meta property="og:description" content="上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxi2oqkslmj30e602r3yh.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxi36flrqnj30pz090q3t.jpg">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?q_{\pi&space;}(s,\pi^{'}(s))&space;\geq&space;v_{\pi&space;}(s)">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?v_{\pi^{'}}(s)\geq&space;v_{\pi}(s)">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxi48wq3bbj30fc09jmxs.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxi4c0tsp1j30el04b0sv.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxi4gvgn4dj30pm0fdabr.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxi7jp3secj30pu0a1my7.jpg">
+<meta property="og:updated_time" content="2018-11-23T11:31:31.629Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Welcome to my Mickey Mouse Club♂house">
+<meta name="twitter:title" content="use-DP-improve-MDP">
+<meta name="twitter:description" content="上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。">
+<meta name="twitter:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxi2oqkslmj30e602r3yh.jpg">
 
 
 
@@ -116,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/">
+  <link rel="canonical" href="http://yoursite.com/2018/11/23/use-DP-improve-MDP/">
 
 
 
 
 
-  <title>Archive | Welcome to my Mickey Mouse Club♂house</title>
+  <title>use-DP-improve-MDP | Welcome to my Mickey Mouse Club♂house</title>
   
 
 
@@ -141,7 +154,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -253,391 +266,171 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/use-DP-improve-MDP/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fx5b09mly4j30kx0i14kq.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my Mickey Mouse Club♂house">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">use-DP-improve-MDP</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T16:00:37+08:00">
+                2018-11-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        Um..! 12 posts in total. Keep on posting.
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/23/use-DP-improve-MDP-3-exercises/" itemprop="url">
-              
-                <span itemprop="name">use-DP-improve-MDP-3-exercises</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-23T16:03:29+08:00" content="2018-11-23">
-          11-23
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/23/use-DP-improve-MDP/" itemprop="url">
-              
-                <span itemprop="name">use-DP-improve-MDP</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-23T16:00:37+08:00" content="2018-11-23">
-          11-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/22/mdp-example-grid-train/" itemprop="url">
-              
-                <span itemprop="name">mdp-example-grid-train</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-22T11:44:38+08:00" content="2018-11-22">
-          11-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p>上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。</p>
+<a id="more"></a>
+<h2 id="4-1-Policy-Evaluation"><a href="#4-1-Policy-Evaluation" class="headerlink" title="4.1 Policy Evaluation"></a>4.1 Policy Evaluation</h2><h3 id="首先理解什么是策略的评估"><a href="#首先理解什么是策略的评估" class="headerlink" title="首先理解什么是策略的评估"></a>首先理解什么是策略的评估</h3><p>策略的评估也可以认为是一种预测行为，是解决MDP问题的必要环节。通过评估，我们使用已有的policy选择action（大部分问题policy是一个随机函数，即按照一定的概率分布产生action），使用动态规划的方法更新整个state-set的value并达到收敛。评估结果即value-table，是我们决策的重要依据，所以可以为未知的player如何行动提供预测的参考。</p>
+<p>评估模型经常使用迭代运算的方式，迭代同时分为原地迭代和旧值迭代，区别仅是在动态规划使用未来状态来更新当前value的时候，是否使用更新后的值，运算通式是：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxi2oqkslmj30e602r3yh.jpg" alt="png"> </p>
+<p>评估算法的伪代码：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxi36flrqnj30pz090q3t.jpg" alt="png"> </p>
+<h2 id="4-2-Policy-Improvement"><a href="#4-2-Policy-Improvement" class="headerlink" title="4.2 Policy Improvement"></a>4.2 Policy Improvement</h2><p>一开始看的时候，一直没明白上一步评估的作用何在，在策略提升这部分就讲了，策略评估是为了改进用的，因为如果在某个state s上，我改变了action a-&gt;a’，那么可以认为我采用了一种新的策略π’，即这一步我采取的行为是π’(s)，如果有：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?q_{\pi&space;}(s,\pi^{'}(s))&space;\geq&space;v_{\pi&space;}(s)" title="q_{\pi }(s,\pi^{'}(s)) \geq v_{\pi }(s)"></p>
+<p>则可以推出新的策略π’一定不差于原来的π，即：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?v_{\pi^{'}}(s)\geq&space;v_{\pi}(s)" title="v_{\pi^{'}}(s)\geq v_{\pi}(s)"></p>
+<p>推导过程：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxi48wq3bbj30fc09jmxs.jpg" alt="png"> </p>
+<p>顺势我们推出一种greedy的提升方法，就是直接获得最大reward的action：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxi4c0tsp1j30el04b0sv.jpg" alt="png"> </p>
+<p>这种方法也为下一部分的Policy迭代优化提供一种优化的思路。</p>
+<h2 id="4-3-Policy-Iteration"><a href="#4-3-Policy-Iteration" class="headerlink" title="4.3 Policy Iteration"></a>4.3 Policy Iteration</h2><p>直接给出迭代优化的伪代码：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxi4gvgn4dj30pm0fdabr.jpg" alt="png"> </p>
+<p>可以看出来算法其实就是评估和提升交替进行的，迭代终止条件就是没办法对当前的v_π(s)进一步优化了。</p>
+<h2 id="4-4-Value-Iteration"><a href="#4-4-Value-Iteration" class="headerlink" title="4.4 Value Iteration"></a>4.4 Value Iteration</h2><p>上面的策略迭代优化的方法很明显有个问题，就是每次提升的前提是需要对策略进行评估，value Iteration提出一种将提升和评估放在一起进行的方法，这个思路比较像4.1中评估的时候使用的in-place方法。</p>
+<p>算法伪代码如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxi7jp3secj30pu0a1my7.jpg" alt="png"> </p>
+<p>算法结束条件就是当value-table更新幅度小于阈值Θ时停止。</p>
+<h2 id="4-5-4-6-4-7"><a href="#4-5-4-6-4-7" class="headerlink" title="4.5 4.6 4.7"></a>4.5 4.6 4.7</h2><p>因为后面三部分都很短，也没有给出具体的解释，所以我就放一块写。</p>
+<p>4.5讲的是异步动态规划，其实前面讲的value iteration就是异步动态规划的一种，主要是希望可以改进DP算法会遍历整个state set的问题，有的value state没必要多次更新，而有的可以多次更新，具体的算法会在第8章提出。</p>
+<p>4.6讲的是统一的策略迭代(GPI)，意指evaluation和improvement是相互竞争合作的，大部分强化学习都是这两者相互作用达到最优的policy和state-value。</p>
+<p>4.7讲的是动态规划算法的效率，大致意思就是动规对于large-state的问题计算量仍旧很大，但是可以用异步动规来解决，policy iteration和value iteration现在仍很常用。</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/22/mdp-learning/" itemprop="url">
-              
-                <span itemprop="name">mdp-learning</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-22T08:57:46+08:00" content="2018-11-22">
-          11-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/16/10-armed-Testbed/" itemprop="url">
-              
-                <span itemprop="name">10-armed-Testbed</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-16T11:57:23+08:00" content="2018-11-16">
-          11-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/15/softmax-theory/" itemprop="url">
-              
-                <span itemprop="name">softmax-theory</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-15T17:28:19+08:00" content="2018-11-15">
-          11-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/14/k-armed-Bandits/" itemprop="url">
-              
-                <span itemprop="name">k-armed Bandits</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-14T19:42:41+08:00" content="2018-11-14">
-          11-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/14/Tic-Tac-Toe/" itemprop="url">
-              
-                <span itemprop="name">Tic-Tac-Toe</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-14T17:28:04+08:00" content="2018-11-14">
-          11-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/12/ReinforcementLearningChapter1/" itemprop="url">
-              
-                <span itemprop="name">ReinforcementLearningChapter1</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-12T20:36:12+08:00" content="2018-11-12">
-          11-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/12/some-config-on-next-theme/" itemprop="url">
-              
-                <span itemprop="name">some config on next theme</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-12T17:22:55+08:00" content="2018-11-12">
-          11-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/22/mdp-example-grid-train/" rel="next" title="mdp-example-grid-train">
+                <i class="fa fa-chevron-left"></i> mdp-example-grid-train
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/23/use-DP-improve-MDP-3-exercises/" rel="prev" title="use-DP-improve-MDP-3-exercises">
+                use-DP-improve-MDP-3-exercises <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -645,6 +438,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -665,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -710,6 +516,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-Policy-Evaluation"><span class="nav-number">1.</span> <span class="nav-text">4.1 Policy Evaluation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先理解什么是策略的评估"><span class="nav-number">1.1.</span> <span class="nav-text">首先理解什么是策略的评估</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-Policy-Improvement"><span class="nav-number">2.</span> <span class="nav-text">4.2 Policy Improvement</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-Policy-Iteration"><span class="nav-number">3.</span> <span class="nav-text">4.3 Policy Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-Value-Iteration"><span class="nav-number">4.</span> <span class="nav-text">4.4 Value Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-4-6-4-7"><span class="nav-number">5.</span> <span class="nav-text">4.5 4.6 4.7</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -850,6 +672,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
