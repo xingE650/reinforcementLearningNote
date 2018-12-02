@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter02/blackjack.py 实现了基于Monte Carlo方法的三种算法：1、基于Monte Carlo方法的策略预测，根据给出的策略计算state-value 2、使用exploring starts的训练方法，得出state-action-value，以及对应的优化policy π 3、使用off-policy的重要取样方法预测st">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter05 blackjack">
+<meta property="og:url" content="http://yoursite.com/2018/11/28/Chapter05-blackjack/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter02/blackjack.py 实现了基于Monte Carlo方法的三种算法：1、基于Monte Carlo方法的策略预测，根据给出的策略计算state-value 2、使用exploring starts的训练方法，得出state-action-value，以及对应的优化policy π 3、使用off-policy的重要取样方法预测st">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxmvnj6anvj30pu09w3zm.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxmvwyplz6j30bg0ajt91.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxmvzrnek8j30ca030q2v.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxmwjcqcdlj30pw08jwg6.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxnup9jg9ej312d0u0tah.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxmv35swadj30pn0bamyp.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxnuq78zztj312h0u00uj.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxnjxhkwkfj30hi0440sr.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxnk0cdkxhj30f602mjrd.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxnuz6y9ouj307o01jjr7.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxnv1wa5y2j30870273yd.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxnv75ocuij308c02gglh.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxnuqtk9dzj30ak07i3ym.jpg">
+<meta property="og:updated_time" content="2018-12-02T09:30:54.132Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter05 blackjack">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter02/blackjack.py 实现了基于Monte Carlo方法的三种算法：1、基于Monte Carlo方法的策略预测，根据给出的策略计算state-value 2、使用exploring starts的训练方法，得出state-action-value，以及对应的优化policy π 3、使用off-policy的重要取样方法预测st">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxmvnj6anvj30pu09w3zm.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/28/Chapter05-blackjack/">
+
+
+
+
+
+  <title>Chapter05 blackjack | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/Chapter05-blackjack/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter05 blackjack</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-28T16:09:50+08:00">
+                2018-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter05/blackjack.py" target="_blank" rel="noopener">chapter02/blackjack.py</a></p>
+<h1 id="实现了基于Monte-Carlo方法的三种算法："><a href="#实现了基于Monte-Carlo方法的三种算法：" class="headerlink" title="实现了基于Monte Carlo方法的三种算法："></a>实现了基于Monte Carlo方法的三种算法：</h1><p>1、基于Monte Carlo方法的策略预测，根据给出的策略计算state-value</p>
+<p>2、使用exploring starts的训练方法，得出state-action-value，以及对应的优化policy π</p>
+<p>3、使用off-policy的重要取样方法预测state-value，并和期望值对比</p>
+<a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>blackjack是一个常见的赌场游戏，规则如下：</p>
+<p>牌组和牌值：总的牌堆由7到8组牌去掉大小王组成，所以不用考虑牌数量问题；其中2-10是原值，J-K当做10使用，A分两种情况，可以等于1 or 11。</p>
+<p>规则：游戏开始，发牌的兄弟给玩家和庄家各发2张牌，玩家的牌是亮出来的明牌，庄家的是一张明牌一张暗牌，如果玩家当场数值和到21了(natural)，即拿到了一张A和一张10(或者J-K)，如果庄家没有达到21，那么判庄家输(这里不考虑赌金什么的)，反正则平局；如果玩家没有到21，可以选择继续要牌(hit)或者放弃要牌(strick or stand)，如果超过21了就叫做爆牌(go bust)，玩家就被判负；如果玩家strick1了，就轮到庄家发牌了，庄家一般会按照这样的方法来决策(也可以不这样，这里是一种规定吧)：如果牌值&lt;17，就hit，在17-21之间stand，如果庄家goes bust，庄家就被判负；如果庄家stand了，就比较双方的总牌值，大的一方为胜方。</p>
+<p>这里使用policy：玩家hit当牌值&lt;20，20-21就stand。</p>
+<p>monte carlo算法本身不难理解，但是这个blackjack问题可以说是目前接触到的最复杂的强化学习问题了。首先是state的理解，state=[usable_ace_player, player_sum, dealer_card1]，其中usable_ace_player指的是player是否将A用作11，player_sum指的是Player牌组总值，dealer_card1指的是庄家亮出的明牌。</p>
+<p>算法中使用了很多blackjack游戏的游戏技巧，比如上面提到的一些策略，还有state的选取，增加了理解难度。</p>
+<p>所以这个问题主要理解monte carlo算法工作原理，具体的技巧可以选择性忽略。</p>
+<h2 id="引入模块，并定义action常量，hit-继续抽，stand-停止"><a href="#引入模块，并定义action常量，hit-继续抽，stand-停止" class="headerlink" title="引入模块，并定义action常量，hit=继续抽，stand=停止"></a>引入模块，并定义action常量，hit=继续抽，stand=停止</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="comment"># actions: hit or stand</span></span><br><span class="line">ACTION_HIT = <span class="number">0</span></span><br><span class="line">ACTION_STAND = <span class="number">1</span>  <span class="comment">#  "strike" in the book</span></span><br><span class="line">ACTIONS = [ACTION_HIT, ACTION_STAND]</span><br></pre></td></tr></table></figure>
+<h2 id="为player定义policy，属于游戏技巧，也是本例的一个参考，通过最终学到的policy和这里的POLICY-PLAYER对比来比较算法的优劣"><a href="#为player定义policy，属于游戏技巧，也是本例的一个参考，通过最终学到的policy和这里的POLICY-PLAYER对比来比较算法的优劣" class="headerlink" title="为player定义policy，属于游戏技巧，也是本例的一个参考，通过最终学到的policy和这里的POLICY_PLAYER对比来比较算法的优劣"></a>为player定义policy，<em>属于游戏技巧</em>，也是本例的一个参考，通过最终学到的policy和这里的POLICY_PLAYER对比来比较算法的优劣</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># policy for player</span></span><br><span class="line">POLICY_PLAYER = np.zeros(<span class="number">22</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>, <span class="number">20</span>):</span><br><span class="line">    POLICY_PLAYER[i] = ACTION_HIT</span><br><span class="line">POLICY_PLAYER[<span class="number">20</span>] = ACTION_STAND</span><br><span class="line">POLICY_PLAYER[<span class="number">21</span>] = ACTION_STAND</span><br></pre></td></tr></table></figure>
+<h2 id="两个待定函数，这里的target-policy-player和behavior-policy-player的工作方式是理解off-policy-Monte-Carlo算法的关键"><a href="#两个待定函数，这里的target-policy-player和behavior-policy-player的工作方式是理解off-policy-Monte-Carlo算法的关键" class="headerlink" title="两个待定函数，这里的target_policy_player和behavior_policy_player的工作方式是理解off-policy Monte Carlo算法的关键"></a>两个待定函数，这里的target_policy_player和behavior_policy_player的工作方式是理解off-policy Monte Carlo算法的关键</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># use for off-policy method</span></span><br><span class="line"><span class="comment"># function form of target policy of player</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">target_policy_player</span><span class="params">(usable_ace_player, player_sum, dealer_card)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> POLICY_PLAYER[player_sum]</span><br><span class="line"></span><br><span class="line"><span class="comment"># function form of behavior policy of player</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">behavior_policy_player</span><span class="params">(usable_ace_player, player_sum, dealer_card)</span>:</span></span><br><span class="line">    <span class="comment"># probality = 0.5 according to binomial distruction</span></span><br><span class="line">    <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, <span class="number">0.5</span>) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> ACTION_STAND</span><br><span class="line">    <span class="keyword">return</span> ACTION_HIT</span><br></pre></td></tr></table></figure>
+<h2 id="为庄家定义policy，属于游戏技巧"><a href="#为庄家定义policy，属于游戏技巧" class="headerlink" title="为庄家定义policy，属于游戏技巧"></a>为庄家定义policy，<em>属于游戏技巧</em></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># policy for dealer</span></span><br><span class="line">POLICY_DEALER = np.zeros(<span class="number">22</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>, <span class="number">17</span>):</span><br><span class="line">    POLICY_DEALER[i] = ACTION_HIT</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">17</span>, <span class="number">22</span>):</span><br><span class="line">    POLICY_DEALER[i] = ACTION_STAND</span><br></pre></td></tr></table></figure>
+<h2 id="Monte-Carlo方法的关键一步，通过模拟游戏来获得sample"><a href="#Monte-Carlo方法的关键一步，通过模拟游戏来获得sample" class="headerlink" title="Monte Carlo方法的关键一步，通过模拟游戏来获得sample"></a>Monte Carlo方法的关键一步，通过模拟游戏来获得sample</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get a new card</span></span><br><span class="line"><span class="comment"># 根据游戏规则发牌并定义牌值</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_card</span><span class="params">()</span>:</span></span><br><span class="line">    card = np.random.randint(<span class="number">1</span>, <span class="number">14</span>)</span><br><span class="line">    card = min(card, <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">return</span> card</span><br><span class="line"></span><br><span class="line"><span class="comment"># play a game</span></span><br><span class="line"><span class="comment"># @policy_player: 为Player制定的policy，也是训练的目标？</span></span><br><span class="line"><span class="comment"># @initial_state: 初始状态[whether player has a usable Ace, sum of player's cards, one card of dealer]</span></span><br><span class="line"><span class="comment"># @initial_action: 初始行为 the initial action</span></span><br><span class="line"><span class="comment"># return:(state,reward,player_trajectory)</span></span><br><span class="line"><span class="comment"># 返回变量解释：</span></span><br><span class="line"><span class="comment"># state：就是得到的初始状态，如果initial_state=None，就是随机产生的，反正其实就是initial_state的deep copy</span></span><br><span class="line"><span class="comment"># reward：是相应的初始状态的最终结果，Player win=1，Player lost=-1，平局=0</span></span><br><span class="line"><span class="comment"># player_trajectory：以[state,action]为元素的list，记录整个实验过程中的state和对应的action</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">play</span><span class="params">(policy_player, initial_state=None, initial_action=None)</span>:</span></span><br><span class="line">    <span class="comment"># player status</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># sum of player</span></span><br><span class="line">    player_sum = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># trajectory of player</span></span><br><span class="line">    player_trajectory = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># whether player uses Ace as 11</span></span><br><span class="line">    usable_ace_player = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># dealer status</span></span><br><span class="line">    dealer_card1 = <span class="number">0</span></span><br><span class="line">    dealer_card2 = <span class="number">0</span></span><br><span class="line">    usable_ace_dealer = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> initial_state <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        <span class="comment"># generate a random initial state</span></span><br><span class="line"></span><br><span class="line">        num_of_ace = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize cards of player</span></span><br><span class="line">        <span class="comment"># 这里是一个理解的难点，主要是因为对游戏不太理解</span></span><br><span class="line">        <span class="comment"># 游戏规定是要一开始给玩家和庄家发2张牌，这里没给初始状态，所以随机抽呗</span></span><br><span class="line">        <span class="comment"># 但是问题是，这个循环把Player的牌值一直抽到11才跳出，也就是说其中大概率不止抽了2张，怎么回事？</span></span><br><span class="line">        <span class="comment"># 因为反正发完牌也是让Player先搞，而且前面按照给的经验玩法，在12到20之间都是无脑hit的，所以直接在这抽到12算了。</span></span><br><span class="line">        <span class="keyword">while</span> player_sum &lt; <span class="number">12</span>:</span><br><span class="line">        <span class="comment"># for _ in range(2):</span></span><br><span class="line">            <span class="comment"># if sum of player is less than 12, always hit</span></span><br><span class="line">            card = get_card()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># if get an Ace, use it as 11</span></span><br><span class="line">            <span class="keyword">if</span> card == <span class="number">1</span>:</span><br><span class="line">                num_of_ace += <span class="number">1</span></span><br><span class="line">                card = <span class="number">11</span></span><br><span class="line">                usable_ace_player = <span class="keyword">True</span></span><br><span class="line">            player_sum += card</span><br><span class="line"></span><br><span class="line">        <span class="comment"># if player's sum is larger than 21, he must hold at least one Ace, two Aces are possible</span></span><br><span class="line">        <span class="comment"># 这里的理解也很有意思，就是如果超过21了，那么考虑前一个while循环，数值肯定是&lt;=11，而最后一次抽最大是11(A)，所以超过21</span></span><br><span class="line">        <span class="comment"># 只有一种情况，就是前一次11，这次又抽到了A，所以肯定至少有一个A，当然两个A也是有可能的。</span></span><br><span class="line">        <span class="keyword">if</span> player_sum &gt; <span class="number">21</span>:</span><br><span class="line">            <span class="comment"># use the Ace as 1 rather than 11</span></span><br><span class="line">            player_sum -= <span class="number">10</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># if the player only has one Ace, then he doesn't have usable Ace any more</span></span><br><span class="line">            <span class="keyword">if</span> num_of_ace == <span class="number">1</span>:</span><br><span class="line">                usable_ace_player = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize cards of dealer, suppose dealer will show the first card he gets</span></span><br><span class="line">        <span class="comment"># 这里也验证了前面的推测，因为下一次不论到庄家抽卡，所以庄家这里就老老实实抽了2张</span></span><br><span class="line">        <span class="comment"># 不过其中card1是可见的，card2是暗牌看不到，所以card1也是会影响决策的(怎么影响就是游戏经验了)</span></span><br><span class="line">        dealer_card1 = get_card()</span><br><span class="line">        dealer_card2 = get_card()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># use specified initial state</span></span><br><span class="line">        usable_ace_player, player_sum, dealer_card1 = initial_state</span><br><span class="line">        dealer_card2 = get_card()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># initial state of the game</span></span><br><span class="line">    state = [usable_ace_player, player_sum, dealer_card1]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># initialize dealer's sum</span></span><br><span class="line">    <span class="comment"># 计算得到庄家的牌值总值，当然这个对玩家是不可见的。</span></span><br><span class="line">    dealer_sum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> dealer_card1 == <span class="number">1</span> <span class="keyword">and</span> dealer_card2 != <span class="number">1</span>:</span><br><span class="line">        dealer_sum += <span class="number">11</span> + dealer_card2</span><br><span class="line">        usable_ace_dealer = <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">elif</span> dealer_card1 != <span class="number">1</span> <span class="keyword">and</span> dealer_card2 == <span class="number">1</span>:</span><br><span class="line">        dealer_sum += dealer_card1 + <span class="number">11</span></span><br><span class="line">        usable_ace_dealer = <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">elif</span> dealer_card1 == <span class="number">1</span> <span class="keyword">and</span> dealer_card2 == <span class="number">1</span>:</span><br><span class="line">        dealer_sum += <span class="number">1</span> + <span class="number">11</span></span><br><span class="line">        usable_ace_dealer = <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        dealer_sum += dealer_card1 + dealer_card2</span><br><span class="line"></span><br><span class="line">    <span class="comment"># game starts!</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># player's turn</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="comment"># 第一次会对玩家的行为套用初始action，以后不会用了</span></span><br><span class="line">        <span class="keyword">if</span> initial_action <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            action = initial_action</span><br><span class="line">            initial_action = <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># get action based on current sum</span></span><br><span class="line">            <span class="comment"># 写了这么变量，其实就是根据state和给定的policy给出action</span></span><br><span class="line">            action = policy_player(usable_ace_player, player_sum, dealer_card1)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># track player's trajectory for importance sampling</span></span><br><span class="line">        <span class="comment"># 将state-action对append进player_trajectory</span></span><br><span class="line">        player_trajectory.append([(usable_ace_player, player_sum, dealer_card1), action])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> action == ACTION_STAND:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="comment"># if hit, get new card</span></span><br><span class="line">        player_sum += get_card()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># player busts</span></span><br><span class="line">        <span class="keyword">if</span> player_sum &gt; <span class="number">21</span>:</span><br><span class="line">            <span class="comment"># if player has a usable Ace, use it as 1 to avoid busting and continue</span></span><br><span class="line">            <span class="keyword">if</span> usable_ace_player == <span class="keyword">True</span>:</span><br><span class="line">                player_sum -= <span class="number">10</span></span><br><span class="line">                usable_ace_player = <span class="keyword">False</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># otherwise player loses</span></span><br><span class="line">                <span class="keyword">return</span> state, <span class="number">-1</span>, player_trajectory</span><br><span class="line"></span><br><span class="line">    <span class="comment"># dealer's turn</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="comment"># get action based on current sum</span></span><br><span class="line">        action = POLICY_DEALER[dealer_sum]</span><br><span class="line">        <span class="keyword">if</span> action == ACTION_STAND:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="comment"># if hit, get a new card</span></span><br><span class="line">        new_card = get_card()</span><br><span class="line">        <span class="keyword">if</span> new_card == <span class="number">1</span> <span class="keyword">and</span> dealer_sum + <span class="number">11</span> &lt; <span class="number">21</span>:</span><br><span class="line">            dealer_sum += <span class="number">11</span></span><br><span class="line">            usable_ace_dealer = <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            dealer_sum += new_card</span><br><span class="line">        <span class="comment"># dealer busts</span></span><br><span class="line">        <span class="keyword">if</span> dealer_sum &gt; <span class="number">21</span>:</span><br><span class="line">            <span class="keyword">if</span> usable_ace_dealer == <span class="keyword">True</span>:</span><br><span class="line">            <span class="comment"># if dealer has a usable Ace, use it as 1 to avoid busting and continue</span></span><br><span class="line">                dealer_sum -= <span class="number">10</span></span><br><span class="line">                usable_ace_dealer = <span class="keyword">False</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># otherwise dealer loses</span></span><br><span class="line">                <span class="keyword">return</span> state, <span class="number">1</span>, player_trajectory</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compare the sum between player and dealer</span></span><br><span class="line">    <span class="keyword">if</span> player_sum &gt; dealer_sum:</span><br><span class="line">        <span class="keyword">return</span> state, <span class="number">1</span>, player_trajectory</span><br><span class="line">    <span class="keyword">elif</span> player_sum == dealer_sum:</span><br><span class="line">        <span class="keyword">return</span> state, <span class="number">0</span>, player_trajectory</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> state, <span class="number">-1</span>, player_trajectory</span><br></pre></td></tr></table></figure>
+<h2 id="使用on-policy策略训-yu-练-ce"><a href="#使用on-policy策略训-yu-练-ce" class="headerlink" title="使用on-policy策略训(yu)练(ce)"></a>使用on-policy策略训(yu)练(ce)</h2><p>算法伪代码：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxmvnj6anvj30pu09w3zm.jpg" alt="png"> </p>
+<p>其实给的target_policy才是last boss，这里只是使用Monte Carlo的方法来预测了一下，看看结果是不是符合的。</p>
+<p>这里有一个比较有意思的地方感觉可以讨论一下：</p>
+<p>算法的最后一部分，也就是循环的最小部分，即对value的更新，因为blackjack问题本身就是state不重复的，所以first-visit和every-visit是一样的；其次就是G，这个G是被累加了，因为这里S_t是按照索引减小的方向移动的，而且注意符号，这里累加了R_{t+1}，这个形式和上一章的MDP问题中的表达式是一致的，关于这里R的索引是n还是n+1，我觉得也有必要提一下。因为在第二章Bandit问题里，R是用的n：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxmvwyplz6j30bg0ajt91.jpg" alt="png"></p>
+<p>而且这里对value的更新也是从前往后的，state是有限的；</p>
+<p>而第4章DP的时候，R使用的就变成n+1了：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxmvzrnek8j30ca030q2v.jpg" alt="png"></p>
+<p>而且也变成反向更新了（虽然形式上仍是正向写的code，但是事实上最先确定的是最终的state-value）</p>
+<p>仔细看的话会发现，其实这两个问题还是差别挺大的，首先说下bandit问题把。Bandit问题是通过学习找到最优的平均收益，所以n控制的试验次数，所以其实本质上它只计算了一个value值，就是最终目标是为了收敛到最优的action，即找到reward期望最大的action。</p>
+<p>MDP问题中的t代表的是state随step出现的时刻，即使一般问题可能不满足MDP的马尔科夫性，但是对于一个普遍的多状态序列决策问题，t时刻的state对应的value肯定是其后时刻states的value的一种和的形式(通常会考虑discount如果问题是continuing task)。所以两个问题本质就是不同的，不能混淆。</p>
+<p>再谈谈另一个问题，就是伪算法最里层计算state-value的时候，计算顺序是沿着t减小的方向的，因为这样有利于迭代，其实也是一种DP的思路。但是这个blackjack问题有它的特殊性，就是每一步action的reward是设为0的，只有最后的结果才是有reward的。这样设计是有道理的，避免达到次优点嘛。</p>
+<p>看到这里我不禁想到，Monte Carlo方法和MDP其实原理是相通的，都利用的DP的思路来解决问题，我记得在MDP那一章也讲过这个问题，在原书46页：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxmwjcqcdlj30pw08jwg6.jpg" alt="png"> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Monte Carlo Sample with On-Policy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">monte_carlo_on_policy</span><span class="params">(episodes)</span>:</span></span><br><span class="line">    states_usable_ace = np.zeros((<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="comment"># initialze counts to 1 to avoid 0 being divided</span></span><br><span class="line">    states_usable_ace_count = np.ones((<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line">    states_no_usable_ace = np.zeros((<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="comment"># initialze counts to 1 to avoid 0 being divided</span></span><br><span class="line">    states_no_usable_ace_count = np.ones((<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(<span class="number">0</span>, episodes)):</span><br><span class="line">        _, reward, player_trajectory = play(target_policy_player)</span><br><span class="line">        <span class="keyword">for</span> (usable_ace, player_sum, dealer_card), _ <span class="keyword">in</span> player_trajectory:</span><br><span class="line">            <span class="comment"># 这里也是一个理解的难点，一点一点分析：</span></span><br><span class="line">            <span class="comment"># 1、“player_sum-=12”这个操作，通过play函数我发现，append进player_trajectory</span></span><br><span class="line">            <span class="comment"># 中的state的player_sum一定是&lt;=21的，即state中的action是在player_sum基础上的，player_sum</span></span><br><span class="line">            <span class="comment"># 的值是在action之前的值。那么可以知道player_sum-12&lt;9</span></span><br><span class="line">            <span class="comment"># 接着分析，-12的操作结果是否会向下溢出，根据play函数中的处理，player_sum一定是从&gt;=12的值开始的，</span></span><br><span class="line">            <span class="comment"># 这一点可以从play函数一开始的初始状态的处理看出来，while循环只有当player_sum&gt;=12才会跳出</span></span><br><span class="line">            <span class="comment"># 所以player_sum-12 ~ [0,9]，刚好符合states_usable_ace等4个np.ndarray的范围</span></span><br><span class="line">            <span class="comment"># 同理，dealer_card-1也是一样的道理，将[1,10]的范围换算到[0,9]</span></span><br><span class="line">            <span class="comment"># 那dealer_card就不可能是11吗？根据play函数的分析，dealer_card在计算dealer_sum的时候</span></span><br><span class="line">            <span class="comment"># 需要根据另一张暗牌的牌值来计算，所以对于player来说只能认为它是1（暗牌不可见）</span></span><br><span class="line">            player_sum -= <span class="number">12</span></span><br><span class="line">            dealer_card -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> usable_ace:</span><br><span class="line">                states_usable_ace_count[player_sum, dealer_card] += <span class="number">1</span></span><br><span class="line">                states_usable_ace[player_sum, dealer_card] += reward</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                states_no_usable_ace_count[player_sum, dealer_card] += <span class="number">1</span></span><br><span class="line">                states_no_usable_ace[player_sum, dealer_card] += reward</span><br><span class="line">    <span class="keyword">return</span> states_usable_ace / states_usable_ace_count, states_no_usable_ace / states_no_usable_ace_count</span><br></pre></td></tr></table></figure>
+<h2 id="绘制图表"><a href="#绘制图表" class="headerlink" title="绘制图表"></a>绘制图表</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_5_1</span><span class="params">()</span>:</span></span><br><span class="line">    states_usable_ace_1, states_no_usable_ace_1 = monte_carlo_on_policy(<span class="number">10000</span>)</span><br><span class="line">    states_usable_ace_2, states_no_usable_ace_2 = monte_carlo_on_policy(<span class="number">500000</span>)</span><br><span class="line"></span><br><span class="line">    states = [states_usable_ace_1,</span><br><span class="line">              states_usable_ace_2,</span><br><span class="line">              states_no_usable_ace_1,</span><br><span class="line">              states_no_usable_ace_2]</span><br><span class="line"></span><br><span class="line">    titles = [<span class="string">'Usable Ace, 10000 Episodes'</span>,</span><br><span class="line">              <span class="string">'Usable Ace, 500000 Episodes'</span>,</span><br><span class="line">              <span class="string">'No Usable Ace, 10000 Episodes'</span>,</span><br><span class="line">              <span class="string">'No Usable Ace, 500000 Episodes'</span>]</span><br><span class="line"></span><br><span class="line">    _, axes = plt.subplots(<span class="number">2</span>, <span class="number">2</span>, figsize=(<span class="number">40</span>, <span class="number">30</span>))</span><br><span class="line">    plt.subplots_adjust(wspace=<span class="number">0.1</span>, hspace=<span class="number">0.2</span>)</span><br><span class="line">    axes = axes.flatten()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> state, title, axis <span class="keyword">in</span> zip(states, titles, axes):</span><br><span class="line">        fig = sns.heatmap(np.flipud(state), cmap=<span class="string">"YlGnBu"</span>, ax=axis, xticklabels=range(<span class="number">1</span>, <span class="number">11</span>),</span><br><span class="line">                          yticklabels=list(reversed(range(<span class="number">12</span>, <span class="number">22</span>))))</span><br><span class="line">        fig.set_ylabel(<span class="string">'player sum'</span>, fontsize=<span class="number">30</span>)</span><br><span class="line">        fig.set_xlabel(<span class="string">'dealer showing'</span>, fontsize=<span class="number">30</span>)</span><br><span class="line">        fig.set_title(title, fontsize=<span class="number">30</span>)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_5_1.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_5_1()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 10000/10000 [00:00&lt;00:00, 51795.15it/s]
+100%|██████████| 500000/500000 [00:08&lt;00:00, 55705.87it/s]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxnup9jg9ej312d0u0tah.jpg" alt="png"></p>
+<h2 id="使用exploring-start训练"><a href="#使用exploring-start训练" class="headerlink" title="使用exploring-start训练"></a>使用exploring-start训练</h2><p>算法的伪代码如下：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxmv35swadj30pn0bamyp.jpg" alt="png"> </p>
+<p>注意其中几个要点：</p>
+<p>在Monte Carlo模拟的时候，即play函数里，使用的player_policy是greey的；</p>
+<p>初始状态是explore的，并保证每个初始state和action组合都有概率出现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Monte Carlo with Exploring Starts</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">monte_carlo_es</span><span class="params">(episodes)</span>:</span></span><br><span class="line">    <span class="comment"># (playerSum, dealerCard, usableAce, action)</span></span><br><span class="line">    state_action_values = np.zeros((<span class="number">10</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">2</span>))</span><br><span class="line">    <span class="comment"># initialze counts to 1 to avoid division by 0</span></span><br><span class="line">    state_action_pair_count = np.ones((<span class="number">10</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># behavior policy is greedy</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">behavior_policy</span><span class="params">(usable_ace, player_sum, dealer_card)</span>:</span></span><br><span class="line">        usable_ace = int(usable_ace)</span><br><span class="line">        player_sum -= <span class="number">12</span></span><br><span class="line">        dealer_card -= <span class="number">1</span></span><br><span class="line">        <span class="comment"># get argmax of the average returns(s, a)</span></span><br><span class="line">        values_ = state_action_values[player_sum, dealer_card, usable_ace, :] / \</span><br><span class="line">                  state_action_pair_count[player_sum, dealer_card, usable_ace, :]</span><br><span class="line">        <span class="comment"># np.random.choice 函数通过给定一个list或者np.ndarray或者整数n，以及一个表示选择概率的list来从一系列数中</span></span><br><span class="line">        <span class="comment"># 按照概率选出相应的值</span></span><br><span class="line">        <span class="comment"># 如果第一个参数是n，其实是相当于np.arange(n)的，第二个概率如果不指定就默认uniform distribution(均匀分布)</span></span><br><span class="line">        <span class="comment"># 这里是从最大的value的action中选出任一个的</span></span><br><span class="line">        <span class="keyword">return</span> np.random.choice([action_ <span class="keyword">for</span> action_, value_ <span class="keyword">in</span> enumerate(values_) <span class="keyword">if</span> value_ == np.max(values_)])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># play for several episodes</span></span><br><span class="line">    <span class="keyword">for</span> episode <span class="keyword">in</span> tqdm(range(episodes)):</span><br><span class="line">        <span class="comment"># for each episode, use a randomly initialized state and action</span></span><br><span class="line">        <span class="comment"># 使用exploring start-action对</span></span><br><span class="line">        initial_state = [bool(np.random.choice([<span class="number">0</span>, <span class="number">1</span>])),</span><br><span class="line">                       np.random.choice(range(<span class="number">12</span>, <span class="number">22</span>)),</span><br><span class="line">                       np.random.choice(range(<span class="number">1</span>, <span class="number">11</span>))]</span><br><span class="line">        initial_action = np.random.choice(ACTIONS)</span><br><span class="line">        <span class="comment"># 这个地方挺有意思的，第一次先使用target_policy，免得state_action_value一直是0，陷入死循环</span></span><br><span class="line">        current_policy = behavior_policy <span class="keyword">if</span> episode <span class="keyword">else</span> target_policy_player</span><br><span class="line">        _, reward, trajectory = play(current_policy, initial_state, initial_action)</span><br><span class="line">        <span class="keyword">for</span> (usable_ace, player_sum, dealer_card), action <span class="keyword">in</span> trajectory:</span><br><span class="line">            usable_ace = int(usable_ace)</span><br><span class="line">            player_sum -= <span class="number">12</span></span><br><span class="line">            dealer_card -= <span class="number">1</span></span><br><span class="line">            <span class="comment"># update values of state-action pairs</span></span><br><span class="line">            state_action_values[player_sum, dealer_card, usable_ace, action] += reward</span><br><span class="line">            state_action_pair_count[player_sum, dealer_card, usable_ace, action] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> state_action_values / state_action_pair_count</span><br></pre></td></tr></table></figure>
+<h2 id="绘制图表-1"><a href="#绘制图表-1" class="headerlink" title="绘制图表"></a>绘制图表</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_5_2</span><span class="params">()</span>:</span></span><br><span class="line">    state_action_values = monte_carlo_es(<span class="number">500000</span>)</span><br><span class="line"></span><br><span class="line">    state_value_no_usable_ace = np.max(state_action_values[:, :, <span class="number">0</span>, :], axis=<span class="number">-1</span>)</span><br><span class="line">    state_value_usable_ace = np.max(state_action_values[:, :, <span class="number">1</span>, :], axis=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the optimal policy</span></span><br><span class="line">    action_no_usable_ace = np.argmax(state_action_values[:, :, <span class="number">0</span>, :], axis=<span class="number">-1</span>)</span><br><span class="line">    action_usable_ace = np.argmax(state_action_values[:, :, <span class="number">1</span>, :], axis=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    images = [action_usable_ace,</span><br><span class="line">              state_value_usable_ace,</span><br><span class="line">              action_no_usable_ace,</span><br><span class="line">              state_value_no_usable_ace]</span><br><span class="line"></span><br><span class="line">    titles = [<span class="string">'Optimal policy with usable Ace'</span>,</span><br><span class="line">              <span class="string">'Optimal value with usable Ace'</span>,</span><br><span class="line">              <span class="string">'Optimal policy without usable Ace'</span>,</span><br><span class="line">              <span class="string">'Optimal value without usable Ace'</span>]</span><br><span class="line"></span><br><span class="line">    _, axes = plt.subplots(<span class="number">2</span>, <span class="number">2</span>, figsize=(<span class="number">40</span>, <span class="number">30</span>))</span><br><span class="line">    plt.subplots_adjust(wspace=<span class="number">0.1</span>, hspace=<span class="number">0.2</span>)</span><br><span class="line">    axes = axes.flatten()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> image, title, axis <span class="keyword">in</span> zip(images, titles, axes):</span><br><span class="line">        fig = sns.heatmap(np.flipud(image), cmap=<span class="string">"YlGnBu"</span>, ax=axis, xticklabels=range(<span class="number">1</span>, <span class="number">11</span>),</span><br><span class="line">                          yticklabels=list(reversed(range(<span class="number">12</span>, <span class="number">22</span>))))</span><br><span class="line">        fig.set_ylabel(<span class="string">'player sum'</span>, fontsize=<span class="number">30</span>)</span><br><span class="line">        fig.set_xlabel(<span class="string">'dealer showing'</span>, fontsize=<span class="number">30</span>)</span><br><span class="line">        fig.set_title(title, fontsize=<span class="number">30</span>)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_5_2.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_5_2()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 500000/500000 [00:31&lt;00:00, 15708.47it/s]
+</code></pre><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnuq78zztj312h0u00uj.jpg" alt="png"> </p>
+<h2 id="使用off-policy策略训练-预测"><a href="#使用off-policy策略训练-预测" class="headerlink" title="使用off-policy策略训练(预测)"></a>使用off-policy策略训练(预测)</h2><p>通过计算Ordinary Importance Sampling 和 Weighted Importance Sampling并和target_policy训练的结果比对，分别计算均方误差来测试算法的性能。</p>
+<p>重点是两个重要取样的意义和计算：</p>
+<p>重要取样(Importance Sampling)的推导是通过MDP得到的，它是一种off-policy方法中通过behavior policy来训练target policy的重要途径，其中一个重要的概念就是重要取样比率(importance-sampling ratio)，它的定义式是target policy下的状态轨迹的π(a|s)和behavior policy下的状态轨迹的b(a|s)的比值。具体推导如下：</p>
+<p>首先定义通过behavior policy取样得到的states-chain的联合概率，这里的进一步计算使用了马尔科夫独立性假设：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnjxhkwkfj30hi0440sr.jpg" alt="png"> </p>
+<p>然后给出重要取样比率的定义：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxnk0cdkxhj30f602mjrd.jpg" alt="png"> </p>
+<p>其中的状态转移概率p被消去了，可以证明这个结论虽然是通过马尔科夫独立性推出的，却具有一般性。</p>
+<p>好了，现在我们基本理解了重要采样比率的概念，那么它到底有什么用那？下面的公式解释了这个问题（具体推导不清楚QAQ）：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnuz6y9ouj307o01jjr7.jpg" alt="png"> </p>
+<p>这个值是联系episode的return和target policy π下的v_π(s)的关键！</p>
+<p>所以很直观的从这个期望公式引出ordinary importance sampling：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxnv1wa5y2j30870273yd.jpg" alt="png"></p>
+<p>但是有一个问题，就是如果重要采样因子有可能是方差无限的，这时我们近似得到的state-value就会发散而无法收敛，这个问题很严重，随后也会通过<a href="https://xinge650.github.io/2018/11/28/infinite-variance/" target="_blank" rel="noopener">代码</a>来解释。</p>
+<p>所以通过对采样因子做归一化，引出了Weighted importance sampling的概念：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnv75ocuij308c02gglh.jpg" alt="png"></p>
+<p>和前者相比，虽然weighted importance sampling是有偏的(bias)，因为它不是直接从上面的期望公式来的，但是经过多次迭代bias会趋于0。但是如果采样因子的方差不是有限的，<br>ordinary importance sampling就很有可能无法收敛，也就是说它的方差(variance)是高于weighted importance sampling的，所以总的来说后者更常用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Monte Carlo Sample with Off-Policy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">monte_carlo_off_policy</span><span class="params">(episodes)</span>:</span></span><br><span class="line">    <span class="comment"># 不用exploring start了，所以可以直接指定起始状态</span></span><br><span class="line">    initial_state = [<span class="keyword">True</span>, <span class="number">13</span>, <span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">    rhos = []</span><br><span class="line">    returns = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, episodes):</span><br><span class="line">        _, reward, player_trajectory = play(behavior_policy_player, initial_state=initial_state)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># get the importance ratio</span></span><br><span class="line">        numerator = <span class="number">1.0</span></span><br><span class="line">        denominator = <span class="number">1.0</span></span><br><span class="line">        <span class="keyword">for</span> (usable_ace, player_sum, dealer_card), action <span class="keyword">in</span> player_trajectory:</span><br><span class="line">            <span class="keyword">if</span> action == target_policy_player(usable_ace, player_sum, dealer_card):</span><br><span class="line">                denominator *= <span class="number">0.5</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                numerator = <span class="number">0.0</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        rho = numerator / denominator</span><br><span class="line">        rhos.append(rho)</span><br><span class="line">        returns.append(reward)</span><br><span class="line"></span><br><span class="line">    rhos = np.asarray(rhos)</span><br><span class="line">    returns = np.asarray(returns)</span><br><span class="line">    weighted_returns = rhos * returns</span><br><span class="line"></span><br><span class="line">    weighted_returns = np.add.accumulate(weighted_returns)</span><br><span class="line">    rhos = np.add.accumulate(rhos)</span><br><span class="line"></span><br><span class="line">    ordinary_sampling = weighted_returns / np.arange(<span class="number">1</span>, episodes + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> np.errstate(divide=<span class="string">'ignore'</span>,invalid=<span class="string">'ignore'</span>):</span><br><span class="line">        weighted_sampling = np.where(rhos != <span class="number">0</span>, weighted_returns / rhos, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ordinary_sampling, weighted_sampling</span><br></pre></td></tr></table></figure>
+<h2 id="绘制图表-2"><a href="#绘制图表-2" class="headerlink" title="绘制图表"></a>绘制图表</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_5_3</span><span class="params">()</span>:</span></span><br><span class="line">    true_value = <span class="number">-0.27726</span></span><br><span class="line">    episodes = <span class="number">10000</span></span><br><span class="line">    runs = <span class="number">100</span></span><br><span class="line">    error_ordinary = np.zeros(episodes)</span><br><span class="line">    error_weighted = np.zeros(episodes)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(<span class="number">0</span>, runs)):</span><br><span class="line">        ordinary_sampling_, weighted_sampling_ = monte_carlo_off_policy(episodes)</span><br><span class="line">        <span class="comment"># get the squared error</span></span><br><span class="line">        error_ordinary += np.power(ordinary_sampling_ - true_value, <span class="number">2</span>)</span><br><span class="line">        error_weighted += np.power(weighted_sampling_ - true_value, <span class="number">2</span>)</span><br><span class="line">    error_ordinary /= runs</span><br><span class="line">    error_weighted /= runs</span><br><span class="line"></span><br><span class="line">    plt.plot(error_ordinary, label=<span class="string">'Ordinary Importance Sampling'</span>)</span><br><span class="line">    plt.plot(error_weighted, label=<span class="string">'Weighted Importance Sampling'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'Episodes (log scale)'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Mean square error'</span>)</span><br><span class="line">    plt.xscale(<span class="string">'log'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_5_3.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_5_3()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 100/100 [00:20&lt;00:00,  4.87it/s]
+</code></pre><p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxnuqtk9dzj30ak07i3ym.jpg" alt="png"> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/28/Chapter05-Monte-Carlo-Methods/" rel="next" title="Chapter05 Monte Carlo Methods">
+                <i class="fa fa-chevron-left"></i> Chapter05 Monte Carlo Methods
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/28/Chapter05-infinite-variance/" rel="prev" title="Chapter05 infinite_variance">
+                Chapter05 infinite_variance <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实现了基于Monte-Carlo方法的三种算法："><span class="nav-number">1.</span> <span class="nav-text">实现了基于Monte Carlo方法的三种算法：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块，并定义action常量，hit-继续抽，stand-停止"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块，并定义action常量，hit=继续抽，stand=停止</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为player定义policy，属于游戏技巧，也是本例的一个参考，通过最终学到的policy和这里的POLICY-PLAYER对比来比较算法的优劣"><span class="nav-number">1.3.</span> <span class="nav-text">为player定义policy，属于游戏技巧，也是本例的一个参考，通过最终学到的policy和这里的POLICY_PLAYER对比来比较算法的优劣</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两个待定函数，这里的target-policy-player和behavior-policy-player的工作方式是理解off-policy-Monte-Carlo算法的关键"><span class="nav-number">1.4.</span> <span class="nav-text">两个待定函数，这里的target_policy_player和behavior_policy_player的工作方式是理解off-policy Monte Carlo算法的关键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为庄家定义policy，属于游戏技巧"><span class="nav-number">1.5.</span> <span class="nav-text">为庄家定义policy，属于游戏技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monte-Carlo方法的关键一步，通过模拟游戏来获得sample"><span class="nav-number">1.6.</span> <span class="nav-text">Monte Carlo方法的关键一步，通过模拟游戏来获得sample</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用on-policy策略训-yu-练-ce"><span class="nav-number">1.7.</span> <span class="nav-text">使用on-policy策略训(yu)练(ce)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图表"><span class="nav-number">1.8.</span> <span class="nav-text">绘制图表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用exploring-start训练"><span class="nav-number">1.9.</span> <span class="nav-text">使用exploring-start训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图表-1"><span class="nav-number">1.10.</span> <span class="nav-text">绘制图表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用off-policy策略训练-预测"><span class="nav-number">1.11.</span> <span class="nav-text">使用off-policy策略训练(预测)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图表-2"><span class="nav-number">1.12.</span> <span class="nav-text">绘制图表</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+</body>
+</html>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Reinforcement Learning Note,">
 
 
 
@@ -79,14 +79,26 @@
 
 
 
-<meta name="keywords" content="Programming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:url" content="http://yoursite.com/tags/hexo/index.html">
+<meta name="description" content="This post is my understanding about P29 deeper insight part:《The Bandit Gradient Algorithm as Stochastic Gradient Ascent》 1. Understand Why it comes from Stochastic Gradient Ascent在我们讨论这个问题之前先看看wiki上关">
+<meta name="keywords" content="Reinforcement Learning Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter02 softmax-theory">
+<meta property="og:url" content="http://yoursite.com/2018/11/15/Chapter02-softmax-theory/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="This post is my understanding about P29 deeper insight part:《The Bandit Gradient Algorithm as Stochastic Gradient Ascent》 1. Understand Why it comes from Stochastic Gradient Ascent在我们讨论这个问题之前先看看wiki上关">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?H_{t+1}(a)\doteq&space;H_{t}(a)+\alpha&space;\frac{\partial&space;E[R_{t}]}{\partial&space;H_{t}(a)}">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?E[R_{t}]=\sum_{x}^{all\&space;action}\pi&space;_{t}(x)q_{*}(x)">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fx93klhwptj309s05oq33.jpg">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?\sum&space;_{x}\frac{\partial&space;\pi&space;_{t}(x)}{\partial&space;H_{t}(a)}=0">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fx93rux5vmj30o5084wfc.jpg">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?\frac{\partial&space;\pi&space;_{t}(x)}{\partial&space;H_{t}(a)}=\pi&space;_{t}(x)(1_{a=x}-\pi&space;_{t}(a))">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fx945uh6t5j30cb028748.jpg">
+<meta property="og:updated_time" content="2018-12-02T09:23:12.635Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta name="twitter:title" content="Chapter02 softmax-theory">
+<meta name="twitter:description" content="This post is my understanding about P29 deeper insight part:《The Bandit Gradient Algorithm as Stochastic Gradient Ascent》 1. Understand Why it comes from Stochastic Gradient Ascent在我们讨论这个问题之前先看看wiki上关">
+<meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?H_{t+1}(a)\doteq&space;H_{t}(a)+\alpha&space;\frac{\partial&space;E[R_{t}]}{\partial&space;H_{t}(a)}">
 
 
 
@@ -116,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/hexo/">
+  <link rel="canonical" href="http://yoursite.com/2018/11/15/Chapter02-softmax-theory/">
 
 
 
 
 
-  <title>Tag: hexo | Oppai>///<</title>
+  <title>Chapter02 softmax-theory | Oppai>///<</title>
   
 
 
@@ -141,7 +153,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -263,104 +275,171 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>hexo<small>Tag</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/15/Chapter02-softmax-theory/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/11/10/some-config-on-next-theme/" itemprop="url">
-              
-                <span itemprop="name">some config on next theme</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Chapter02 softmax-theory</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-10T17:22:55+08:00" content="2018-11-10">
-          11-10
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-15T17:28:19+08:00">
+                2018-11-15
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/09/how-to-config-the-hexo/" itemprop="url">
-              
-                <span itemprop="name">my first try of hexo+github</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-09T15:48:47+08:00" content="2018-11-09">
-          11-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/08/hello-world/" itemprop="url">
-              
-                <span itemprop="name">Hello World</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-08T16:22:33+08:00" content="2018-11-08">
-          11-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <p>This post is my understanding about P29 deeper insight part:《The Bandit Gradient Algorithm as Stochastic Gradient Ascent》</p>
+<h2 id="1-Understand-Why-it-comes-from-Stochastic-Gradient-Ascent"><a href="#1-Understand-Why-it-comes-from-Stochastic-Gradient-Ascent" class="headerlink" title="1. Understand Why it comes from Stochastic Gradient Ascent"></a>1. Understand Why it comes from Stochastic Gradient Ascent</h2><p>在我们讨论这个问题之前先看看wiki上关于softmax在reinforcementLearning上的<a href="https://en.wikipedia.org/wiki/Softmax_function#Reinforcement_learning" target="_blank" rel="noopener">应用</a>吧。<br><a id="more"></a></p>
+<p>相信你和我一样惊奇，这里本来的H_t(a)变成了q_t(a)/τ。其中τ为温度系数(temperature parameter)，τ-&gt;无穷，所以action具有相同的选择概率，或者说是explore的；如果τ-&gt;0,则具有最大q_t(a)的行为会被选择，且τ越小，选择q_t(a)最大的概率越大并趋于1。</p>
+<p>这太有意思了，wiki上直接解释了softmax function选择action的合理性，但是这就是这篇post想要讨论的问题啊@_@。</p>
+<p>好了回到标题，书上这里这样写的：</p>
+<p><strong>In exact gradient ascent, each preference H_t(a) would be incremented proportional to the increment’s effect on performance:</strong></p>
+<p>并给出了公式：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?H_{t&plus;1}(a)\doteq&space;H_{t}(a)&plus;\alpha&space;\frac{\partial&space;E[R_{t}]}{\partial&space;H_{t}(a)}" title="H_{t+1}(a)\doteq H_{t}(a)+\alpha \frac{\partial E[R_{t}]}{\partial H_{t}(a)}"></p>
+<p>E[R_t]的定义为：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?E[R_{t}]=\sum_{x}^{all\&space;action}\pi&space;_{t}(x)q_{*}(x)" title="E[R_{t}]=\sum_{x}^{all\ action}\pi _{t}(x)q_{*}(x)"></p>
+<p>从梯度上升的角度来解释：如果平均的value:E[R_t]对H_t(a)导数为正，则提高H_t(a)可以提高E[R_t]；如果相反，则减小H_t(a)可以提高E[R_t]。总结起来就是H_t(a)的增量和E[R_t]对H_t(a)的偏导成正比。</p>
+<h2 id="计算偏导"><a href="#计算偏导" class="headerlink" title="计算偏导"></a>计算偏导</h2><p>计算公式如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fx93klhwptj309s05oq33.jpg" alt="png"> </p>
+<p>公式的难点主要在第三步B_t的引入。B_t is called the baseline, can be any scalar that does not depend on x. We can include a baseline here without changing the equality because the gradient sums to zero over all the actions:</p>
+<p><img src="https://latex.codecogs.com/gif.latex?\sum&space;_{x}\frac{\partial&space;\pi&space;_{t}(x)}{\partial&space;H_{t}(a)}=0" title="\sum _{x}\frac{\partial \pi _{t}(x)}{\partial H_{t}(a)}=0"></p>
+<h2 id="change-the-equation-to-the-form-of-expectation"><a href="#change-the-equation-to-the-form-of-expectation" class="headerlink" title="change the equation to the form of expectation"></a>change the equation to the form of expectation</h2><p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fx93rux5vmj30o5084wfc.jpg" alt="png"></p>
+<p>这里的难点是使用R_t替换q_<em>(A_t)，因为E[R_t|A_t] = q_</em>(A_t)，所以可以替换。接着我们处理一下后半部分：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?\frac{\partial&space;\pi&space;_{t}(x)}{\partial&space;H_{t}(a)}=\pi&space;_{t}(x)(1_{a=x}-\pi&space;_{t}(a))" title="\frac{\partial \pi _{t}(x)}{\partial H_{t}(a)}=\pi _{t}(x)(1_{a=x}-\pi _{t}(a))"></p>
+<p>其中1_(a=x) means that if a=x, output 1; else output 0</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fx945uh6t5j30cb028748.jpg" alt="png"></p>
+<p>因为我们通过无数次训练来更新H_t(a)，所以可以去掉期望符号，并在前面加上step-size α进行近似。如果α=1/n，那么就符合大数定律近似了，如果采用常数可能对解决非平稳问题更好一些。</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/14/Chapter02-Multi-armed-Bandits/" rel="next" title="Chapter02 Multi-armed Bandits">
+                <i class="fa fa-chevron-left"></i> Chapter02 Multi-armed Bandits
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/16/Chapter02-ten-armed-Testbed/" rel="prev" title="Chapter02 ten-armed-Testbed">
+                Chapter02 ten-armed-Testbed <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -368,6 +447,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -388,8 +471,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -442,6 +534,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Understand-Why-it-comes-from-Stochastic-Gradient-Ascent"><span class="nav-number">1.</span> <span class="nav-text">1. Understand Why it comes from Stochastic Gradient Ascent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算偏导"><span class="nav-number">2.</span> <span class="nav-text">计算偏导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#change-the-equation-to-the-form-of-expectation"><span class="nav-number">3.</span> <span class="nav-text">change the equation to the form of expectation</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -582,6 +690,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

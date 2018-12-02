@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
 
 
 
@@ -79,14 +79,21 @@
 
 
 
-<meta name="keywords" content="Programming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:url" content="http://yoursite.com/tags/hexo/index.html">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter05/infinite_variance.py 通过一个例子论证了ordinary importance sampling的不稳定性">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter05 infinite_variance">
+<meta property="og:url" content="http://yoursite.com/2018/11/28/Chapter05-infinite-variance/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter05/infinite_variance.py 通过一个例子论证了ordinary importance sampling的不稳定性">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxnszvgf4ij30b003qq2y.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxnut5mqu9j30b007i0tu.jpg">
+<meta property="og:updated_time" content="2018-12-02T09:25:38.241Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta name="twitter:title" content="Chapter05 infinite_variance">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter05/infinite_variance.py 通过一个例子论证了ordinary importance sampling的不稳定性">
+<meta name="twitter:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxnszvgf4ij30b003qq2y.jpg">
 
 
 
@@ -116,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/hexo/">
+  <link rel="canonical" href="http://yoursite.com/2018/11/28/Chapter05-infinite-variance/">
 
 
 
 
 
-  <title>Tag: hexo | Oppai>///<</title>
+  <title>Chapter05 infinite_variance | Oppai>///<</title>
   
 
 
@@ -141,7 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -263,104 +270,162 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>hexo<small>Tag</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/Chapter05-infinite-variance/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/11/10/some-config-on-next-theme/" itemprop="url">
-              
-                <span itemprop="name">some config on next theme</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Chapter05 infinite_variance</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-10T17:22:55+08:00" content="2018-11-10">
-          11-10
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-28T16:10:13+08:00">
+                2018-11-28
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/09/how-to-config-the-hexo/" itemprop="url">
-              
-                <span itemprop="name">my first try of hexo+github</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-09T15:48:47+08:00" content="2018-11-09">
-          11-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/08/hello-world/" itemprop="url">
-              
-                <span itemprop="name">Hello World</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-08T16:22:33+08:00" content="2018-11-08">
-          11-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter05/infinite_variance.py" target="_blank" rel="noopener">chapter05/infinite_variance.py</a></p>
+<h1 id="通过一个例子论证了ordinary-importance-sampling的不稳定性"><a href="#通过一个例子论证了ordinary-importance-sampling的不稳定性" class="headerlink" title="通过一个例子论证了ordinary importance sampling的不稳定性"></a>通过一个例子论证了ordinary importance sampling的不稳定性</h1><a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个程序通过一个简单的例子证明了ordinary importance sampling 的方差经常会发生不收敛的问题。</p>
+<p>本例使用了一个只有一个状态s和两个状态left和right，以及一个terminate state的MDP问题，详细的Reward和转移概率如下所示：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnszvgf4ij30b003qq2y.jpg" alt="png"> </p>
+<p>选择的target_policy是：π(left|s)=1,π(right|s)=0；</p>
+<p>选择生成episode的behavior policy是:b(left|s)=b(right|s)=0.5</p>
+<p>满足π cover b的要求，并根据target_policy可以估计出v_π(s)=1，接下来看看代码运行结果，看看通过behavior policy预测出来的可以收敛到什么情况。</p>
+<h2 id="引入模块并定义常量，其中action-back-left，action-end-right"><a href="#引入模块并定义常量，其中action-back-left，action-end-right" class="headerlink" title="引入模块并定义常量，其中action_back=left，action_end=right"></a>引入模块并定义常量，其中action_back=left，action_end=right</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm </span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line">ACTION_BACK = <span class="number">0</span></span><br><span class="line">ACTION_END = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义behavior-policy和target-policy并开始训练"><a href="#定义behavior-policy和target-policy并开始训练" class="headerlink" title="定义behavior-policy和target-policy并开始训练"></a>定义behavior-policy和target-policy并开始训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># behavior policy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">behavior_policy</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> np.random.binomial(<span class="number">1</span>, <span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># target policy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">target_policy</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> ACTION_BACK</span><br><span class="line"></span><br><span class="line"><span class="comment"># one turn</span></span><br><span class="line"><span class="comment"># 返回reward和action trajectory，因为state已知，所以不用指定</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">play</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># track the action for importance ratio</span></span><br><span class="line">    trajectory = []</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        action = behavior_policy()</span><br><span class="line">        trajectory.append(action)</span><br><span class="line">        <span class="keyword">if</span> action == ACTION_END:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>, trajectory</span><br><span class="line">        <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, <span class="number">0.9</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>, trajectory</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_5_4</span><span class="params">()</span>:</span></span><br><span class="line">    runs = <span class="number">10</span></span><br><span class="line">    episodes = <span class="number">100000</span></span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> tqdm(range(runs)):</span><br><span class="line">        <span class="comment"># 每轮run之间都是独立的</span></span><br><span class="line">        rewards = []</span><br><span class="line">        <span class="keyword">for</span> episode <span class="keyword">in</span> range(<span class="number">0</span>, episodes):</span><br><span class="line">            reward, trajectory = play()</span><br><span class="line">            <span class="keyword">if</span> trajectory[<span class="number">-1</span>] == ACTION_END:</span><br><span class="line">                rho = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                rho = <span class="number">1.0</span> / pow(<span class="number">0.5</span>, len(trajectory))</span><br><span class="line">            rewards.append(rho * reward)</span><br><span class="line">        rewards = np.add.accumulate(rewards)</span><br><span class="line">        estimations = np.asarray(rewards) / np.arange(<span class="number">1</span>, episodes + <span class="number">1</span>)</span><br><span class="line">        plt.plot(estimations)</span><br><span class="line">        </span><br><span class="line">    plt.plot(np.ones(episodes+<span class="number">1</span>))</span><br><span class="line">    plt.xlabel(<span class="string">'Episodes (log scale)'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Ordinary Importance Sampling'</span>)</span><br><span class="line">    plt.xscale(<span class="string">'log'</span>)</span><br><span class="line">    plt.ylim(<span class="number">0</span>,<span class="number">2</span>)</span><br><span class="line">    plt.savefig(<span class="string">'./figure_5_4.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_5_4()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 10/10 [00:06&lt;00:00,  1.59it/s]
+</code></pre><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnut5mqu9j30b007i0tu.jpg" alt="png"> </p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/28/Chapter05-blackjack/" rel="next" title="Chapter05 blackjack">
+                <i class="fa fa-chevron-left"></i> Chapter05 blackjack
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/01/Chapter06-Temporal-Difference-Learning/" rel="prev" title="Chapter06 Temporal-Difference Learning">
+                Chapter06 Temporal-Difference Learning <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -368,6 +433,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -388,8 +457,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -442,6 +520,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过一个例子论证了ordinary-importance-sampling的不稳定性"><span class="nav-number">1.</span> <span class="nav-text">通过一个例子论证了ordinary importance sampling的不稳定性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量，其中action-back-left，action-end-right"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块并定义常量，其中action_back=left，action_end=right</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义behavior-policy和target-policy并开始训练"><span class="nav-number">1.3.</span> <span class="nav-text">定义behavior-policy和target-policy并开始训练</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -582,6 +676,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

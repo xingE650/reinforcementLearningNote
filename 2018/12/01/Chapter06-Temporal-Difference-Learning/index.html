@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Note,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="TD methodTemporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
+<meta name="keywords" content="Reinforcement Learning Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter06 Temporal-Difference Learning">
+<meta property="og:url" content="http://yoursite.com/2018/12/01/Chapter06-Temporal-Difference-Learning/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="TD methodTemporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})+\alpha&space;(G_{t}-V(S_{t}))">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})+\alpha&space;\left&space;[&space;R_{t+1}+\gamma&space;V(S_{t+1})-V(S_{t})&space;\right&space;]">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxr9680skej30hm08s0tl.jpg">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?NewEstimate\leftarrow&space;OldEstimate+StepSize[Target-OldEstimate]">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxr9n01aloj30p4032jrh.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxrauu3xgpj30jh06umxi.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsfj33dj3j30pp08xdgz.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxsfx84k9ij30pl087ab1.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsfzjd3bbj30jj02vaa3.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsh2o5fhtj30lj01y3yf.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsi31tna0j30bs06mq2u.jpg">
+<meta property="og:updated_time" content="2018-12-02T09:30:02.990Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter06 Temporal-Difference Learning">
+<meta name="twitter:description" content="TD methodTemporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
+<meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})+\alpha&space;(G_{t}-V(S_{t}))">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/01/Chapter06-Temporal-Difference-Learning/">
+
+
+
+
+
+  <title>Chapter06 Temporal-Difference Learning | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Chapter06-Temporal-Difference-Learning/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter06 Temporal-Difference Learning</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T11:14:15+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="TD-method"><a href="#TD-method" class="headerlink" title="TD method"></a>TD method</h1><p>Temporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：<br>TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；<br>同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。</p>
+<a id="more"></a>
+<h1 id="TD-Prediction"><a href="#TD-Prediction" class="headerlink" title="TD Prediction"></a>TD Prediction</h1><p>TD方法和MC方法都是根据生成的经验来学习的，但是MC方法需要在episode结束后才能更新，比如对一个非平稳问题有如下更新规则的every-visit MC方法：</p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=V(S_{t})\leftarrow&space;V(S_{t})&plus;\alpha&space;(G_{t}-V(S_{t}))" target="_blank"><img src="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})&plus;\alpha&space;(G_{t}-V(S_{t}))" title="V(S_{t})\leftarrow V(S_{t})+\alpha (G_{t}-V(S_{t}))"></a></p>
+<p>TD methods need to wait only until the next time step. At time t+1 they immediately form a target and make a useful update using the observed reward<br>R_{t+1} and the estimate V(S_{t+1}). The simplest TD method makes the update, which we call it as TD(0):</p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=V(S_{t})\leftarrow&space;V(S_{t})&plus;\alpha&space;\left&space;[&space;R_{t&plus;1}&plus;\gamma&space;V(S_{t&plus;1})-V(S_{t})&space;\right&space;]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})&plus;\alpha&space;\left&space;[&space;R_{t&plus;1}&plus;\gamma&space;V(S_{t&plus;1})-V(S_{t})&space;\right&space;]" title="V(S_{t})\leftarrow V(S_{t})+\alpha \left [ R_{t+1}+\gamma V(S_{t+1})-V(S_{t}) \right ]"></a></p>
+<p>接着给出TD(0)方法预测(prediction)的伪代码：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxr9680skej30hm08s0tl.jpg" alt="png"></p>
+<p>关于TD方法的理论基础，我们需要分析一下target的由来。target的概念在第二章Bandit的增量实现那一部分提到过，在强化学习中使用的更新通式：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?NewEstimate\leftarrow&space;OldEstimate&plus;StepSize[Target-OldEstimate]" title="NewEstimate\leftarrow OldEstimate+StepSize[Target-OldEstimate]"></p>
+<p>从第三章我们推导出这样的公式：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxr9n01aloj30p4032jrh.jpg" alt="png"> </p>
+<p>可以看到Monte Carlo方法是使用(6.3)的近似来作为target，使用样本返回的reward来近似；DP方法使用(6.4)的近似作为target。TD方法将两者结合起来，首先它并没有使用R_{t+1}的期望，而是使用了一次抽样的reward来近似，其次没有使用基于policy π的expect value，而是使用了它当前的近似V来更新。所以可以认为TD方法结合了Monte Carlo的抽样原理，使它不必基于model，同时基于DP的原理使得TD可以快速迭代更新。</p>
+<p>这一部分关于TD方法的预测基本完成了，但是书中还提到了一个量δ_t，这个值是update rule右边括号里的值，是V(s)更新到更好的值所使用的偏差。因为需要采样来进行更新，所以δ_t只有到t+1时刻才可以知道。</p>
+<p>如果假设V array的值不变，或者因为step size的值α很小，认为V array的更新比较缓慢，则有下述等式近似成立：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxrauu3xgpj30jh06umxi.jpg" alt="png"></p>
+<p>Generalizations of this identity play an important role in the theory and algorithms of temporal-difference learning.</p>
+<h1 id="Advantages-of-TD-Prediction-Methods"><a href="#Advantages-of-TD-Prediction-Methods" class="headerlink" title="Advantages of TD Prediction Methods"></a>Advantages of TD Prediction Methods</h1><p>这部分回答了几个问题：</p>
+<p>1、TD方法比DP好吗？比MC好吗？</p>
+<p>TD vs DP:</p>
+<p>Obviously, TD methods have an advantage over DP methods in that they do not require a model of<br>the environment, of its reward and next-state probability distributions.</p>
+<p>TD vs MC:</p>
+<p>(1)One of most obvious advantage of TD methods over Monte Carlo methods is that they are naturally<br>implemented in an on-line, fully incremental fashion.</p>
+<p>(2)With Monte Carlo methods one must wait until<br>the end of an episode, because only then is the return known, whereas with TD methods one need wait<br>only one time step. Surprisingly often this turns out to be a critical consideration. Some applications<br>have very long episodes, so that delaying all learning until the end of the episode is too slow. Other<br>applications are continuing tasks and have no episodes at all. </p>
+<p>(3)Finally, as we noted in the previous<br>chapter, some Monte Carlo methods must ignore or discount episodes on which experimental actions<br>are taken, which can greatly slow learning. TD methods are much less susceptible to these problems<br>because they learn from each transition regardless of what subsequent actions are taken.</p>
+<p>2、TD方法收敛吗？</p>
+<p>答案是肯定的。对于任意给定的policy π，TD(0)方法的结果被证明会收敛到v_π，如果使用一个小的固定step size那么收敛情况是平均的(我觉得应该是在附近很小的振荡吧)或者变化的，如果使用满足如下条件的递减step size则一定会收敛v_π。</p>
+<p>3、TD方法和MC方法那个训练起来更快？</p>
+<p>这个目前还没有人能通过数学推导出两者的速度孰快孰慢，但是一般来说TD方法总是比constant-α MC方法快一些。</p>
+<p>这部分的实验Example6.2 Random Walk的代码可以看<a href="https://xinge650.github.io/2018/12/01/TD-0-vs-constant-alpha-MC" target="_blank" rel="noopener">这个</a>。</p>
+<h1 id="Optimality-of-TD-0"><a href="#Optimality-of-TD-0" class="headerlink" title="Optimality of TD(0)"></a>Optimality of TD(0)</h1><p>这一部分主要讲了batch updating的优化方法，这个方法不同于之前的方法,V(S_t)不是在得到V(S_{t+1})后就直接更新了,而是先模拟了n个完整的episode,然后再用每个episode计算相应的target值,相当于原来增量以episode为单位的总和，再用这个总和进行更新，如果value收敛了，这个episode就算用完了，再换下一个episode继续操作。这种方法适用于训练样本比较少的情况，在相同样本数量下这种方法训练速度较慢，而且训练结果从和理论值计算得到的rms error来看并没有很大的优化。</p>
+<h2 id="使用batch-updating方法更新的python代码"><a href="#使用batch-updating方法更新的python代码" class="headerlink" title="使用batch updating方法更新的python代码"></a>使用batch updating方法更新的python代码</h2><p>其中的temporal_difference(value,batch)函数是使用TD方法更新的函数，如果batch=True则不执行数据更新，只返回trajectory和reward的两个array；</p>
+<p>monte_carlo(value,batch)函数是使用MC方法更新的函数，如果batch=True，只返回trajectory和return的两个array。</p>
+<p>同时因为这里使用的是MRP(example6.3)，所以可以直接计算state-value(model-based)。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> tqdm(range(<span class="number">0</span>, runs)):</span><br><span class="line">    <span class="comment"># current_value是当前对v_π的近似(estimate)</span></span><br><span class="line">    current_values = np.copy(VALUES)</span><br><span class="line">    trajectories = []</span><br><span class="line">    rewards = []</span><br><span class="line">    <span class="keyword">for</span> ep <span class="keyword">in</span> range(episodes):</span><br><span class="line">        <span class="keyword">if</span> method == <span class="string">'TD'</span>:</span><br><span class="line">            <span class="comment"># trajectory_ 是单次episode的轨迹，包括了(1)中提到的S0,S1,S2,...,S_n</span></span><br><span class="line">            <span class="comment"># rewards在TD方法里指的是每一步action引入的reward。</span></span><br><span class="line">            trajectory_, rewards_ = temporal_difference(current_values, batch=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># trajectory_ 是单次episode的轨迹，包括了(1)中提到的S0,S1,S2,...,S_n</span></span><br><span class="line">            <span class="comment"># rewards在MC方法里指的是每个state的return</span></span><br><span class="line">            trajectory_, rewards_ = monte_carlo(current_values, batch=<span class="keyword">True</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 将每一个episode产生的trajectory还有rewards都推进宏观的trajectories和rewards</span></span><br><span class="line">        <span class="comment"># 这两个list随着实验进行长度迅速增长</span></span><br><span class="line">        trajectories.append(trajectory_)</span><br><span class="line">        rewards.append(rewards_)</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line"></span><br><span class="line">            <span class="comment"># update相当于累加版的target</span></span><br><span class="line">            update = np.zeros(<span class="number">7</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> trajectory_, rewards_ <span class="keyword">in</span> zip(trajectories, rewards):</span><br><span class="line">                <span class="comment"># len(trajectory)-1表明不考虑终止状态</span></span><br><span class="line">                <span class="comment"># 使用所有的trajectory和reward计算所以trajectory上的state的update</span></span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(trajectory_) - <span class="number">1</span>):</span><br><span class="line">                    <span class="keyword">if</span> method == <span class="string">'TD'</span>:</span><br><span class="line">                        updates[trajectory_[i]] += rewards_[i] + current_values[trajectory_[i + <span class="number">1</span>]] - current_values[trajectory_[i]]</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        updates[trajectory_[i]] += rewards_[i] - current_values[trajectory_[i]]</span><br><span class="line">            updates *= alpha</span><br><span class="line">            <span class="keyword">if</span> np.sum(np.abs(updates)) &lt; <span class="number">1e-3</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># 使用update进行一次batch update</span></span><br><span class="line">            current_values += updates</span><br></pre></td></tr></table></figure>
+<h2 id="现在来讨论一下Example6-4并对TD和MC性能差异给出解释"><a href="#现在来讨论一下Example6-4并对TD和MC性能差异给出解释" class="headerlink" title="现在来讨论一下Example6.4并对TD和MC性能差异给出解释"></a>现在来讨论一下Example6.4并对TD和MC性能差异给出解释</h2><p>首先给出8个episode：</p>
+<p>A, 0, B, 0              B, 1</p>
+<p>B, 1                    B, 1</p>
+<p>B, 1                    B, 1</p>
+<p>B, 1                    B, 0</p>
+<p>这是一条参数未知的MRP，如何根据给出的episode来估计其中的参数？</p>
+<p>首先来讨论一下value(B)，因为TD(0)method 和MC method更新最后一个state的方法一致，所有最终会收敛到最大似然估计值：0.75。</p>
+<p>最大似然估计值在《统计学习方法》里经常可以看到，抛开详细的证明，根据频率来逼近概率的思路就是最大似然估计，所以这里对v(B)的最大似然估计就是出现1的概率：0.75。</p>
+<p>但是在v(A)的计算中，TD和MC方法出现了分歧：</p>
+<p>MC方法直接从train data中来，所有只有一次A出现，而且G=0，所以很自然v(A)=0;</p>
+<p>但是如果用TD方法来估计，因为reward(action:A-&gt;B)=0，所以最终v(A)会和v(B)一起收敛到0.75。</p>
+<p>比较这两个方法可以看到，MC方法在train data上计算出来的rms error无疑更小，但是我们仍然认为TD方法更好，因为TD方法在未来或者说未知数据上可能会有更好的近似性。PS:这个问题比较像欠拟合和过拟合的辨析。</p>
+<h2 id="从Example6-4总结得到结论"><a href="#从Example6-4总结得到结论" class="headerlink" title="从Example6.4总结得到结论"></a>从Example6.4总结得到结论</h2><p>batch MC方法总是找到使训练集上的均方误差(rms error)最小的estimate，而batch-TD(0)总是找到对马尔可夫过程的<em>最大似然模型</em>精确的估计。</p>
+<p>通常，参数的最大似然估计是其生成数据的概率最大的参数值。在这种情况下，最大似然估计得到的是马尔可夫过程的模型，该模型以明显的方式由观测事件形成：从i到j的转移概率的估计是从i到j的观测转移的频率，并且关联的期望报酬是在这些转变中观察到的回报。给定这个模型，我们可以计算值函数的估计，如果模型是正确的，则该估计将完全正确。这被称为确定性等价性估计(certainty-equivalence estimate)，因为它等价于假定基础过程的估计是确定的，而不是近似的。总体上，批处理TD(0)收敛于确定性等价估计。</p>
+<p>总体来说，TD方法得到的estimate是最大似然估计(maximum-likelihood)，得到的是确定性等价评估；而MC方法则太过于注重样本的结果，得到的是训练样本的无差估计。虽然这个结论是我们从batch updating得到的，但是nonbatch算法的收敛趋势和batch updating是<em>一致</em>的，即总的方向是粗略的朝着batch updating的方向的。从而我们证明了TD方法训练效果和收敛速度快于constant-α MC。</p>
+<h1 id="Sarsa-On-policy-TD-Control"><a href="#Sarsa-On-policy-TD-Control" class="headerlink" title="Sarsa: On-policy TD Control"></a>Sarsa: On-policy TD Control</h1><p>从预测算法得到控制算法或者提升算法(chapter04)，重要的是引入greedy-policy。在DP方法那一章引入的GPI方法几乎给出了控制算法的”通解”。所以可以仿照上一章给出的基于MC方法的on-policy控制算法，给出TD方法的on-policy控制算法——Sarsa:</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxsfj33dj3j30pp08xdgz.jpg" alt="png"> </p>
+<p>target-policy:ε-greedy or ε-soft policies.</p>
+<p>convergence properties of the Sarsa algorithm: </p>
+<p>depend on the nature of the policy’s dependence on Q, ε-greedy or ε-soft policies are OK. Sarsa converges with probability 1 to an optimal policy and action-value function as long as <em>all state–action pairs are visited an infinite number of times</em> and the policy converges in the limit to the greedy policy (which can be arranged, for example, with ε-greedy policies by setting ε = 1/t).</p>
+<h1 id="Q-learning-Off-policy-TD-Control"><a href="#Q-learning-Off-policy-TD-Control" class="headerlink" title="Q-learning: Off-policy TD Control"></a>Q-learning: Off-policy TD Control</h1><p>Q-learning 是off-policy的控制方法，因为在update Q的时候，使用的不是behavior policy(比如ε-greedy)，而是使用的next-state对应的maximization state-action-value。伪代码如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxsfx84k9ij30pl087ab1.jpg" alt="png"></p>
+<h1 id="Expected-Sarsa"><a href="#Expected-Sarsa" class="headerlink" title="Expected Sarsa"></a>Expected Sarsa</h1><p>如果把Sarsa的update规则更换为如下：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxsfzjd3bbj30jj02vaa3.jpg" alt="png"> </p>
+<p>就是Expected sarsa算法。</p>
+<p>Expected sarsa算法相比Sarsa方法表现更好，因为引入了期望来更新Q，一定程度上消除了因为随机选择Action带来的方差(variance)。从cliff-walk的例子中我们可以看到，state的转换都是确定的，随机性或者说不确定性都是policy引入的，因为Expected Sarsa引入了期望，所以可以设置α=1，并且不会降低渐近性能(asymptotic performance)，而Sarsa只能把α设置的低一些才能有效的运行，并且只有长期训练才有好的效果。关于渐近性能和临时性能的比较，可以参考<a href="https://xinge650.github.io/2018/12/01/Sarsa-vs-Q-Learning-vs-Expected-Sarsa" target="_blank" rel="noopener">post</a>。</p>
+<h1 id="Maximization-Bias-and-Double-Learning"><a href="#Maximization-Bias-and-Double-Learning" class="headerlink" title="Maximization Bias and Double Learning"></a>Maximization Bias and Double Learning</h1><p>所谓的最大正偏差，产生的原因就是在算法中使用的maximization操作。这种maximization操作无形中将估计Q值中的最大值用作了对最大q*的估计值：</p>
+<p>In these algorithms, <strong><em>a maximum over estimated</em></strong> values is used implicitly as <strong><em>an estimate of the maximum value</em></strong>, which can lead to <em>a significant positive bias</em>.</p>
+<p>比如，假设只有一个state，并且它有很多对q(s,a)=0。但是estimate of q(s,a)有大于0的也有小于0的。如果把估计值中的最大值用作了estimate of maximization q*(s,a)，那么就会产生一个正偏差。</p>
+<p>那么如何解决这个问题那？</p>
+<p>One way to view the problem is that it is due to using the same samples (plays) both to determine the maximizing action and to estimate its value.</p>
+<p>意思就是维护两个q(s,a)的估计Q1和Q2，当估计max q*的时候，可以先找到对应最大Q1的A*，然后使用Q2(A*)来估计max q*。原理就是E[Q2(A*)] = q(A*)这个期望公式是无偏的。<br>同理也可以反过来更新Q1，二者谁更新的问题就好比抛硬币正反面一样，可以使用二项分布来决定。这种算法和Q-learning结合起来就可以得到避免最大正向偏差的控制算法：Double Q-learning.</p>
+<p>更新规则下例，反过来同理:</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxsh2o5fhtj30lj01y3yf.jpg" alt="png"></p>
+<p>Example6.7代码可以参考这个<a href="https://xinge650.github.io/2018/12/01/maximization-bias-and-Double-Learning" target="_blank" rel="noopener">post</a></p>
+<h1 id="Games-Afterstates-and-Other-Special-Cases"><a href="#Games-Afterstates-and-Other-Special-Cases" class="headerlink" title="Games, Afterstates, and Other Special Cases"></a>Games, Afterstates, and Other Special Cases</h1><p>算法根据不同的情况也需要进行一些调整，给出的方法只是一种参考格式，并不一定适应所有问题。</p>
+<p>一个例子就是在导论中学习的<a href="https://xinge650.github.io/2018/11/14/Tic-Tac-Toe" target="_blank" rel="noopener">tic-tac-toe问题</a>，可以看到我们在这里学习的value function并不每一步的state-action-value，而是采取action后当前棋盘的所有棋子分布的value。因为只考虑action的话，就无法将对手的走子情况考虑进去，作为一个竞技游戏很明显是不合适的。比如下面的两种棋盘，虽然所处state和采取action都不同，但是结果是一样的，所以这种afterstate的更新方法更加有效可靠。</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxsi31tna0j30bs06mq2u.jpg" alt="png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/28/Chapter05-infinite-variance/" rel="next" title="Chapter05 infinite_variance">
+                <i class="fa fa-chevron-left"></i> Chapter05 infinite_variance
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/" rel="prev" title="Chapter06 TD(0) vs constant-alpha-MC">
+                Chapter06 TD(0) vs constant-alpha-MC <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TD-method"><span class="nav-number">1.</span> <span class="nav-text">TD method</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TD-Prediction"><span class="nav-number">2.</span> <span class="nav-text">TD Prediction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Advantages-of-TD-Prediction-Methods"><span class="nav-number">3.</span> <span class="nav-text">Advantages of TD Prediction Methods</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optimality-of-TD-0"><span class="nav-number">4.</span> <span class="nav-text">Optimality of TD(0)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用batch-updating方法更新的python代码"><span class="nav-number">4.1.</span> <span class="nav-text">使用batch updating方法更新的python代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#现在来讨论一下Example6-4并对TD和MC性能差异给出解释"><span class="nav-number">4.2.</span> <span class="nav-text">现在来讨论一下Example6.4并对TD和MC性能差异给出解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从Example6-4总结得到结论"><span class="nav-number">4.3.</span> <span class="nav-text">从Example6.4总结得到结论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sarsa-On-policy-TD-Control"><span class="nav-number">5.</span> <span class="nav-text">Sarsa: On-policy TD Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Q-learning-Off-policy-TD-Control"><span class="nav-number">6.</span> <span class="nav-text">Q-learning: Off-policy TD Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Expected-Sarsa"><span class="nav-number">7.</span> <span class="nav-text">Expected Sarsa</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Maximization-Bias-and-Double-Learning"><span class="nav-number">8.</span> <span class="nav-text">Maximization Bias and Double Learning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Games-Afterstates-and-Other-Special-Cases"><span class="nav-number">9.</span> <span class="nav-text">Games, Afterstates, and Other Special Cases</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+</body>
+</html>

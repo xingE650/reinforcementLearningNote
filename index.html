@@ -278,7 +278,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/infinite-variance/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Chapter06-maximization-bias-and-Double-Learning/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -297,7 +297,506 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/28/infinite-variance/" itemprop="url">infinite_variance</a></h1>
+                <a class="post-title-link" href="/2018/12/01/Chapter06-maximization-bias-and-Double-Learning/" itemprop="url">Chapter06 maximization-bias and Double-Learning</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T11:20:15+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter06/maximization_bias.py" target="_blank" rel="noopener">chapter06/maximization_bias.py</a></p>
+<h1 id="因为TD算法中的target-policy建立中经常会用到maximization操作，在这些算法中，a-maximum-over-estimated-values-is-used-implicitly-as-an-estimate-of-the-maximum-value-这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。"><a href="#因为TD算法中的target-policy建立中经常会用到maximization操作，在这些算法中，a-maximum-over-estimated-values-is-used-implicitly-as-an-estimate-of-the-maximum-value-这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。" class="headerlink" title="因为TD算法中的target policy建立中经常会用到maximization操作，在这些算法中，a maximum over estimated values is used implicitly as an estimate of the maximum value,这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。"></a>因为TD算法中的target policy建立中经常会用到maximization操作，在这些算法中，<strong><em>a maximum over estimated values is used implicitly as an estimate of the maximum value</em></strong>,这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。</h1>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/01/Chapter06-maximization-bias-and-Double-Learning/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Chapter06-Sarsa-vs-Q-Learning-vs-Expected-Sarsa/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/Chapter06-Sarsa-vs-Q-Learning-vs-Expected-Sarsa/" itemprop="url">Chapter06 Sarsa vs Q-Learning vs Expected Sarsa</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T11:19:07+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter06/windy_grid_world.py" target="_blank" rel="noopener">chapter06/windy_grid_world.py</a>、<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter06/cliff_walking.py" target="_blank" rel="noopener">chapter06/cliff_walking.py</a></p>
+<h1 id="本篇包含了两份代码，第一个主要测试了on-policy-Sarsa的性能，第二个对标题的三种算法性能进行了比较"><a href="#本篇包含了两份代码，第一个主要测试了on-policy-Sarsa的性能，第二个对标题的三种算法性能进行了比较" class="headerlink" title="本篇包含了两份代码，第一个主要测试了on-policy Sarsa的性能，第二个对标题的三种算法性能进行了比较"></a>本篇包含了两份代码，第一个主要测试了on-policy Sarsa的性能，第二个对标题的三种算法性能进行了比较</h1>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/01/Chapter06-Sarsa-vs-Q-Learning-vs-Expected-Sarsa/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/" itemprop="url">Chapter06 TD(0) vs constant-alpha-MC</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T11:18:41+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter06/random_walk.py" target="_blank" rel="noopener">chapter06/random_walk.py</a></p>
+<h1 id="通过一个例子比较了TD-0-和constant-α-MC方法的训练性能"><a href="#通过一个例子比较了TD-0-和constant-α-MC方法的训练性能" class="headerlink" title="通过一个例子比较了TD(0)和constant-α MC方法的训练性能"></a>通过一个例子比较了TD(0)和constant-α MC方法的训练性能</h1>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Chapter06-Temporal-Difference-Learning/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/Chapter06-Temporal-Difference-Learning/" itemprop="url">Chapter06 Temporal-Difference Learning</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T11:14:15+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="TD-method"><a href="#TD-method" class="headerlink" title="TD method"></a>TD method</h1><p>Temporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：<br>TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；<br>同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/01/Chapter06-Temporal-Difference-Learning/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/Chapter05-infinite-variance/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/28/Chapter05-infinite-variance/" itemprop="url">Chapter05 infinite_variance</a></h1>
         
 
         <div class="post-meta">
@@ -352,7 +851,7 @@
 <h1 id="通过一个例子论证了ordinary-importance-sampling的不稳定性"><a href="#通过一个例子论证了ordinary-importance-sampling的不稳定性" class="headerlink" title="通过一个例子论证了ordinary importance sampling的不稳定性"></a>通过一个例子论证了ordinary importance sampling的不稳定性</h1>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/28/infinite-variance/#more" rel="contents">
+            <a class="btn" href="/2018/11/28/Chapter05-infinite-variance/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -403,7 +902,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/blackjack/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/Chapter05-blackjack/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -422,7 +921,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/28/blackjack/" itemprop="url">blackjack</a></h1>
+                <a class="post-title-link" href="/2018/11/28/Chapter05-blackjack/" itemprop="url">Chapter05 blackjack</a></h1>
         
 
         <div class="post-meta">
@@ -477,10 +976,9 @@
 <h1 id="实现了基于Monte-Carlo方法的三种算法："><a href="#实现了基于Monte-Carlo方法的三种算法：" class="headerlink" title="实现了基于Monte Carlo方法的三种算法："></a>实现了基于Monte Carlo方法的三种算法：</h1><p>1、基于Monte Carlo方法的策略预测，根据给出的策略计算state-value</p>
 <p>2、使用exploring starts的训练方法，得出state-action-value，以及对应的优化policy π</p>
 <p>3、使用off-policy的重要取样方法预测state-value，并和期望值对比</p>
-<p>但是未实现without exploring starts的 on-policy算法，以及off-policy的Monte Carlo Control方法。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/28/blackjack/#more" rel="contents">
+            <a class="btn" href="/2018/11/28/Chapter05-blackjack/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -531,7 +1029,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/Monte-Carlo-method/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/Chapter05-Monte-Carlo-Methods/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -550,7 +1048,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/28/Monte-Carlo-method/" itemprop="url">Monte Carlo method</a></h1>
+                <a class="post-title-link" href="/2018/11/28/Chapter05-Monte-Carlo-Methods/" itemprop="url">Chapter05 Monte Carlo Methods</a></h1>
         
 
         <div class="post-meta">
@@ -604,7 +1102,7 @@
           <h1 id="Monte-Carlo-Method"><a href="#Monte-Carlo-Method" class="headerlink" title="Monte Carlo Method"></a>Monte Carlo Method</h1><p>Unlike the previous chapter, here we do not assume complete knowledge of the environment. Monte Carlo methods require only experience—sample sequences of states, actions, and rewards from actual or simulated interaction with an environment. Learning from actual experience is striking because it requires no prior knowledge of the environment’s dynamics, yet can still attain optimal behavior.</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/28/Monte-Carlo-method/#more" rel="contents">
+            <a class="btn" href="/2018/11/28/Chapter05-Monte-Carlo-Methods/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -655,7 +1153,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/use-DP-improve-MDP-3-exercises/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/Chapter04-gamblers-problem/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -674,7 +1172,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/23/use-DP-improve-MDP-3-exercises/" itemprop="url">use-DP-improve-MDP-3-exercises</a></h1>
+                <a class="post-title-link" href="/2018/11/23/Chapter04-gamblers-problem/" itemprop="url">Chapter04 gamblers_problem</a></h1>
         
 
         <div class="post-meta">
@@ -686,7 +1184,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T16:03:29+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T17:07:00+08:00">
                 2018-11-23
               </time>
             
@@ -725,13 +1223,12 @@
 
       
         
-          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/grid_world.py" target="_blank" rel="noopener">chapter04/gird_world.py</a>、<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/car_rental.py" target="_blank" rel="noopener">chapter04/car_rental.py</a>、<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/gamblers_problem.py" target="_blank" rel="noopener">chapter04/gamblers_problem.py</a></p>
-<h1 id="书中第四章3个例子，分别是："><a href="#书中第四章3个例子，分别是：" class="headerlink" title="书中第四章3个例子，分别是："></a>书中第四章3个例子，分别是：</h1><p>4.1 Policy Evaluation : Gird-world problem</p>
-<p>4.2 Policy Iteration : Car rental problem</p>
-<p>4.3 Value Iteration : Gambler problem</p>
+          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/gamblers_problem.py" target="_blank" rel="noopener">chapter04/gamblers_problem.py</a></p>
+<h1 id="赌徒问题"><a href="#赌徒问题" class="headerlink" title="赌徒问题"></a>赌徒问题</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>一个赌徒可以在每轮赌博中决定将自己手里的钱拿来赌硬币的正反，如果硬币向上，则可以获得押金一样的奖励，但是向下的话押金就没了。结束条件是赌徒手里的钱增长到100，或者把钱输光。</p>
+<p>这个问题可以定义为state为赌徒手里的钱，action为每次拿去赌的钱，discount=1的MDP问题。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/23/use-DP-improve-MDP-3-exercises/#more" rel="contents">
+            <a class="btn" href="/2018/11/23/Chapter04-gamblers-problem/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -782,7 +1279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/use-DP-improve-MDP/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/Chapter04-car-rental/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -801,7 +1298,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/23/use-DP-improve-MDP/" itemprop="url">use-DP-improve-MDP</a></h1>
+                <a class="post-title-link" href="/2018/11/23/Chapter04-car-rental/" itemprop="url">Chapter04 car_rental</a></h1>
         
 
         <div class="post-meta">
@@ -813,7 +1310,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T16:00:37+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T17:06:38+08:00">
                 2018-11-23
               </time>
             
@@ -852,10 +1349,12 @@
 
       
         
-          <p>上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。</p>
+          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/car_rental.py" target="_blank" rel="noopener">chapter04/car_rental.py</a></p>
+<h1 id="car-rental-问题"><a href="#car-rental-问题" class="headerlink" title="car rental 问题"></a>car rental 问题</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租借和归还的数量都遵循泊松分布：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxi9cogra8j306r02ijr9.jpg" alt="png"> </p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/23/use-DP-improve-MDP/#more" rel="contents">
+            <a class="btn" href="/2018/11/23/Chapter04-car-rental/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -906,7 +1405,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/22/mdp-example-grid-train/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/Chapter04-gird-world-using-DP/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -925,7 +1424,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/22/mdp-example-grid-train/" itemprop="url">mdp-example-grid-train</a></h1>
+                <a class="post-title-link" href="/2018/11/23/Chapter04-gird-world-using-DP/" itemprop="url">Chapter04 gird-world using DP</a></h1>
         
 
         <div class="post-meta">
@@ -937,8 +1436,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-22T11:44:38+08:00">
-                2018-11-22
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T17:06:24+08:00">
+                2018-11-23
               </time>
             
 
@@ -976,138 +1475,13 @@
 
       
         
-          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter03/grid_world.py" target="_blank" rel="noopener">chapter03/gird_world.py</a></p>
-<h1 id="使用MDP的强化学习算法解决Grid-world问题"><a href="#使用MDP的强化学习算法解决Grid-world问题" class="headerlink" title="使用MDP的强化学习算法解决Grid-world问题"></a>使用MDP的强化学习算法解决Grid-world问题</h1><h2 id="任务解释-example-3-5-in-chapter-03"><a href="#任务解释-example-3-5-in-chapter-03" class="headerlink" title="任务解释(example 3.5 in chapter 03)"></a>任务解释(example 3.5 in chapter 03)</h2><p>grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下：</p>
-<p>如果action导致agent跑到网格外面去，则reward=-1；</p>
-<p>如果agent从A出发，则reward=10，下个状态是固定的A_PRIME_POS；从B出发，reward=5，下个状态时固定的B_PRIME_POS；</p>
-<p>其他的state上的action均为0。<br>
+          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/grid_world.py" target="_blank" rel="noopener">chapter04/gird_world.py</a></p>
+<h1 id="grid-world-policy-evaluation"><a href="#grid-world-policy-evaluation" class="headerlink" title="grid_world(policy evaluation)"></a>grid_world(policy evaluation)</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>4X4 网格：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxi8g720auj30fj05v74a.jpg" alt="png"></p>
+<p>左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/22/mdp-example-grid-train/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/22/mdp-learning/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xingE650">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Oppai>///<">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/22/mdp-learning/" itemprop="url">mdp-learning</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-22T08:57:46+08:00">
-                2018-11-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>马尔可夫决策过程(Markov Decision Process, MDP)，是指具有<a href="https://en.wikipedia.org/wiki/Markov_property" target="_blank" rel="noopener">马尔可夫性</a>的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/22/mdp-learning/#more" rel="contents">
+            <a class="btn" href="/2018/11/23/Chapter04-gird-world-using-DP/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1115,380 +1489,6 @@
         
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/10-armed-Testbed/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xingE650">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Oppai>///<">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/16/10-armed-Testbed/" itemprop="url">10-armed-Testbed</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T11:57:23+08:00">
-                2018-11-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter02/ten_armed_testbed.py" target="_blank" rel="noopener">chapter02/ten_armed_testbed.py</a></p>
-<h1 id="通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法"><a href="#通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法" class="headerlink" title="通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法"></a>通过建立10-armed-Testbed来仿真第二章讲的几种Bandit算法</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/16/10-armed-Testbed/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/15/softmax-theory/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xingE650">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Oppai>///<">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/15/softmax-theory/" itemprop="url">softmax-theory</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-15T17:28:19+08:00">
-                2018-11-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>This post is my understanding about P29 deeper insight part:《The Bandit Gradient Algorithm as Stochastic Gradient Ascent》</p>
-<h2 id="1-Understand-Why-it-comes-from-Stochastic-Gradient-Ascent"><a href="#1-Understand-Why-it-comes-from-Stochastic-Gradient-Ascent" class="headerlink" title="1. Understand Why it comes from Stochastic Gradient Ascent"></a>1. Understand Why it comes from Stochastic Gradient Ascent</h2><p>在我们讨论这个问题之前先看看wiki上关于softmax在reinforcementLearning上的<a href="https://en.wikipedia.org/wiki/Softmax_function#Reinforcement_learning" target="_blank" rel="noopener">应用</a>吧。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/15/softmax-theory/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/14/k-armed-Bandits/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xingE650">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Oppai>///<">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/14/k-armed-Bandits/" itemprop="url">k-armed Bandits</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-14T19:42:41+08:00">
-                2018-11-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="2-1-1-什么是k-armed-Bandits问题"><a href="#2-1-1-什么是k-armed-Bandits问题" class="headerlink" title="2.1.1 什么是k-armed Bandits问题"></a>2.1.1 什么是k-armed Bandits问题</h2><p>You are faced repeatedly with a choice among k different options, or <strong><em>actions</em></strong>. After each choice you receive a <strong><em>numerical reward</em></strong> chosen from a stationary probability distribution that depends on the action you selected. Your objective is to <strong><em>maximize the expected total reward</em></strong> over some time period, for example, over 1000 action selections, or time steps.<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/14/k-armed-Bandits/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
     
     
     
@@ -1523,7 +1523,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1571,7 +1571,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1584,7 +1584,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

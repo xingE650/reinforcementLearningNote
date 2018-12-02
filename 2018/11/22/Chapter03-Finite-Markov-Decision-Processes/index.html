@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Reinforcement Learning Note,">
 
 
 
@@ -79,14 +79,32 @@
 
 
 
-<meta name="keywords" content="Programming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:url" content="http://yoursite.com/tags/hexo/index.html">
+<meta name="description" content="马尔可夫决策过程(Markov Decision Process, MDP)，是指具有马尔可夫性的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。">
+<meta name="keywords" content="Reinforcement Learning Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter03 Finite Markov Decision Processes">
+<meta property="og:url" content="http://yoursite.com/2018/11/22/Chapter03-Finite-Markov-Decision-Processes/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="马尔可夫决策过程(Markov Decision Process, MDP)，是指具有马尔可夫性的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?p(s^{'},r|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?p(s^{'}|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'}|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?r(s,a)\doteq&space;E[R_{t}|S_{t-1}=s,A_{t-1}=a]">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?r(s,a,s^{'})\doteq&space;E[R_{t}|S_{t-1}=s,A_{t-1}=a,S_{t}=s^{'}]">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?G_{t}\doteq&space;R_{t+1}+&space;R_{t+2}+&space;R_{t+2}&space;+...+R_{t+T}">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxgmhar8evj30cb02wq2v.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxgn1eab7uj30ga03g3yi.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxgmz1i07kj306t02zmwz.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxgn7rxr0tj30ia02haa0.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxgn8uvztgj30jj033q2v.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxgoaxpkxuj30gs05hdg3.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxgolqc69aj30d406bweu.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxgomhk1plj30g90333yj.jpg">
+<meta property="og:updated_time" content="2018-12-02T09:23:33.958Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta name="twitter:title" content="Chapter03 Finite Markov Decision Processes">
+<meta name="twitter:description" content="马尔可夫决策过程(Markov Decision Process, MDP)，是指具有马尔可夫性的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。">
+<meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?p(s^{'},r|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}">
 
 
 
@@ -116,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/hexo/">
+  <link rel="canonical" href="http://yoursite.com/2018/11/22/Chapter03-Finite-Markov-Decision-Processes/">
 
 
 
 
 
-  <title>Tag: hexo | Oppai>///<</title>
+  <title>Chapter03 Finite Markov Decision Processes | Oppai>///<</title>
   
 
 
@@ -141,7 +159,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -263,104 +281,187 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>hexo<small>Tag</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/22/Chapter03-Finite-Markov-Decision-Processes/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/11/10/some-config-on-next-theme/" itemprop="url">
-              
-                <span itemprop="name">some config on next theme</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Chapter03 Finite Markov Decision Processes</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-10T17:22:55+08:00" content="2018-11-10">
-          11-10
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-22T08:57:46+08:00">
+                2018-11-22
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/09/how-to-config-the-hexo/" itemprop="url">
-              
-                <span itemprop="name">my first try of hexo+github</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-09T15:48:47+08:00" content="2018-11-09">
-          11-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/08/hello-world/" itemprop="url">
-              
-                <span itemprop="name">Hello World</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-08T16:22:33+08:00" content="2018-11-08">
-          11-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <p>马尔可夫决策过程(Markov Decision Process, MDP)，是指具有<a href="https://en.wikipedia.org/wiki/Markov_property" target="_blank" rel="noopener">马尔可夫性</a>的一类强化学习问题，即系统下个状态和当前的状态有关，以及当前采取的动作有关。</p>
+<a id="more"></a>
+<h2 id="some-notation-in-MDP"><a href="#some-notation-in-MDP" class="headerlink" title="some notation in MDP"></a>some notation in MDP</h2><p>1.state : S_t</p>
+<p>2.action: A_t</p>
+<p>3.reward: R_t</p>
+<p>4.a probability of those values occurring at time t, given particular values of the preceding state and action:</p>
+<p><img src="https://latex.codecogs.com/gif.latex?p(s^{'},r|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}" title="p(s^{'},r|s,a)\doteq Pr\left \{ S_{t}=s^{'},R_{t}=r|S_{t-1}=s,A_{t-1}=a \right \}"></p>
+<p>上述概率对s’和r分别累加=1</p>
+<p>5.state-transition probability</p>
+<p><img src="https://latex.codecogs.com/gif.latex?p(s^{'}|s,a)\doteq&space;Pr\left&space;\{&space;S_{t}=s^{'}|S_{t-1}=s,A_{t-1}=a&space;\right&space;\}" title="p(s^{'}|s,a)\doteq Pr\left \{ S_{t}=s^{'}|S_{t-1}=s,A_{t-1}=a \right \}"></p>
+<p>6.expect reward</p>
+<p><img src="https://latex.codecogs.com/gif.latex?r(s,a)\doteq&space;E[R_{t}|S_{t-1}=s,A_{t-1}=a]" title="r(s,a)\doteq E[R_{t}|S_{t-1}=s,A_{t-1}=a]"></p>
+<p>7.expected reward for state-action-next-state</p>
+<p><img src="https://latex.codecogs.com/gif.latex?r(s,a,s^{'})\doteq&space;E[R_{t}|S_{t-1}=s,A_{t-1}=a,S_{t}=s^{'}]" title="r(s,a,s^{'})\doteq E[R_{t}|S_{t-1}=s,A_{t-1}=a,S_{t}=s^{'}]"></p>
+<h2 id="return-of-episode-tasks-and-continuing-tasks"><a href="#return-of-episode-tasks-and-continuing-tasks" class="headerlink" title="return of episode tasks and continuing tasks"></a>return of episode tasks and continuing tasks</h2><h3 id="what-is-return-of-task"><a href="#what-is-return-of-task" class="headerlink" title="what is return of task?"></a>what is return of task?</h3><p>if we define each step reward as R_i(i=0,1,2,3…), then expect return is defined as some specific function of the reward sequence.</p>
+<h3 id="what-is-episode-task"><a href="#what-is-episode-task" class="headerlink" title="what is episode task?"></a>what is episode task?</h3><p>Such as plays of a game, trips through a maze, or any sort of repeated interaction. Each episode <em>ends in a special state</em> called the terminal state, followed by a reset to a standard starting state or to a sample from a standard distribution of starting states.</p>
+<p>And the next episode begins independently of how the previous one ended.</p>
+<h3 id="what-is-continuing-taks"><a href="#what-is-continuing-taks" class="headerlink" title="what is continuing taks?"></a>what is continuing taks?</h3><p>agent–environment interaction does not break naturally into identifiable episodes, but <em>goes on continually without limit</em>. For example, this would be the natural way to formulate an on-going process-control task, or an application to a robot with a long life span. </p>
+<p>We call these continuing tasks.</p>
+<h3 id="the-return-of-above-two-task"><a href="#the-return-of-above-two-task" class="headerlink" title="the return of above two task"></a>the return of above two task</h3><h4 id="episode-task"><a href="#episode-task" class="headerlink" title="episode task"></a>episode task</h4><p><img src="https://latex.codecogs.com/gif.latex?G_{t}\doteq&space;R_{t&plus;1}&plus;&space;R_{t&plus;2}&plus;&space;R_{t&plus;2}&space;&plus;...&plus;R_{t&plus;T}" title="G_{t}\doteq R_{t+1}+ R_{t+2}+ R_{t+2} +...+R_{t+T}"></p>
+<h4 id="continuing-task"><a href="#continuing-task" class="headerlink" title="continuing task"></a>continuing task</h4><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxgmhar8evj30cb02wq2v.jpg" alt="png"></p>
+<h3 id="Unified-notation"><a href="#Unified-notation" class="headerlink" title="Unified notation"></a>Unified notation</h3><p>through add an absorbing state in episode task(solid square):</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxgn1eab7uj30ga03g3yi.jpg" alt="png"></p>
+<p>unified notation:</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxgmz1i07kj306t02zmwz.jpg" alt="png"></p>
+<h2 id="update-value-function-in-mdp-method"><a href="#update-value-function-in-mdp-method" class="headerlink" title="update value function in mdp method"></a>update value function in mdp method</h2><p>state-value function for policy π:</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxgn7rxr0tj30ia02haa0.jpg" alt="png"></p>
+<p>state-action-value function for policy π:</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxgn8uvztgj30jj033q2v.jpg" alt="png"></p>
+<h3 id="how-to-update-the-state-in-policy-π"><a href="#how-to-update-the-state-in-policy-π" class="headerlink" title="how to update the state in policy π?"></a>how to update the state in policy π?</h3><p>Bellman equation for v π:</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxgoaxpkxuj30gs05hdg3.jpg" alt="png"></p>
+<p>Instead of getting average return in some random samples(Monte Carlo method), use some parameters to describle.</p>
+<p>π(a|s) is the policy π: decide action due to state s</p>
+<p>p(s’,r|s,a) is the transition probability of previous state s and action a, which follows the Markov property</p>
+<h2 id="get-the-optimal-policy-π-and-optimal-policy-value-state"><a href="#get-the-optimal-policy-π-and-optimal-policy-value-state" class="headerlink" title="get the optimal policy π and optimal policy value-state"></a>get the optimal policy π and optimal policy value-state</h2><p>choose the max value in the actions of state s:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxgolqc69aj30d406bweu.jpg" alt="png"></p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxgomhk1plj30g90333yj.jpg" alt="png"></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/16/Chapter02-ten-armed-Testbed/" rel="next" title="Chapter02 ten-armed-Testbed">
+                <i class="fa fa-chevron-left"></i> Chapter02 ten-armed-Testbed
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/22/Chapter03-gird-world/" rel="prev" title="Chapter03 gird-world">
+                Chapter03 gird-world <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -368,6 +469,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -388,8 +493,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -442,6 +556,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#some-notation-in-MDP"><span class="nav-number">1.</span> <span class="nav-text">some notation in MDP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#return-of-episode-tasks-and-continuing-tasks"><span class="nav-number">2.</span> <span class="nav-text">return of episode tasks and continuing tasks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#what-is-return-of-task"><span class="nav-number">2.1.</span> <span class="nav-text">what is return of task?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#what-is-episode-task"><span class="nav-number">2.2.</span> <span class="nav-text">what is episode task?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#what-is-continuing-taks"><span class="nav-number">2.3.</span> <span class="nav-text">what is continuing taks?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#the-return-of-above-two-task"><span class="nav-number">2.4.</span> <span class="nav-text">the return of above two task</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#episode-task"><span class="nav-number">2.4.1.</span> <span class="nav-text">episode task</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#continuing-task"><span class="nav-number">2.4.2.</span> <span class="nav-text">continuing task</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Unified-notation"><span class="nav-number">2.5.</span> <span class="nav-text">Unified notation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#update-value-function-in-mdp-method"><span class="nav-number">3.</span> <span class="nav-text">update value function in mdp method</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-update-the-state-in-policy-π"><span class="nav-number">3.1.</span> <span class="nav-text">how to update the state in policy π?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#get-the-optimal-policy-π-and-optimal-policy-value-state"><span class="nav-number">4.</span> <span class="nav-text">get the optimal policy π and optimal policy value-state</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -582,6 +712,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
