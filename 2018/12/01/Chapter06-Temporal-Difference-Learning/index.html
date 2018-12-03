@@ -98,7 +98,7 @@
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsfzjd3bbj30jj02vaa3.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsh2o5fhtj30lj01y3yf.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsi31tna0j30bs06mq2u.jpg">
-<meta property="og:updated_time" content="2018-12-02T09:30:02.990Z">
+<meta property="og:updated_time" content="2018-12-03T07:25:32.984Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter06 Temporal-Difference Learning">
 <meta name="twitter:description" content="TD methodTemporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
@@ -389,7 +389,7 @@
 <p>答案是肯定的。对于任意给定的policy π，TD(0)方法的结果被证明会收敛到v_π，如果使用一个小的固定step size那么收敛情况是平均的(我觉得应该是在附近很小的振荡吧)或者变化的，如果使用满足如下条件的递减step size则一定会收敛v_π。</p>
 <p>3、TD方法和MC方法那个训练起来更快？</p>
 <p>这个目前还没有人能通过数学推导出两者的速度孰快孰慢，但是一般来说TD方法总是比constant-α MC方法快一些。</p>
-<p>这部分的实验Example6.2 Random Walk的代码可以看<a href="https://xinge650.github.io/2018/12/01/TD-0-vs-constant-alpha-MC" target="_blank" rel="noopener">这个</a>。</p>
+<p>这部分的实验Example6.2 Random Walk的代码可以看<a href="https://xinge650.github.io/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/" target="_blank" rel="noopener">这个</a>。</p>
 <h1 id="Optimality-of-TD-0"><a href="#Optimality-of-TD-0" class="headerlink" title="Optimality of TD(0)"></a>Optimality of TD(0)</h1><p>这一部分主要讲了batch updating的优化方法，这个方法不同于之前的方法,V(S_t)不是在得到V(S_{t+1})后就直接更新了,而是先模拟了n个完整的episode,然后再用每个episode计算相应的target值,相当于原来增量以episode为单位的总和，再用这个总和进行更新，如果value收敛了，这个episode就算用完了，再换下一个episode继续操作。这种方法适用于训练样本比较少的情况，在相同样本数量下这种方法训练速度较慢，而且训练结果从和理论值计算得到的rms error来看并没有很大的优化。</p>
 <h2 id="使用batch-updating方法更新的python代码"><a href="#使用batch-updating方法更新的python代码" class="headerlink" title="使用batch updating方法更新的python代码"></a>使用batch updating方法更新的python代码</h2><p>其中的temporal_difference(value,batch)函数是使用TD方法更新的函数，如果batch=True则不执行数据更新，只返回trajectory和reward的两个array；</p>
 <p>monte_carlo(value,batch)函数是使用MC方法更新的函数，如果batch=True，只返回trajectory和return的两个array。</p>
@@ -407,6 +407,7 @@
 <p>MC方法直接从train data中来，所有只有一次A出现，而且G=0，所以很自然v(A)=0;</p>
 <p>但是如果用TD方法来估计，因为reward(action:A-&gt;B)=0，所以最终v(A)会和v(B)一起收敛到0.75。</p>
 <p>比较这两个方法可以看到，MC方法在train data上计算出来的rms error无疑更小，但是我们仍然认为TD方法更好，因为TD方法在未来或者说未知数据上可能会有更好的近似性。PS:这个问题比较像欠拟合和过拟合的辨析。</p>
+<p>这里有一个问题，关于<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/issues/91" target="_blank" rel="noopener">last state value</a>，在github issue上问了一下代码作者，他给出的解释是最后一个state的value始终是0。的确是这样的，因为最后一个state都不更新action了，所以不会有value更新的。思考之后，我觉得问题出在Example6.4上，因为它这里让我预测的B的value，正是最后一个state的value!所以如果需要代码解决这个问题，需要在B之后再加上两个分别对应reward=0和reward=1的terminal state才行。</p>
 <h2 id="从Example6-4总结得到结论"><a href="#从Example6-4总结得到结论" class="headerlink" title="从Example6.4总结得到结论"></a>从Example6.4总结得到结论</h2><p>batch MC方法总是找到使训练集上的均方误差(rms error)最小的estimate，而batch-TD(0)总是找到对马尔可夫过程的<em>最大似然模型</em>精确的估计。</p>
 <p>通常，参数的最大似然估计是其生成数据的概率最大的参数值。在这种情况下，最大似然估计得到的是马尔可夫过程的模型，该模型以明显的方式由观测事件形成：从i到j的转移概率的估计是从i到j的观测转移的频率，并且关联的期望报酬是在这些转变中观察到的回报。给定这个模型，我们可以计算值函数的估计，如果模型是正确的，则该估计将完全正确。这被称为确定性等价性估计(certainty-equivalence estimate)，因为它等价于假定基础过程的估计是确定的，而不是近似的。总体上，批处理TD(0)收敛于确定性等价估计。</p>
 <p>总体来说，TD方法得到的estimate是最大似然估计(maximum-likelihood)，得到的是确定性等价评估；而MC方法则太过于注重样本的结果，得到的是训练样本的无差估计。虽然这个结论是我们从batch updating得到的，但是nonbatch算法的收敛趋势和batch updating是<em>一致</em>的，即总的方向是粗略的朝着batch updating的方向的。从而我们证明了TD方法训练效果和收敛速度快于constant-α MC。</p>
@@ -420,7 +421,7 @@
 <h1 id="Expected-Sarsa"><a href="#Expected-Sarsa" class="headerlink" title="Expected Sarsa"></a>Expected Sarsa</h1><p>如果把Sarsa的update规则更换为如下：</p>
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxsfzjd3bbj30jj02vaa3.jpg" alt="png"> </p>
 <p>就是Expected sarsa算法。</p>
-<p>Expected sarsa算法相比Sarsa方法表现更好，因为引入了期望来更新Q，一定程度上消除了因为随机选择Action带来的方差(variance)。从cliff-walk的例子中我们可以看到，state的转换都是确定的，随机性或者说不确定性都是policy引入的，因为Expected Sarsa引入了期望，所以可以设置α=1，并且不会降低渐近性能(asymptotic performance)，而Sarsa只能把α设置的低一些才能有效的运行，并且只有长期训练才有好的效果。关于渐近性能和临时性能的比较，可以参考<a href="https://xinge650.github.io/2018/12/01/Sarsa-vs-Q-Learning-vs-Expected-Sarsa" target="_blank" rel="noopener">post</a>。</p>
+<p>Expected sarsa算法相比Sarsa方法表现更好，因为引入了期望来更新Q，一定程度上消除了因为随机选择Action带来的方差(variance)。从cliff-walk的例子中我们可以看到，state的转换都是确定的，随机性或者说不确定性都是policy引入的，因为Expected Sarsa引入了期望，所以可以设置α=1，并且不会降低渐近性能(asymptotic performance)，而Sarsa只能把α设置的低一些才能有效的运行，并且只有长期训练才有好的效果。关于渐近性能和临时性能的比较，可以参考<a href="https://xinge650.github.io/2018/12/01/Chapter06-Sarsa-vs-Q-Learning-vs-Expected-Sarsa/" target="_blank" rel="noopener">post</a>。</p>
 <h1 id="Maximization-Bias-and-Double-Learning"><a href="#Maximization-Bias-and-Double-Learning" class="headerlink" title="Maximization Bias and Double Learning"></a>Maximization Bias and Double Learning</h1><p>所谓的最大正偏差，产生的原因就是在算法中使用的maximization操作。这种maximization操作无形中将估计Q值中的最大值用作了对最大q*的估计值：</p>
 <p>In these algorithms, <strong><em>a maximum over estimated</em></strong> values is used implicitly as <strong><em>an estimate of the maximum value</em></strong>, which can lead to <em>a significant positive bias</em>.</p>
 <p>比如，假设只有一个state，并且它有很多对q(s,a)=0。但是estimate of q(s,a)有大于0的也有小于0的。如果把估计值中的最大值用作了estimate of maximization q*(s,a)，那么就会产生一个正偏差。</p>
@@ -429,9 +430,9 @@
 <p>意思就是维护两个q(s,a)的估计Q1和Q2，当估计max q*的时候，可以先找到对应最大Q1的A*，然后使用Q2(A*)来估计max q*。原理就是E[Q2(A*)] = q(A*)这个期望公式是无偏的。<br>同理也可以反过来更新Q1，二者谁更新的问题就好比抛硬币正反面一样，可以使用二项分布来决定。这种算法和Q-learning结合起来就可以得到避免最大正向偏差的控制算法：Double Q-learning.</p>
 <p>更新规则下例，反过来同理:</p>
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxsh2o5fhtj30lj01y3yf.jpg" alt="png"></p>
-<p>Example6.7代码可以参考这个<a href="https://xinge650.github.io/2018/12/01/maximization-bias-and-Double-Learning" target="_blank" rel="noopener">post</a></p>
+<p>Example6.7代码可以参考这个<a href="https://xinge650.github.io/2018/12/01/Chapter06-maximization-bias-and-Double-Learning/" target="_blank" rel="noopener">post</a></p>
 <h1 id="Games-Afterstates-and-Other-Special-Cases"><a href="#Games-Afterstates-and-Other-Special-Cases" class="headerlink" title="Games, Afterstates, and Other Special Cases"></a>Games, Afterstates, and Other Special Cases</h1><p>算法根据不同的情况也需要进行一些调整，给出的方法只是一种参考格式，并不一定适应所有问题。</p>
-<p>一个例子就是在导论中学习的<a href="https://xinge650.github.io/2018/11/14/Tic-Tac-Toe" target="_blank" rel="noopener">tic-tac-toe问题</a>，可以看到我们在这里学习的value function并不每一步的state-action-value，而是采取action后当前棋盘的所有棋子分布的value。因为只考虑action的话，就无法将对手的走子情况考虑进去，作为一个竞技游戏很明显是不合适的。比如下面的两种棋盘，虽然所处state和采取action都不同，但是结果是一样的，所以这种afterstate的更新方法更加有效可靠。</p>
+<p>一个例子就是在导论中学习的<a href="https://xinge650.github.io/2018/11/14/Chapter01-Tic-Tac-Toe/" target="_blank" rel="noopener">tic-tac-toe问题</a>，可以看到我们在这里学习的value function并不每一步的state-action-value，而是采取action后当前棋盘的所有棋子分布的value。因为只考虑action的话，就无法将对手的走子情况考虑进去，作为一个竞技游戏很明显是不合适的。比如下面的两种棋盘，虽然所处state和采取action都不同，但是结果是一样的，所以这种afterstate的更新方法更加有效可靠。</p>
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxsi31tna0j30bs06mq2u.jpg" alt="png"></p>
 
       
@@ -554,7 +555,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
