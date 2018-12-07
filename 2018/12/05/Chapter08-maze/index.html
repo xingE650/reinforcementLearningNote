@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter08/maze.py 通过maze问题帮助对8.1-8.4的内容有一个更好的理解^_^Dyna-Q：8.2 Dyna-Q+：8.3 Prioritized Sweeping：8.4">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter08 maze">
+<meta property="og:url" content="http://yoursite.com/2018/12/05/Chapter08-maze/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter08/maze.py 通过maze问题帮助对8.1-8.4的内容有一个更好的理解^_^Dyna-Q：8.2 Dyna-Q+：8.3 Prioritized Sweeping：8.4">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxw5w0ysqpj30b207edg0.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxw5wz7dlwj30aw07ejrh.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxw5xh8j2ej30aw07emxa.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxw5y1h9lhj30aw07e74g.jpg">
+<meta property="og:updated_time" content="2018-12-06T02:18:46.801Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter08 maze">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter08/maze.py 通过maze问题帮助对8.1-8.4的内容有一个更好的理解^_^Dyna-Q：8.2 Dyna-Q+：8.3 Prioritized Sweeping：8.4">
+<meta name="twitter:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxw5w0ysqpj30b207edg0.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/05/Chapter08-maze/">
+
+
+
+
+
+  <title>Chapter08 maze | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/05/Chapter08-maze/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter08 maze</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-05T20:44:45+08:00">
+                2018-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter08/maze.py" target="_blank" rel="noopener">chapter08/maze.py</a></p>
+<h1 id="通过maze问题帮助对8-1-8-4的内容有一个更好的理解"><a href="#通过maze问题帮助对8-1-8-4的内容有一个更好的理解" class="headerlink" title="通过maze问题帮助对8.1-8.4的内容有一个更好的理解^_^"></a>通过maze问题帮助对8.1-8.4的内容有一个更好的理解^_^</h1><p>Dyna-Q：8.2</p>
+<p>Dyna-Q+：8.3</p>
+<p>Prioritized Sweeping：8.4</p>
+<a id="more"></a>
+<h2 id="引入模块"><a href="#引入模块" class="headerlink" title="引入模块"></a>引入模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"><span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy</span><br></pre></td></tr></table></figure>
+<h2 id="定义迷宫类maze，实现算法和环境的交互方法"><a href="#定义迷宫类maze，实现算法和环境的交互方法" class="headerlink" title="定义迷宫类maze，实现算法和环境的交互方法"></a>定义迷宫类maze，实现算法和环境的交互方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># A wrapper class for a maze, containing all the information about the maze.</span></span><br><span class="line"><span class="comment"># Basically it's initialized to DynaMaze by default, however it can be easily adapted</span></span><br><span class="line"><span class="comment"># to other maze</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Maze</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># maze width</span></span><br><span class="line">        self.WORLD_WIDTH = <span class="number">9</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># maze height</span></span><br><span class="line">        self.WORLD_HEIGHT = <span class="number">6</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># all possible actions</span></span><br><span class="line">        self.ACTION_UP = <span class="number">0</span></span><br><span class="line">        self.ACTION_DOWN = <span class="number">1</span></span><br><span class="line">        self.ACTION_LEFT = <span class="number">2</span></span><br><span class="line">        self.ACTION_RIGHT = <span class="number">3</span></span><br><span class="line">        self.actions = [self.ACTION_UP, self.ACTION_DOWN, self.ACTION_LEFT, self.ACTION_RIGHT]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># start state</span></span><br><span class="line">        self.START_STATE = [<span class="number">2</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># goal state</span></span><br><span class="line">        self.GOAL_STATES = [[<span class="number">0</span>, <span class="number">8</span>]]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># all obstacles</span></span><br><span class="line">        self.obstacles = [[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">2</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">2</span>], [<span class="number">0</span>, <span class="number">7</span>], [<span class="number">1</span>, <span class="number">7</span>], [<span class="number">2</span>, <span class="number">7</span>], [<span class="number">4</span>, <span class="number">5</span>]]</span><br><span class="line">        self.old_obstacles = <span class="keyword">None</span></span><br><span class="line">        self.new_obstacles = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># time to change obstacles</span></span><br><span class="line">        <span class="comment"># 改变障碍物的时刻</span></span><br><span class="line">        self.obstacle_switch_time = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># initial state action pair values</span></span><br><span class="line">        <span class="comment"># self.stateActionValues = np.zeros((self.WORLD_HEIGHT, self.WORLD_WIDTH, len(self.actions)))</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># the size of q value</span></span><br><span class="line">        <span class="comment"># q(s,a)的size=(height,width,actions)</span></span><br><span class="line">        self.q_size = (self.WORLD_HEIGHT, self.WORLD_WIDTH, len(self.actions))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># max steps</span></span><br><span class="line">        self.max_steps = float(<span class="string">'inf'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># track the resolution for this maze</span></span><br><span class="line">        self.resolution = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># extend a state to a higher resolution maze</span></span><br><span class="line">    <span class="comment"># @state: state in lower resoultion maze</span></span><br><span class="line">    <span class="comment"># @factor: extension factor, one state will become factor^2 states after extension</span></span><br><span class="line">    <span class="comment"># 把一个给定的state拓展到以(state[0],state[1])和(state[0]+factor,state[1]+factor)为对角线的正方形states区域</span></span><br><span class="line">    <span class="comment"># 提高了原来某个点的分辨率，该函数用在extend_maze函数里，用来提高迷宫的分辨率</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">extend_state</span><span class="params">(self, state, factor)</span>:</span></span><br><span class="line">        new_state = [state[<span class="number">0</span>] * factor, state[<span class="number">1</span>] * factor]</span><br><span class="line">        new_states = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, factor):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, factor):</span><br><span class="line">                new_states.append([new_state[<span class="number">0</span>] + i, new_state[<span class="number">1</span>] + j])</span><br><span class="line">        <span class="keyword">return</span> new_states</span><br><span class="line"></span><br><span class="line">    <span class="comment"># extend a state into higher resolution</span></span><br><span class="line">    <span class="comment"># one state in original maze will become @factor^2 states in @return new maze</span></span><br><span class="line">    <span class="comment"># 拓展了整个maze的分辨率</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">extend_maze</span><span class="params">(self, factor)</span>:</span></span><br><span class="line">        new_maze = Maze()</span><br><span class="line">        new_maze.WORLD_WIDTH = self.WORLD_WIDTH * factor</span><br><span class="line">        new_maze.WORLD_HEIGHT = self.WORLD_HEIGHT * factor</span><br><span class="line">        new_maze.START_STATE = [self.START_STATE[<span class="number">0</span>] * factor, self.START_STATE[<span class="number">1</span>] * factor]</span><br><span class="line">        <span class="comment"># 把goal_state拓展到一个以factor为缩放因子的正方形区域中</span></span><br><span class="line">        new_maze.GOAL_STATES = self.extend_state(self.GOAL_STATES[<span class="number">0</span>], factor)</span><br><span class="line">        new_maze.obstacles = []</span><br><span class="line">        <span class="keyword">for</span> state <span class="keyword">in</span> self.obstacles:</span><br><span class="line">            new_maze.obstacles.extend(self.extend_state(state, factor))</span><br><span class="line">        new_maze.q_size = (new_maze.WORLD_HEIGHT, new_maze.WORLD_WIDTH, len(new_maze.actions))</span><br><span class="line">        <span class="comment"># new_maze.stateActionValues = np.zeros((new_maze.WORLD_HEIGHT, new_maze.WORLD_WIDTH, len(new_maze.actions)))</span></span><br><span class="line">        new_maze.resolution = factor</span><br><span class="line">        <span class="keyword">return</span> new_maze</span><br><span class="line"></span><br><span class="line">    <span class="comment"># take @action in @state</span></span><br><span class="line">    <span class="comment"># @return: [new state, reward]</span></span><br><span class="line">    <span class="comment"># 根据给定的state-action对，返回next-state和对应的reward</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(self, state, action)</span>:</span></span><br><span class="line">        x, y = state</span><br><span class="line">        <span class="keyword">if</span> action == self.ACTION_UP:</span><br><span class="line">            x = max(x - <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">elif</span> action == self.ACTION_DOWN:</span><br><span class="line">            x = min(x + <span class="number">1</span>, self.WORLD_HEIGHT - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">elif</span> action == self.ACTION_LEFT:</span><br><span class="line">            y = max(y - <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">elif</span> action == self.ACTION_RIGHT:</span><br><span class="line">            y = min(y + <span class="number">1</span>, self.WORLD_WIDTH - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> [x, y] <span class="keyword">in</span> self.obstacles:</span><br><span class="line">            x, y = state</span><br><span class="line">        <span class="keyword">if</span> [x, y] <span class="keyword">in</span> self.GOAL_STATES:</span><br><span class="line">            reward = <span class="number">1.0</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            reward = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">return</span> [x, y], reward</span><br></pre></td></tr></table></figure>
+<h2 id="dyna算法的参数类"><a href="#dyna算法的参数类" class="headerlink" title="dyna算法的参数类"></a>dyna算法的参数类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a wrapper class for parameters of dyna algorithms</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DynaParams</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># discount</span></span><br><span class="line">        self.gamma = <span class="number">0.95</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># probability for exploration</span></span><br><span class="line">        self.epsilon = <span class="number">0.1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># step size</span></span><br><span class="line">        self.alpha = <span class="number">0.1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># weight for elapsed time</span></span><br><span class="line">        self.time_weight = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># n-step planning</span></span><br><span class="line">        self.planning_steps = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># average over several independent runs</span></span><br><span class="line">        self.runs = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># algorithm names</span></span><br><span class="line">        self.methods = [<span class="string">'Dyna-Q'</span>, <span class="string">'Dyna-Q+'</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># threshold for priority queue</span></span><br><span class="line">        self.theta = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="根据epsilon-greedy-policy选择action"><a href="#根据epsilon-greedy-policy选择action" class="headerlink" title="根据epsilon-greedy policy选择action"></a>根据epsilon-greedy policy选择action</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># choose an action based on epsilon-greedy algorithm</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">choose_action</span><span class="params">(state, q_value, maze, dyna_params)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, dyna_params.epsilon) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> np.random.choice(maze.actions)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        values = q_value[state[<span class="number">0</span>], state[<span class="number">1</span>], :]</span><br><span class="line">        <span class="keyword">return</span> np.random.choice([action <span class="keyword">for</span> action, value <span class="keyword">in</span> enumerate(values) <span class="keyword">if</span> value == np.max(values)])</span><br></pre></td></tr></table></figure>
+<h2 id="建立模型类，使用一般的模型建立方法，也是Dyna-Q算法的model建立方法"><a href="#建立模型类，使用一般的模型建立方法，也是Dyna-Q算法的model建立方法" class="headerlink" title="建立模型类，使用一般的模型建立方法，也是Dyna-Q算法的model建立方法"></a>建立模型类，使用一般的模型建立方法，也是Dyna-Q算法的model建立方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Trivial model for planning in Dyna-Q</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrivialModel</span>:</span></span><br><span class="line">    <span class="comment"># @rand: an instance of np.random.RandomState for sampling</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rand=np.random)</span>:</span></span><br><span class="line">        <span class="comment"># self.model的键值是state，对应的值是dict：action:[next_state,reward]，其中state是tuple格式，next_state是list格式</span></span><br><span class="line">        self.model = dict()</span><br><span class="line">        self.rand = rand</span><br><span class="line"></span><br><span class="line">    <span class="comment"># feed the model with previous experience</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">(self, state, action, next_state, reward)</span>:</span></span><br><span class="line">        state = deepcopy(state)</span><br><span class="line">        next_state = deepcopy(next_state)</span><br><span class="line">        <span class="comment"># 必须把state(type=list)转换为tuple，因为dictionary的键值只能是不变值:tuple、string、数值型，list不可以。</span></span><br><span class="line">        <span class="keyword">if</span> tuple(state) <span class="keyword">not</span> <span class="keyword">in</span> self.model.keys():</span><br><span class="line">            self.model[tuple(state)] = dict()</span><br><span class="line">        self.model[tuple(state)][action] = [list(next_state), reward]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># randomly sample from previous experience</span></span><br><span class="line">    <span class="comment"># 从建立起来的model中随机采样得到state-action-next_state-reward序列</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sample</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># choice函数有两种：python模块rand对应的random.choice和模块numpy对应的np.random.choice</span></span><br><span class="line">        <span class="comment"># 默认参数下两者效果一样的，都是从给定序列中随机取出一个元素，但是np.random.choice()不能从string取出元素</span></span><br><span class="line">        <span class="comment"># random.choice可以操作list，tuple，string</span></span><br><span class="line">        state_index = self.rand.choice(range(len(self.model.keys())))</span><br><span class="line">        <span class="comment"># state取出上一步随机选中的state index对应的state</span></span><br><span class="line">        state = list(self.model)[state_index]</span><br><span class="line">        action_index = self.rand.choice(range(len(self.model[state].keys())))</span><br><span class="line">        action = list(self.model[state])[action_index]</span><br><span class="line">        next_state, reward = self.model[state][action]</span><br><span class="line">        state = deepcopy(state)</span><br><span class="line">        next_state = deepcopy(next_state)</span><br><span class="line">        <span class="keyword">return</span> list(state), action, list(next_state), reward</span><br></pre></td></tr></table></figure>
+<h2 id="建立模型类，使用time-based模型建立方法"><a href="#建立模型类，使用time-based模型建立方法" class="headerlink" title="建立模型类，使用time-based模型建立方法"></a>建立模型类，使用time-based模型建立方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Time-based model for planning in Dyna-Q+</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimeModel</span>:</span></span><br><span class="line">    <span class="comment"># @maze: the maze instance. Indeed it's not very reasonable to give access to maze to the model.</span></span><br><span class="line">    <span class="comment"># @timeWeight: also called kappa, the weight for elapsed time in sampling reward, it need to be small</span></span><br><span class="line">    <span class="comment"># @rand: an instance of np.random.RandomState for sampling</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, maze, time_weight=<span class="number">1e-4</span>, rand=np.random)</span>:</span></span><br><span class="line">        self.rand = rand</span><br><span class="line">        self.model = dict()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># track the total time</span></span><br><span class="line">        self.time = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        self.time_weight = time_weight</span><br><span class="line">        self.maze = maze</span><br><span class="line"></span><br><span class="line">    <span class="comment"># feed the model with previous experience</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">(self, state, action, next_state, reward)</span>:</span></span><br><span class="line">        state = deepcopy(state)</span><br><span class="line">        next_state = deepcopy(next_state)</span><br><span class="line">        self.time += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> tuple(state) <span class="keyword">not</span> <span class="keyword">in</span> self.model.keys():</span><br><span class="line">            self.model[tuple(state)] = dict()</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 这里可以看到Dyna-Q+方法的model还考虑了未出现的action</span></span><br><span class="line">            <span class="comment"># Actions that had never been tried before from a state were allowed to be considered in the planning step</span></span><br><span class="line">            <span class="keyword">for</span> action_ <span class="keyword">in</span> self.maze.actions:</span><br><span class="line">                <span class="keyword">if</span> action_ != action:</span><br><span class="line">                    <span class="comment"># Such actions would lead back to the same state with a reward of zero</span></span><br><span class="line">                    <span class="comment"># Notice that the minimum time stamp is 1 instead of 0</span></span><br><span class="line">                    self.model[tuple(state)][action_] = [list(state), <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        self.model[tuple(state)][action] = [list(next_state), reward, self.time]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># randomly sample from previous experience</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sample</span><span class="params">(self)</span>:</span></span><br><span class="line">        state_index = self.rand.choice(range(len(self.model.keys())))</span><br><span class="line">        state = list(self.model)[state_index]</span><br><span class="line">        action_index = self.rand.choice(range(len(self.model[state].keys())))</span><br><span class="line">        action = list(self.model[state])[action_index]</span><br><span class="line">        next_state, reward, time = self.model[state][action]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># adjust reward with elapsed time since last vist</span></span><br><span class="line">        <span class="comment"># 这个补偿的解释在P136页，</span></span><br><span class="line">        <span class="comment"># 因为self.time-time越大，说明这个state-action对已经很久没被选择过了，这种方法给予model一种启发式的探索</span></span><br><span class="line">        <span class="comment"># 因为如果这对state-action已经很久没被选中了，那么它的动态性很有可能已经改变，那么我们当前的model保有的还是</span></span><br><span class="line">        <span class="comment"># 它的旧的动态性dynamic，说明模型也有可能已经不正确了，所以给予一个相应的补偿奖励帮助选中这对state-action</span></span><br><span class="line">        reward += self.time_weight * np.sqrt(self.time - time)</span><br><span class="line"></span><br><span class="line">        state = deepcopy(state)</span><br><span class="line">        next_state = deepcopy(next_state)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> list(state), action, list(next_state), reward</span><br></pre></td></tr></table></figure>
+<h2 id="建立优先队列类，用于prioritized-sweeping方法"><a href="#建立优先队列类，用于prioritized-sweeping方法" class="headerlink" title="建立优先队列类，用于prioritized sweeping方法"></a>建立优先队列类，用于prioritized sweeping方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在8.4 Prioritized Sweeping的优先更新算法中使用</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PriorityQueue</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.pq = []</span><br><span class="line">        <span class="comment"># entry_finder的values格式：</span></span><br><span class="line">        <span class="comment"># [priority,self.counter,item]</span></span><br><span class="line">        self.entry_finder = &#123;&#125;</span><br><span class="line">        self.REMOVED = <span class="string">'&lt;removed-task&gt;'</span></span><br><span class="line">        self.counter = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_item</span><span class="params">(self, item, priority=<span class="number">0</span>)</span>:</span></span><br><span class="line">        <span class="comment"># 这种方法判断的是item是否在self.entry_finder的keys里</span></span><br><span class="line">        <span class="keyword">if</span> item <span class="keyword">in</span> self.entry_finder:</span><br><span class="line">            self.remove_item(item)</span><br><span class="line">        entry = [priority, self.counter, item]</span><br><span class="line">        self.counter += <span class="number">1</span></span><br><span class="line">        <span class="comment"># 堆的索引存储在self.entry_finder</span></span><br><span class="line">        self.entry_finder[item] = entry</span><br><span class="line">        heapq.heappush(self.pq, entry)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove_item</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        <span class="comment"># entry存储self.entry_finder退出的key=item的value</span></span><br><span class="line">        entry = self.entry_finder.pop(item)</span><br><span class="line">        entry[<span class="number">-1</span>] = self.REMOVED</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 如果self.pq中的元素的item值不等于self.REMOVED，那么返回该元素的item和priority值</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pop_item</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> len(self.pq) &gt; <span class="number">0</span>:</span><br><span class="line">            priority, count, item = heapq.heappop(self.pq)</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">is</span> <span class="keyword">not</span> self.REMOVED:</span><br><span class="line">                <span class="keyword">del</span> self.entry_finder[item]</span><br><span class="line">                <span class="keyword">return</span> item, priority</span><br><span class="line">        <span class="keyword">raise</span> KeyError(<span class="string">'pop from an empty priority queue'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">empty</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">not</span> self.entry_finder</span><br></pre></td></tr></table></figure>
+<h2 id="建立模型类，使用基于prioritized-sweeping的模型建立方法"><a href="#建立模型类，使用基于prioritized-sweeping的模型建立方法" class="headerlink" title="建立模型类，使用基于prioritized sweeping的模型建立方法"></a>建立模型类，使用基于prioritized sweeping的模型建立方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Model containing a priority queue for Prioritized Sweeping</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PriorityModel</span><span class="params">(TrivialModel)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rand=np.random)</span>:</span></span><br><span class="line">        TrivialModel.__init__(self, rand)</span><br><span class="line">        <span class="comment"># maintain a priority queue</span></span><br><span class="line">        self.priority_queue = PriorityQueue()</span><br><span class="line">        <span class="comment"># track predecessors for every state</span></span><br><span class="line">        self.predecessors = dict()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># add a @state-@action pair into the priority queue with priority @priority</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(self, priority, state, action)</span>:</span></span><br><span class="line">        <span class="comment"># note the priority queue is a minimum heap, so we use -priority</span></span><br><span class="line">        self.priority_queue.add_item((tuple(state), action), -priority)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># @return: whether the priority queue is empty</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">empty</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.priority_queue.empty()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the first item in the priority queue</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sample</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 取出priority最大的那个元素</span></span><br><span class="line">        (state, action), priority = self.priority_queue.pop_item()</span><br><span class="line">        next_state, reward = self.model[state][action]</span><br><span class="line">        state = deepcopy(state)</span><br><span class="line">        next_state = deepcopy(next_state)</span><br><span class="line">        <span class="keyword">return</span> -priority, list(state), action, list(next_state), reward</span><br><span class="line"></span><br><span class="line">    <span class="comment"># feed the model with previous experience</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">(self, state, action, next_state, reward)</span>:</span></span><br><span class="line">        state = deepcopy(state)</span><br><span class="line">        next_state = deepcopy(next_state)</span><br><span class="line">        TrivialModel.feed(self, state, action, next_state, reward)</span><br><span class="line">        <span class="keyword">if</span> tuple(next_state) <span class="keyword">not</span> <span class="keyword">in</span> self.predecessors.keys():</span><br><span class="line">            self.predecessors[tuple(next_state)] = set()</span><br><span class="line">        self.predecessors[tuple(next_state)].add((tuple(state), action))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get all seen predecessors of a state @state</span></span><br><span class="line">    <span class="comment"># 返回一个state的所有前导state-action对</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predecessor</span><span class="params">(self, state)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> tuple(state) <span class="keyword">not</span> <span class="keyword">in</span> self.predecessors.keys():</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        predecessors = []</span><br><span class="line">        <span class="keyword">for</span> state_pre, action_pre <span class="keyword">in</span> list(self.predecessors[tuple(state)]):</span><br><span class="line">            predecessors.append([list(state_pre), action_pre, self.model[state_pre][action_pre][<span class="number">1</span>]])</span><br><span class="line">        <span class="keyword">return</span> predecessors</span><br></pre></td></tr></table></figure>
+<h2 id="使用Dyna-Q算法完成一次episode并更新value-function"><a href="#使用Dyna-Q算法完成一次episode并更新value-function" class="headerlink" title="使用Dyna-Q算法完成一次episode并更新value function"></a>使用Dyna-Q算法完成一次episode并更新value function</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># play for an episode for Dyna-Q algorithm</span></span><br><span class="line"><span class="comment"># @q_value: state action pair values, will be updated</span></span><br><span class="line"><span class="comment"># @model: model instance for planning</span></span><br><span class="line"><span class="comment"># @maze: a maze instance containing all information about the environment</span></span><br><span class="line"><span class="comment"># @dyna_params: several params for the algorithm</span></span><br><span class="line"><span class="comment"># @return: the number of all steps in an episode</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dyna_q</span><span class="params">(q_value, model, maze, dyna_params)</span>:</span></span><br><span class="line">    state = maze.START_STATE</span><br><span class="line">    steps = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> state <span class="keyword">not</span> <span class="keyword">in</span> maze.GOAL_STATES:</span><br><span class="line">        <span class="comment"># track the steps</span></span><br><span class="line">        steps += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># get action</span></span><br><span class="line">        action = choose_action(state, q_value, maze, dyna_params)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># take action</span></span><br><span class="line">        next_state, reward = maze.step(state, action)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Q-Learning update</span></span><br><span class="line">        q_value[state[<span class="number">0</span>], state[<span class="number">1</span>], action] += \</span><br><span class="line">            dyna_params.alpha * (reward + dyna_params.gamma * np.max(q_value[next_state[<span class="number">0</span>], next_state[<span class="number">1</span>], :]) -</span><br><span class="line">                                 q_value[state[<span class="number">0</span>], state[<span class="number">1</span>], action])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># feed the model with experience</span></span><br><span class="line">        model.feed(state, action, next_state, reward)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># sample experience from the model</span></span><br><span class="line">        <span class="comment"># 在建立起来的model中进行dyna_params.planning_steps次采样，并对每次采样的得到的state-action的Q使用</span></span><br><span class="line">        <span class="comment"># 其对应的next-state和reward更新</span></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">0</span>, dyna_params.planning_steps):</span><br><span class="line">            state_, action_, next_state_, reward_ = model.sample()</span><br><span class="line">            q_value[state_[<span class="number">0</span>], state_[<span class="number">1</span>], action_] += \</span><br><span class="line">                dyna_params.alpha * (reward_ + dyna_params.gamma * np.max(q_value[next_state_[<span class="number">0</span>], next_state_[<span class="number">1</span>], :]) -</span><br><span class="line">                                     q_value[state_[<span class="number">0</span>], state_[<span class="number">1</span>], action_])</span><br><span class="line"></span><br><span class="line">        state = next_state</span><br><span class="line"></span><br><span class="line">        <span class="comment"># check whether it has exceeded the step limit</span></span><br><span class="line">        <span class="keyword">if</span> steps &gt; maze.max_steps:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> steps</span><br></pre></td></tr></table></figure>
+<h2 id="使用prioritized-sweeping方法进行一次episode更新"><a href="#使用prioritized-sweeping方法进行一次episode更新" class="headerlink" title="使用prioritized sweeping方法进行一次episode更新"></a>使用prioritized sweeping方法进行一次episode更新</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># play for an episode for prioritized sweeping algorithm</span></span><br><span class="line"><span class="comment"># @q_value: state action pair values, will be updated</span></span><br><span class="line"><span class="comment"># @model: model instance for planning</span></span><br><span class="line"><span class="comment"># @maze: a maze instance containing all information about the environment</span></span><br><span class="line"><span class="comment"># @dyna_params: several params for the algorithm</span></span><br><span class="line"><span class="comment"># @return: # of backups during this episode</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prioritized_sweeping</span><span class="params">(q_value, model, maze, dyna_params)</span>:</span></span><br><span class="line">    state = maze.START_STATE</span><br><span class="line"></span><br><span class="line">    <span class="comment"># track the steps in this episode</span></span><br><span class="line">    steps = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># track the backups in planning phase</span></span><br><span class="line">    backups = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> state <span class="keyword">not</span> <span class="keyword">in</span> maze.GOAL_STATES:</span><br><span class="line">        steps += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># get action</span></span><br><span class="line">        action = choose_action(state, q_value, maze, dyna_params)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># take action</span></span><br><span class="line">        next_state, reward = maze.step(state, action)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># feed the model with experience</span></span><br><span class="line">        model.feed(state, action, next_state, reward)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># get the priority for current state action pair</span></span><br><span class="line">        <span class="comment"># priority是当前state-action对应的更新规则中的target的绝对值</span></span><br><span class="line">        priority = np.abs(reward + dyna_params.gamma * np.max(q_value[next_state[<span class="number">0</span>], next_state[<span class="number">1</span>], :]) -</span><br><span class="line">                          q_value[state[<span class="number">0</span>], state[<span class="number">1</span>], action])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> priority &gt; dyna_params.theta:</span><br><span class="line">            model.insert(priority, state, action)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 注意到这里并没有进行Q-Learning的Q更新</span></span><br><span class="line">        <span class="comment"># start planning</span></span><br><span class="line">        planning_step = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 这个算法很真实，前面的部分只是通过sample的方式存储下来每个随机state的前导pre-state，并判断更新值(target)是否大于阈值</span></span><br><span class="line">        <span class="comment"># 如果大于阈值，那么后半部分就要开始value的更新了</span></span><br><span class="line">        <span class="comment"># 如果看了P138页的伪代码的(g)部分就会发现，代码的后半部分会直接把priority queue消耗空的，但是这里加了一个限制应该是想限制计算资源的</span></span><br><span class="line">        <span class="comment"># 所以前半部分只是来找那些更新值高的state-action，后半部分则更新它的所有满足要求的前导state-action，也就是backward focusing的planning计算</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># planning for several steps,</span></span><br><span class="line">        <span class="comment"># although keep planning until the priority queue becomes empty will converge much faster</span></span><br><span class="line">        <span class="keyword">while</span> planning_step &lt; dyna_params.planning_steps <span class="keyword">and</span> <span class="keyword">not</span> model.empty():</span><br><span class="line">            <span class="comment"># get a sample with highest priority from the model</span></span><br><span class="line">            priority, state_, action_, next_state_, reward_ = model.sample()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># update the state action value for the sample</span></span><br><span class="line">            <span class="comment"># delta是sampling得到的target</span></span><br><span class="line">            delta = reward_ + dyna_params.gamma * np.max(q_value[next_state_[<span class="number">0</span>], next_state_[<span class="number">1</span>], :]) - \</span><br><span class="line">                    q_value[state_[<span class="number">0</span>], state_[<span class="number">1</span>], action_]</span><br><span class="line">            q_value[state_[<span class="number">0</span>], state_[<span class="number">1</span>], action_] += dyna_params.alpha * delta</span><br><span class="line"></span><br><span class="line">            <span class="comment"># deal with all the predecessors of the sample state</span></span><br><span class="line">            <span class="comment"># 使用sample得到的state-next_state进行planning，使用predecessor得到的state_pre-state更新priority-queue</span></span><br><span class="line">            <span class="comment"># 可以看到在算法实现中，更新了一次Q，带阈值的更新了两次priority-queue</span></span><br><span class="line">            <span class="keyword">for</span> state_pre, action_pre, reward_pre <span class="keyword">in</span> model.predecessor(state_):</span><br><span class="line">                priority = np.abs(reward_pre + dyna_params.gamma * np.max(q_value[state_[<span class="number">0</span>], state_[<span class="number">1</span>], :]) -</span><br><span class="line">                                  q_value[state_pre[<span class="number">0</span>], state_pre[<span class="number">1</span>], action_pre])</span><br><span class="line">                <span class="keyword">if</span> priority &gt; dyna_params.theta:</span><br><span class="line">                    model.insert(priority, state_pre, action_pre)</span><br><span class="line">            planning_step += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        state = next_state</span><br><span class="line"></span><br><span class="line">        <span class="comment"># update the # of backups</span></span><br><span class="line">        backups += planning_step + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> backups</span><br></pre></td></tr></table></figure>
+<h2 id="改变planning-step，比较不同的Dyna-Q算法的性能-找到终点的平均step"><a href="#改变planning-step，比较不同的Dyna-Q算法的性能-找到终点的平均step" class="headerlink" title="改变planning-step，比较不同的Dyna-Q算法的性能(找到终点的平均step)"></a>改变planning-step，比较不同的Dyna-Q算法的性能(找到终点的平均step)</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 8.2, DynaMaze, use 10 runs instead of 30 runs</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_8_2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># set up an instance for DynaMaze</span></span><br><span class="line">    dyna_maze = Maze()</span><br><span class="line">    dyna_params = DynaParams()</span><br><span class="line"></span><br><span class="line">    runs = <span class="number">10</span></span><br><span class="line">    episodes = <span class="number">50</span></span><br><span class="line">    planning_steps = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">50</span>]</span><br><span class="line">    steps = np.zeros((len(planning_steps), episodes))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> tqdm(range(runs)):</span><br><span class="line">        <span class="keyword">for</span> index, planning_step <span class="keyword">in</span> zip(range(len(planning_steps)), planning_steps):</span><br><span class="line">            dyna_params.planning_steps = planning_step</span><br><span class="line">            q_value = np.zeros(dyna_maze.q_size)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># generate an instance of Dyna-Q model</span></span><br><span class="line">            model = TrivialModel()</span><br><span class="line">            <span class="keyword">for</span> ep <span class="keyword">in</span> range(episodes):</span><br><span class="line">                <span class="comment"># print('run:', run, 'planning step:', planning_step, 'episode:', ep)</span></span><br><span class="line">                steps[index, ep] += dyna_q(q_value, model, dyna_maze, dyna_params)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># averaging over runs</span></span><br><span class="line">    steps /= runs</span><br><span class="line">    <span class="comment"># 输出最终收敛的平均step</span></span><br><span class="line">    print(steps[:,<span class="number">-10</span>:].mean(axis=<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(planning_steps)):</span><br><span class="line">        plt.plot(steps[i, :], label=<span class="string">'%d planning steps'</span> % (planning_steps[i]))</span><br><span class="line">    plt.xlabel(<span class="string">'episodes'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'steps per episode'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_8_2.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># test</span></span><br><span class="line">figure_8_2()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 10/10 [00:55&lt;00:00,  5.00s/it]
+
+[18.06 17.26 15.9 ]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxw5w0ysqpj30b207edg0.jpg" alt="png"> </p>
+<h2 id="改变maze障碍的位置，并计算相应的累计reward"><a href="#改变maze障碍的位置，并计算相应的累计reward" class="headerlink" title="改变maze障碍的位置，并计算相应的累计reward"></a>改变maze障碍的位置，并计算相应的累计reward</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrapper function for changing maze</span></span><br><span class="line"><span class="comment"># @maze: a maze instance</span></span><br><span class="line"><span class="comment"># @dynaParams: several parameters for dyna algorithms</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">changing_maze</span><span class="params">(maze, dyna_params)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># set up max steps</span></span><br><span class="line">    max_steps = maze.max_steps</span><br><span class="line"></span><br><span class="line">    <span class="comment"># track the cumulative rewards</span></span><br><span class="line">    rewards = np.zeros((dyna_params.runs, <span class="number">2</span>, max_steps))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> tqdm(range(dyna_params.runs)):</span><br><span class="line">        <span class="comment"># set up models</span></span><br><span class="line">        models = [TrivialModel(), TimeModel(maze, time_weight=dyna_params.time_weight)]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize state action values</span></span><br><span class="line">        q_values = [np.zeros(maze.q_size), np.zeros(maze.q_size)]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(dyna_params.methods)):</span><br><span class="line">            <span class="comment"># print('run:', run, dyna_params.methods[i])</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># set old obstacles for the maze</span></span><br><span class="line">            maze.obstacles = maze.old_obstacles</span><br><span class="line"></span><br><span class="line">            steps = <span class="number">0</span></span><br><span class="line">            last_steps = steps</span><br><span class="line">            <span class="keyword">while</span> steps &lt; max_steps:</span><br><span class="line">                <span class="comment"># play for an episode</span></span><br><span class="line">                steps += dyna_q(q_values[i], models[i], maze, dyna_params)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># update cumulative rewards</span></span><br><span class="line">                <span class="comment"># 使用last_steps的reward更新[last_steps,steps-1]的rewards</span></span><br><span class="line">                rewards[run, i, last_steps: steps] = rewards[run, i, last_steps]</span><br><span class="line">                <span class="comment"># steps表示最新的episode的terminal state所对应的在总的steps中的位置，因为terminal-state的reward=1，所以+1</span></span><br><span class="line">                rewards[run, i, min(steps, max_steps - <span class="number">1</span>)] = rewards[run, i, last_steps] + <span class="number">1</span></span><br><span class="line">                <span class="comment"># 上面两句程序第一次读起来觉得很晦涩，但是这种计算reward的方法之前使用过</span></span><br><span class="line">                <span class="comment"># 其实就是将这次的reward建立在上一次episode的reward的基础上，如果将x轴设置为step，则可以看到reward随step的变化趋势</span></span><br><span class="line">                last_steps = steps</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> steps &gt; maze.obstacle_switch_time:</span><br><span class="line">                    <span class="comment"># change the obstacles</span></span><br><span class="line">                    maze.obstacles = maze.new_obstacles</span><br><span class="line"></span><br><span class="line">    <span class="comment"># averaging over runs</span></span><br><span class="line">    rewards = rewards.mean(axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> rewards</span><br></pre></td></tr></table></figure>
+<h2 id="改变迷宫障碍的位置，比较Dyna-Q和Dyna-Q-方法的性能"><a href="#改变迷宫障碍的位置，比较Dyna-Q和Dyna-Q-方法的性能" class="headerlink" title="改变迷宫障碍的位置，比较Dyna-Q和Dyna-Q+方法的性能"></a>改变迷宫障碍的位置，比较Dyna-Q和Dyna-Q+方法的性能</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 8.5, BlockingMaze</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_8_5</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># set up a blocking maze instance</span></span><br><span class="line">    blocking_maze = Maze()</span><br><span class="line">    blocking_maze.START_STATE = [<span class="number">5</span>, <span class="number">3</span>]</span><br><span class="line">    blocking_maze.GOAL_STATES = [[<span class="number">0</span>, <span class="number">8</span>]]</span><br><span class="line">    blocking_maze.old_obstacles = [[<span class="number">3</span>, i] <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">8</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># new obstalces will block the optimal path</span></span><br><span class="line">    blocking_maze.new_obstacles = [[<span class="number">3</span>, i] <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">9</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># step limit</span></span><br><span class="line">    blocking_maze.max_steps = <span class="number">3000</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># obstacles will change after 1000 steps</span></span><br><span class="line">    <span class="comment"># the exact step for changing will be different</span></span><br><span class="line">    <span class="comment"># However given that 1000 steps is long enough for both algorithms to converge,</span></span><br><span class="line">    <span class="comment"># the difference is guaranteed to be very small</span></span><br><span class="line">    blocking_maze.obstacle_switch_time = <span class="number">1000</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># set up parameters</span></span><br><span class="line">    dyna_params = DynaParams()</span><br><span class="line">    dyna_params.alpha = <span class="number">1.0</span></span><br><span class="line">    dyna_params.planning_steps = <span class="number">10</span></span><br><span class="line">    dyna_params.runs = <span class="number">20</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># kappa must be small, as the reward for getting the goal is only 1</span></span><br><span class="line">    dyna_params.time_weight = <span class="number">1e-4</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># play</span></span><br><span class="line">    rewards = changing_maze(blocking_maze, dyna_params)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(dyna_params.methods)):</span><br><span class="line">        plt.plot(rewards[i, :], label=dyna_params.methods[i])</span><br><span class="line">    plt.xlabel(<span class="string">'time steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'cumulative reward'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_8_5.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_8_5()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 20/20 [01:16&lt;00:00,  3.79s/it]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxw5wz7dlwj30aw07ejrh.jpg" alt="png"> </p>
+<h2 id="给迷宫添加一条更近的可用路径，比较两个算法的更新情况"><a href="#给迷宫添加一条更近的可用路径，比较两个算法的更新情况" class="headerlink" title="给迷宫添加一条更近的可用路径，比较两个算法的更新情况"></a>给迷宫添加一条更近的可用路径，比较两个算法的更新情况</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 8.6, ShortcutMaze</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_8_6</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># set up a shortcut maze instance</span></span><br><span class="line">    shortcut_maze = Maze()</span><br><span class="line">    shortcut_maze.START_STATE = [<span class="number">5</span>, <span class="number">3</span>]</span><br><span class="line">    shortcut_maze.GOAL_STATES = [[<span class="number">0</span>, <span class="number">8</span>]]</span><br><span class="line">    shortcut_maze.old_obstacles = [[<span class="number">3</span>, i] <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">9</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># new obstacles will have a shorter path</span></span><br><span class="line">    shortcut_maze.new_obstacles = [[<span class="number">3</span>, i] <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">8</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># step limit</span></span><br><span class="line">    shortcut_maze.max_steps = <span class="number">6000</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># obstacles will change after 3000 steps</span></span><br><span class="line">    <span class="comment"># the exact step for changing will be different</span></span><br><span class="line">    <span class="comment"># However given that 3000 steps is long enough for both algorithms to converge,</span></span><br><span class="line">    <span class="comment"># the difference is guaranteed to be very small</span></span><br><span class="line">    shortcut_maze.obstacle_switch_time = <span class="number">3000</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># set up parameters</span></span><br><span class="line">    dyna_params = DynaParams()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 50-step planning</span></span><br><span class="line">    dyna_params.planning_steps = <span class="number">50</span></span><br><span class="line">    dyna_params.runs = <span class="number">5</span></span><br><span class="line">    dyna_params.time_weight = <span class="number">1e-3</span></span><br><span class="line">    dyna_params.alpha = <span class="number">1.0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># play</span></span><br><span class="line">    rewards = changing_maze(shortcut_maze, dyna_params)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(dyna_params.methods)):</span><br><span class="line">        plt.plot( rewards[i, :], label=dyna_params.methods[i])</span><br><span class="line">    plt.xlabel(<span class="string">'time steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'cumulative reward'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_8_6.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_8_6()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 5/5 [02:32&lt;00:00, 30.57s/it]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxw5xh8j2ej30aw07emxa.jpg" alt="png"> </p>
+<h2 id="检查当前的Q是否已经是最优"><a href="#检查当前的Q是否已经是最优" class="headerlink" title="检查当前的Q是否已经是最优"></a>检查当前的Q是否已经是最优</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check whether state-action values are already optimal</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_path</span><span class="params">(q_values, maze)</span>:</span></span><br><span class="line">    <span class="comment"># get the length of optimal path</span></span><br><span class="line">    <span class="comment"># 14 is the length of optimal path of the original maze</span></span><br><span class="line">    <span class="comment"># 1.2 means it's a relaxed optifmal path</span></span><br><span class="line">    max_steps = <span class="number">14</span> * maze.resolution * <span class="number">1.2</span></span><br><span class="line">    state = maze.START_STATE</span><br><span class="line">    steps = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> state <span class="keyword">not</span> <span class="keyword">in</span> maze.GOAL_STATES:</span><br><span class="line">        <span class="comment"># 使用完全的greedy policy，判断maze step完成的步数是否&lt;max_steps</span></span><br><span class="line">        action = np.argmax(q_values[state[<span class="number">0</span>], state[<span class="number">1</span>], :])</span><br><span class="line">        state, _ = maze.step(state, action)</span><br><span class="line">        steps += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> steps &gt; max_steps:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">True</span></span><br></pre></td></tr></table></figure>
+<h2 id="比较Dyna-Q方法和Priority-Sweeping方法的性能"><a href="#比较Dyna-Q方法和Priority-Sweeping方法的性能" class="headerlink" title="比较Dyna-Q方法和Priority Sweeping方法的性能"></a>比较Dyna-Q方法和Priority Sweeping方法的性能</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Example 8.4, mazes with different resolution</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">example_8_4</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># get the original 6 * 9 maze</span></span><br><span class="line">    original_maze = Maze()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># set up the parameters for each algorithm</span></span><br><span class="line">    params_dyna = DynaParams()</span><br><span class="line">    params_dyna.planning_steps = <span class="number">5</span></span><br><span class="line">    params_dyna.alpha = <span class="number">0.5</span></span><br><span class="line">    params_dyna.gamma = <span class="number">0.95</span></span><br><span class="line"></span><br><span class="line">    params_prioritized = DynaParams()</span><br><span class="line">    params_prioritized.theta = <span class="number">0.0001</span></span><br><span class="line">    params_prioritized.planning_steps = <span class="number">5</span></span><br><span class="line">    params_prioritized.alpha = <span class="number">0.5</span></span><br><span class="line">    params_prioritized.gamma = <span class="number">0.95</span></span><br><span class="line"></span><br><span class="line">    params = [params_prioritized, params_dyna]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># set up models for planning</span></span><br><span class="line">    models = [PriorityModel, TrivialModel]</span><br><span class="line">    method_names = [<span class="string">'Prioritized Sweeping'</span>, <span class="string">'Dyna-Q'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># due to limitation of my machine, I can only perform experiments for 5 mazes</span></span><br><span class="line">    <span class="comment"># assuming the 1st maze has w * h states, then k-th maze has w * h * k * k states</span></span><br><span class="line">    num_of_mazes = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># build all the mazes</span></span><br><span class="line">    mazes = [original_maze.extend_maze(i) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, num_of_mazes + <span class="number">1</span>)]</span><br><span class="line">    methods = [prioritized_sweeping, dyna_q]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># My machine cannot afford too many runs...</span></span><br><span class="line">    runs = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># track the # of backups</span></span><br><span class="line">    backups = np.zeros((runs, <span class="number">2</span>, num_of_mazes))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> range(<span class="number">0</span>, runs):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(method_names)):</span><br><span class="line">            <span class="keyword">for</span> mazeIndex, maze <span class="keyword">in</span> zip(range(<span class="number">0</span>, len(mazes)), mazes):</span><br><span class="line">                print(<span class="string">'run %d, %s, maze size %d'</span> % (run, method_names[i], maze.WORLD_HEIGHT * maze.WORLD_WIDTH))</span><br><span class="line"></span><br><span class="line">                <span class="comment"># initialize the state action values</span></span><br><span class="line">                q_value = np.zeros(maze.q_size)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># track steps / backups for each episode</span></span><br><span class="line">                steps = []</span><br><span class="line"></span><br><span class="line">                <span class="comment"># generate the model</span></span><br><span class="line">                model = models[i]()</span><br><span class="line"></span><br><span class="line">                <span class="comment"># 这里不止一个episode了，只有判断Q是最优之后才会跳出</span></span><br><span class="line">                <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">                    <span class="comment"># play for an episode</span></span><br><span class="line">                    steps.append(methods[i](q_value, model, maze, params[i]))</span><br><span class="line"></span><br><span class="line">                    <span class="comment"># print best actions w.r.t. current state-action values</span></span><br><span class="line">                    <span class="comment"># printActions(currentStateActionValues, maze)</span></span><br><span class="line"></span><br><span class="line">                    <span class="comment"># check whether the (relaxed) optimal path is found</span></span><br><span class="line">                    <span class="keyword">if</span> check_path(q_value, maze):</span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># update the total steps / backups for this maze</span></span><br><span class="line">                backups[run, i, mazeIndex] = np.sum(steps)</span><br><span class="line"></span><br><span class="line">    backups = backups.mean(axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Dyna-Q performs several backups per step</span></span><br><span class="line">    backups[<span class="number">1</span>, :] *= params_dyna.planning_steps + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(method_names)):</span><br><span class="line">        plt.plot(np.arange(<span class="number">1</span>, num_of_mazes + <span class="number">1</span>), backups[i, :], label=method_names[i])</span><br><span class="line">    plt.xlabel(<span class="string">'maze resolution factor'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'backups until optimal solution'</span>)</span><br><span class="line">    plt.yscale(<span class="string">'log'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./example_8_4.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">example_8_4()</span><br></pre></td></tr></table></figure>
+<pre><code>run 0, Prioritized Sweeping, maze size 54
+run 0, Prioritized Sweeping, maze size 216
+run 0, Prioritized Sweeping, maze size 486
+run 0, Prioritized Sweeping, maze size 864
+run 0, Prioritized Sweeping, maze size 1350
+run 0, Dyna-Q, maze size 54
+run 0, Dyna-Q, maze size 216
+run 0, Dyna-Q, maze size 486
+run 0, Dyna-Q, maze size 864
+run 0, Dyna-Q, maze size 1350
+run 1, Prioritized Sweeping, maze size 54
+run 1, Prioritized Sweeping, maze size 216
+run 1, Prioritized Sweeping, maze size 486
+run 1, Prioritized Sweeping, maze size 864
+run 1, Prioritized Sweeping, maze size 1350
+run 1, Dyna-Q, maze size 54
+run 1, Dyna-Q, maze size 216
+run 1, Dyna-Q, maze size 486
+run 1, Dyna-Q, maze size 864
+run 1, Dyna-Q, maze size 1350
+run 2, Prioritized Sweeping, maze size 54
+run 2, Prioritized Sweeping, maze size 216
+run 2, Prioritized Sweeping, maze size 486
+run 2, Prioritized Sweeping, maze size 864
+run 2, Prioritized Sweeping, maze size 1350
+run 2, Dyna-Q, maze size 54
+run 2, Dyna-Q, maze size 216
+run 2, Dyna-Q, maze size 486
+run 2, Dyna-Q, maze size 864
+run 2, Dyna-Q, maze size 1350
+run 3, Prioritized Sweeping, maze size 54
+run 3, Prioritized Sweeping, maze size 216
+run 3, Prioritized Sweeping, maze size 486
+run 3, Prioritized Sweeping, maze size 864
+run 3, Prioritized Sweeping, maze size 1350
+run 3, Dyna-Q, maze size 54
+run 3, Dyna-Q, maze size 216
+run 3, Dyna-Q, maze size 486
+run 3, Dyna-Q, maze size 864
+run 3, Dyna-Q, maze size 1350
+run 4, Prioritized Sweeping, maze size 54
+run 4, Prioritized Sweeping, maze size 216
+run 4, Prioritized Sweeping, maze size 486
+run 4, Prioritized Sweeping, maze size 864
+run 4, Prioritized Sweeping, maze size 1350
+run 4, Dyna-Q, maze size 54
+run 4, Dyna-Q, maze size 216
+run 4, Dyna-Q, maze size 486
+run 4, Dyna-Q, maze size 864
+run 4, Dyna-Q, maze size 1350
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxw5y1h9lhj30aw07e74g.jpg" alt="png"> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/03/Chapter07-random-walk-19-states/" rel="next" title="Chapter07 random walk 19-states">
+                <i class="fa fa-chevron-left"></i> Chapter07 random walk 19-states
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/06/Chapter08-expectation-vs-sample/" rel="prev" title="Chapter08 expectation vs sample">
+                Chapter08 expectation vs sample <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过maze问题帮助对8-1-8-4的内容有一个更好的理解"><span class="nav-number">1.</span> <span class="nav-text">通过maze问题帮助对8.1-8.4的内容有一个更好的理解^_^</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块"><span class="nav-number">1.1.</span> <span class="nav-text">引入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义迷宫类maze，实现算法和环境的交互方法"><span class="nav-number">1.2.</span> <span class="nav-text">定义迷宫类maze，实现算法和环境的交互方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dyna算法的参数类"><span class="nav-number">1.3.</span> <span class="nav-text">dyna算法的参数类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#根据epsilon-greedy-policy选择action"><span class="nav-number">1.4.</span> <span class="nav-text">根据epsilon-greedy policy选择action</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立模型类，使用一般的模型建立方法，也是Dyna-Q算法的model建立方法"><span class="nav-number">1.5.</span> <span class="nav-text">建立模型类，使用一般的模型建立方法，也是Dyna-Q算法的model建立方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立模型类，使用time-based模型建立方法"><span class="nav-number">1.6.</span> <span class="nav-text">建立模型类，使用time-based模型建立方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立优先队列类，用于prioritized-sweeping方法"><span class="nav-number">1.7.</span> <span class="nav-text">建立优先队列类，用于prioritized sweeping方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立模型类，使用基于prioritized-sweeping的模型建立方法"><span class="nav-number">1.8.</span> <span class="nav-text">建立模型类，使用基于prioritized sweeping的模型建立方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Dyna-Q算法完成一次episode并更新value-function"><span class="nav-number">1.9.</span> <span class="nav-text">使用Dyna-Q算法完成一次episode并更新value function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用prioritized-sweeping方法进行一次episode更新"><span class="nav-number">1.10.</span> <span class="nav-text">使用prioritized sweeping方法进行一次episode更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改变planning-step，比较不同的Dyna-Q算法的性能-找到终点的平均step"><span class="nav-number">1.11.</span> <span class="nav-text">改变planning-step，比较不同的Dyna-Q算法的性能(找到终点的平均step)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改变maze障碍的位置，并计算相应的累计reward"><span class="nav-number">1.12.</span> <span class="nav-text">改变maze障碍的位置，并计算相应的累计reward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改变迷宫障碍的位置，比较Dyna-Q和Dyna-Q-方法的性能"><span class="nav-number">1.13.</span> <span class="nav-text">改变迷宫障碍的位置，比较Dyna-Q和Dyna-Q+方法的性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#给迷宫添加一条更近的可用路径，比较两个算法的更新情况"><span class="nav-number">1.14.</span> <span class="nav-text">给迷宫添加一条更近的可用路径，比较两个算法的更新情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检查当前的Q是否已经是最优"><span class="nav-number">1.15.</span> <span class="nav-text">检查当前的Q是否已经是最优</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#比较Dyna-Q方法和Priority-Sweeping方法的性能"><span class="nav-number">1.16.</span> <span class="nav-text">比较Dyna-Q方法和Priority Sweeping方法的性能</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

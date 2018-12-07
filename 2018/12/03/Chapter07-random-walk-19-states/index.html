@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="问题描述本例通过将不同step的TD方法应用在Chapter06的random-walk问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter07/random_walk.py 问题描述本例通过将不同step的TD方法应用在Chapter06的random-walk问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。">
 <meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter07 random walk 19-states">
 <meta property="og:url" content="http://yoursite.com/2018/12/03/Chapter07-random-walk-19-states/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="问题描述本例通过将不同step的TD方法应用在Chapter06的random-walk问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter07/random_walk.py 问题描述本例通过将不同step的TD方法应用在Chapter06的random-walk问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxtlsh51h7j30c0080js7.jpg">
-<meta property="og:updated_time" content="2018-12-03T11:54:48.158Z">
+<meta property="og:updated_time" content="2018-12-05T12:49:00.070Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter07 random walk 19-states">
-<meta name="twitter:description" content="问题描述本例通过将不同step的TD方法应用在Chapter06的random-walk问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter07/random_walk.py 问题描述本例通过将不同step的TD方法应用在Chapter06的random-walk问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。">
 <meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxtlsh51h7j30c0080js7.jpg">
 
 
@@ -350,7 +350,8 @@
       
 
       
-        <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>本例通过将不同step的TD方法应用在Chapter06的<a href="https://xinge650.github.io/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/" target="_blank" rel="noopener">random-walk</a>问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。</p>
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter07/random_walk.py" target="_blank" rel="noopener">chapter07/random_walk.py</a></p>
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>本例通过将不同step的TD方法应用在Chapter06的<a href="https://xinge650.github.io/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/" target="_blank" rel="noopener">random-walk</a>问题中，不过将原来的5-state问题修改为了19-state问题。以此来对比不同的n-step算法的性能。</p>
 <a id="more"></a>
 <h2 id="引入模块并定义常量"><a href="#引入模块并定义常量" class="headerlink" title="引入模块并定义常量"></a>引入模块并定义常量</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 除了终止state以外的19个state</span></span><br><span class="line">N_STATES = <span class="number">19</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># discount</span></span><br><span class="line">GAMMA = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># all states but terminal states</span></span><br><span class="line">STATES = np.arange(<span class="number">1</span>, N_STATES + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># start from the middle state</span></span><br><span class="line"><span class="comment"># 0和20是终止state，所以有效state是1-19</span></span><br><span class="line">START_STATE = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># two terminal states</span></span><br><span class="line"><span class="comment"># an action leading to the left terminal state has reward -1</span></span><br><span class="line"><span class="comment"># an action leading to the right terminal state has reward 1</span></span><br><span class="line">END_STATES = [<span class="number">0</span>, N_STATES + <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过bellman equation计算得到真实的V*，这个方法在下面两个地方都有用到：</span></span><br><span class="line"><span class="comment"># https://xinge650.github.io/2018/11/22/Chapter03-gird-world/</span></span><br><span class="line"><span class="comment"># https://xinge650.github.io/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/</span></span><br><span class="line">TRUE_VALUE = np.arange(<span class="number">-20</span>, <span class="number">22</span>, <span class="number">2</span>) / <span class="number">20.0</span></span><br><span class="line">TRUE_VALUE[<span class="number">0</span>] = TRUE_VALUE[<span class="number">-1</span>] = <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <h2 id="使用n-step-TD方法来对policy-π进行predict"><a href="#使用n-step-TD方法来对policy-π进行predict" class="headerlink" title="使用n-step TD方法来对policy π进行predict"></a>使用n-step TD方法来对policy π进行predict</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># n-steps TD method</span></span><br><span class="line"><span class="comment"># @value: values for each state, will be updated</span></span><br><span class="line"><span class="comment"># @n: # of steps</span></span><br><span class="line"><span class="comment"># @alpha: # step size</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">temporal_difference</span><span class="params">(value, n, alpha)</span>:</span></span><br><span class="line">    <span class="comment"># initial starting state</span></span><br><span class="line">    state = START_STATE</span><br><span class="line"></span><br><span class="line">    <span class="comment"># arrays to store states and rewards for an episode</span></span><br><span class="line">    <span class="comment"># space isn't a major consideration, so I didn't use the mod trick</span></span><br><span class="line">    states = [state]</span><br><span class="line">    rewards = [<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># track the time</span></span><br><span class="line">    time = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># the length of this episode</span></span><br><span class="line">    T = float(<span class="string">'inf'</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="comment"># go to next time step</span></span><br><span class="line">        <span class="comment"># time总是next state的索引</span></span><br><span class="line">        time += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> time &lt; T:</span><br><span class="line">            <span class="comment"># choose an action randomly</span></span><br><span class="line">            <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, <span class="number">0.5</span>) == <span class="number">1</span>:</span><br><span class="line">                next_state = state + <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                next_state = state - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> next_state == <span class="number">0</span>:</span><br><span class="line">                reward = <span class="number">-1</span></span><br><span class="line">            <span class="keyword">elif</span> next_state == <span class="number">20</span>:</span><br><span class="line">                reward = <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                reward = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># store new state and new reward</span></span><br><span class="line">            states.append(next_state)</span><br><span class="line">            rewards.append(reward)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> next_state <span class="keyword">in</span> END_STATES:</span><br><span class="line">                <span class="comment"># T记录的是terminal state的time-index</span></span><br><span class="line">                <span class="comment"># 可以看到n-step TD方法也和MC方法一样需要等待整个episode结束，但是Q的更新是在结束前就开始的</span></span><br><span class="line">                <span class="comment"># 所以这种方法仍然比MC方法要快</span></span><br><span class="line">                T = time</span><br><span class="line"></span><br><span class="line">        <span class="comment"># get the time of the state to update</span></span><br><span class="line">        update_time = time - n</span><br><span class="line">        <span class="keyword">if</span> update_time &gt;= <span class="number">0</span>:</span><br><span class="line">            returns = <span class="number">0.0</span></span><br><span class="line">            <span class="comment"># calculate corresponding rewards</span></span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> range(update_time + <span class="number">1</span>, min(T, update_time + n) + <span class="number">1</span>):</span><br><span class="line">                returns += pow(GAMMA, t - update_time - <span class="number">1</span>) * rewards[t]</span><br><span class="line">            <span class="comment"># add state value to the return</span></span><br><span class="line">            <span class="comment"># 如果update_time+n&gt;T，则n-step TD算法退化为constant-α算法，即使用estimate of return来作为target</span></span><br><span class="line">            <span class="keyword">if</span> update_time + n &lt;= T:</span><br><span class="line">                returns += pow(GAMMA, n) * value[states[(update_time + n)]]</span><br><span class="line">            state_to_update = states[update_time]</span><br><span class="line">            <span class="comment"># update the state value</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> state_to_update <span class="keyword">in</span> END_STATES:</span><br><span class="line">                value[state_to_update] += alpha * (returns - value[state_to_update])</span><br><span class="line">        <span class="keyword">if</span> update_time == T - <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        state = next_state</span><br></pre></td></tr></table></figure>
@@ -396,6 +397,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/05/Chapter08-maze/" rel="prev" title="Chapter08 maze">
+                Chapter08 maze <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -474,7 +479,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -503,6 +508,24 @@
           
 
           
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
           
 
           
@@ -1063,5 +1086,7 @@
 		<li>
 		<span>6</span></li>
   </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
 </body>
-</html>
+</body></html>

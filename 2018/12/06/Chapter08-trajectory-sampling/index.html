@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter08/trajectory_sampling.py 通过一个MDP的例子比较了均匀采样和on-policy采样的性能">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter08 trajectory_sampling">
+<meta property="og:url" content="http://yoursite.com/2018/12/06/Chapter08-trajectory-sampling/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter08/trajectory_sampling.py 通过一个MDP的例子比较了均匀采样和on-policy采样的性能">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxx9ryhuqwj30p40i9glz.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxxxp6iesaj30gr0vwjus.jpg">
+<meta property="og:updated_time" content="2018-12-07T01:41:41.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter08 trajectory_sampling">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter08/trajectory_sampling.py 通过一个MDP的例子比较了均匀采样和on-policy采样的性能">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxx9ryhuqwj30p40i9glz.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/06/Chapter08-trajectory-sampling/">
+
+
+
+
+
+  <title>Chapter08 trajectory_sampling | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/06/Chapter08-trajectory-sampling/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter08 trajectory_sampling</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-06T19:34:38+08:00">
+                2018-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter08/trajectory_sampling.py" target="_blank" rel="noopener">chapter08/trajectory_sampling.py</a></p>
+<h1 id="通过一个MDP的例子比较了均匀采样和on-policy采样的性能"><a href="#通过一个MDP的例子比较了均匀采样和on-policy采样的性能" class="headerlink" title="通过一个MDP的例子比较了均匀采样和on-policy采样的性能"></a>通过一个MDP的例子比较了均匀采样和on-policy采样的性能</h1><a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>问题建立在一个MDP上，首先假设一个MDP有n个state，其中[0,n)是一般状态，n是terminal-state，每个状态有两个action=0;1。每个action都用epsilon的概率使state跳转到terminal-state；如果没有跳转到terminal-state，action会导致state等概率的跳转到b个branch对应的state上，同时每个branch对应的state也是|S|上等概率的，所以MDP示意图如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxx9ryhuqwj30p40i9glz.jpg" alt="png"> </p>
+<h2 id="引入模块并定义常量"><a href="#引入模块并定义常量" class="headerlink" title="引入模块并定义常量"></a>引入模块并定义常量</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 actions</span></span><br><span class="line">ACTIONS = [<span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># each transition has a probability to terminate with 0</span></span><br><span class="line">TERMINATION_PROB = <span class="number">0.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># maximum expected updates</span></span><br><span class="line">MAX_STEPS = <span class="number">20000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># epsilon greedy for behavior policy</span></span><br><span class="line">EPSILON = <span class="number">0.1</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义argmax函数，返回value中最大值的任一个索引"><a href="#定义argmax函数，返回value中最大值的任一个索引" class="headerlink" title="定义argmax函数，返回value中最大值的任一个索引"></a>定义argmax函数，返回value中最大值的任一个索引</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># break tie randomly</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">argmax</span><span class="params">(value)</span>:</span></span><br><span class="line">    max_q = np.max(value)</span><br><span class="line">    <span class="keyword">return</span> np.random.choice([a <span class="keyword">for</span> a, q <span class="keyword">in</span> enumerate(value) <span class="keyword">if</span> q == max_q])</span><br></pre></td></tr></table></figure>
+<h2 id="定义Task类，用来模拟agent和环境的交互"><a href="#定义Task类，用来模拟agent和环境的交互" class="headerlink" title="定义Task类，用来模拟agent和环境的交互"></a>定义Task类，用来模拟agent和环境的交互</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># @n_states: number of non-terminal states</span></span><br><span class="line">    <span class="comment"># @b: branch</span></span><br><span class="line">    <span class="comment"># Each episode starts with state 0, and state n_states is a terminal state</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, n_states, b)</span>:</span></span><br><span class="line">        self.n_states = n_states</span><br><span class="line">        self.b = b</span><br><span class="line"></span><br><span class="line">        <span class="comment"># transition matrix, each state-action pair leads to b possible states</span></span><br><span class="line">        <span class="comment"># 返回size尺寸的range(n_states)内的随机数</span></span><br><span class="line">        <span class="comment"># 这里根据self.transition来选定next_state这样理解的：</span></span><br><span class="line">        <span class="comment"># 首先选定state和action，因为每个action都有b种分支branch的选择，每种branch又随机对应一种|S|中的state</span></span><br><span class="line">        <span class="comment"># 所以在step函数里根据state和action选择next_state的时候，需要先random选择一个branch，然后这个branch对应的</span></span><br><span class="line">        <span class="comment"># state再由self.transition给出</span></span><br><span class="line">        self.transition = np.random.randint(n_states, size=(n_states, len(ACTIONS), b))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># it is not clear how to set the reward, I use a unit normal distribution here</span></span><br><span class="line">        <span class="comment"># reward is determined by (s, a, s')</span></span><br><span class="line">        self.reward = np.random.randn(n_states, len(ACTIONS), b)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(self, state, action)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> np.random.rand() &lt; TERMINATION_PROB:</span><br><span class="line">            <span class="comment"># 直接跳转到terminal状态，并给reward=0</span></span><br><span class="line">            <span class="keyword">return</span> self.n_states, <span class="number">0</span></span><br><span class="line">        next = np.random.randint(self.b)</span><br><span class="line">        <span class="keyword">return</span> self.transition[state, action, next], self.reward[state, action, next]</span><br></pre></td></tr></table></figure>
+<h2 id="计算使用基于value-function的greedy-policy得到的平均episode-reward"><a href="#计算使用基于value-function的greedy-policy得到的平均episode-reward" class="headerlink" title="计算使用基于value function的greedy policy得到的平均episode-reward"></a>计算使用基于value function的greedy policy得到的平均episode-reward</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Evaluate the value of the start state for the greedy policy</span></span><br><span class="line"><span class="comment"># derived from @q under the MDP @task</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluate_pi</span><span class="params">(q, task)</span>:</span></span><br><span class="line">    <span class="comment"># use Monte Carlo method to estimate the state value</span></span><br><span class="line">    runs = <span class="number">1000</span></span><br><span class="line">    returns = []</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> range(runs):</span><br><span class="line">        rewards = <span class="number">0</span></span><br><span class="line">        state = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> state &lt; task.n_states:</span><br><span class="line">            action = argmax(q[state])</span><br><span class="line">            state, r = task.step(state, action)</span><br><span class="line">            rewards += r</span><br><span class="line">        returns.append(rewards)</span><br><span class="line">    <span class="keyword">return</span> np.mean(returns)</span><br></pre></td></tr></table></figure>
+<h2 id="使用expected-update更新value-function，使用一致采样"><a href="#使用expected-update更新value-function，使用一致采样" class="headerlink" title="使用expected update更新value function，使用一致采样"></a>使用expected update更新value function，使用一致采样</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perform expected update from a uniform state-action distribution of the MDP @task</span></span><br><span class="line"><span class="comment"># evaluate the learned q value every @eval_interval steps</span></span><br><span class="line"><span class="comment"># 根据给定的评估间隔，在expected update中穿插着reward的评估，来对更新算法进行评估</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">uniform</span><span class="params">(task, eval_interval)</span>:</span></span><br><span class="line">    performance = []</span><br><span class="line">    q = np.zeros((task.n_states, <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> tqdm(range(MAX_STEPS)):</span><br><span class="line">        <span class="comment"># //表示整除</span></span><br><span class="line">        <span class="comment"># 这里可以看到所有的state-action都会被sample，只要MAX_STEPS足够大</span></span><br><span class="line">        state = step // len(ACTIONS) % task.n_states</span><br><span class="line">        action = step % len(ACTIONS)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># next_states是一个维度为(b,)的array</span></span><br><span class="line">        next_states = task.transition[state, action]</span><br><span class="line">        <span class="comment"># task.reward[state,action]是一个维度为(b,)的array</span></span><br><span class="line">        <span class="comment"># q[next_states,:]是维度为(b,2)的array,np.max操作之后就是(b,)维度了</span></span><br><span class="line">        <span class="comment"># 这个更新公式是expected update的，P141</span></span><br><span class="line">        <span class="comment"># 这里还有一个细节，就是真实的概率应该是(1-TERMINATION_PROB)/b，但是np.mean里隐含了1/b</span></span><br><span class="line">        q[state, action] = (<span class="number">1</span> - TERMINATION_PROB) * np.mean(</span><br><span class="line">            task.reward[state, action] + np.max(q[next_states, :], axis=<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> step % eval_interval == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 如果到评估间隔了，则进行一次greedy policy更新</span></span><br><span class="line">            v_pi = evaluate_pi(q, task)</span><br><span class="line">            performance.append([step, v_pi])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> zip(*performance)</span><br></pre></td></tr></table></figure>
+<h2 id="使用基于on-policy的采样方法进行value-function的更新"><a href="#使用基于on-policy的采样方法进行value-function的更新" class="headerlink" title="使用基于on-policy的采样方法进行value function的更新"></a>使用基于on-policy的采样方法进行value function的更新</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perform expected update from an on-policy distribution of the MDP @task</span></span><br><span class="line"><span class="comment"># evaluate the learned q value every @eval_interval steps</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_policy</span><span class="params">(task, eval_interval)</span>:</span></span><br><span class="line">    performance = []</span><br><span class="line">    q = np.zeros((task.n_states, <span class="number">2</span>))</span><br><span class="line">    <span class="comment"># 可以看到两种更新方法都是从state=0开始训练的</span></span><br><span class="line">    state = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 可以看到采样的时候没有使用uniform的均匀采样，而是根据value function来生成episode，并紧随着state的迭代来更新</span></span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> tqdm(range(MAX_STEPS)):</span><br><span class="line">        <span class="keyword">if</span> np.random.rand() &lt; EPSILON:</span><br><span class="line">            action = np.random.choice(ACTIONS)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            action = argmax(q[state])</span><br><span class="line"></span><br><span class="line">        next_state, _ = task.step(state, action)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># value function的更新和uniform()的更新是一样的</span></span><br><span class="line">        next_states = task.transition[state, action]</span><br><span class="line">        q[state, action] = (<span class="number">1</span> - TERMINATION_PROB) * np.mean(</span><br><span class="line">            task.reward[state, action] + np.max(q[next_states, :], axis=<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> next_state == task.n_states:</span><br><span class="line">            next_state = <span class="number">0</span></span><br><span class="line">        state = next_state</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> step % eval_interval == <span class="number">0</span>:</span><br><span class="line">            v_pi = evaluate_pi(q, task)</span><br><span class="line">            performance.append([step, v_pi])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> zip(*performance)</span><br></pre></td></tr></table></figure>
+<h2 id="通过图像来比较两种采样方法的性能"><a href="#通过图像来比较两种采样方法的性能" class="headerlink" title="通过图像来比较两种采样方法的性能"></a>通过图像来比较两种采样方法的性能</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_8_9</span><span class="params">()</span>:</span></span><br><span class="line">    num_states = [<span class="number">1000</span>, <span class="number">10000</span>]</span><br><span class="line">    branch = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">10</span>]</span><br><span class="line">    methods = [on_policy, uniform]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average accross 30 tasks</span></span><br><span class="line">    <span class="comment"># woc这总共要跑2*3*2*30=360个max_steps，太变态了。。。</span></span><br><span class="line">    <span class="comment"># n_tasks =  30</span></span><br><span class="line">    n_tasks = <span class="number">5</span></span><br><span class="line">    <span class="comment"># number of evaluation points</span></span><br><span class="line">    x_ticks = <span class="number">100</span></span><br><span class="line"></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">20</span>))</span><br><span class="line">    <span class="keyword">for</span> i, n <span class="keyword">in</span> enumerate(num_states):</span><br><span class="line">        plt.subplot(<span class="number">2</span>, <span class="number">1</span>, i+<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> b <span class="keyword">in</span> branch:</span><br><span class="line">            tasks = [Task(n, b) <span class="keyword">for</span> _ <span class="keyword">in</span> range(n_tasks)]</span><br><span class="line">            <span class="keyword">for</span> method <span class="keyword">in</span> methods:</span><br><span class="line">                value = []</span><br><span class="line">                <span class="keyword">for</span> task <span class="keyword">in</span> tasks:</span><br><span class="line">                    steps, v = method(task, MAX_STEPS / x_ticks)</span><br><span class="line">                    value.append(v)</span><br><span class="line">                value = np.mean(np.asarray(value), axis=<span class="number">0</span>)</span><br><span class="line">                plt.plot(steps, value, label=<span class="string">'b = %d, %s'</span> % (b, method.__name__))</span><br><span class="line">        plt.title(<span class="string">'%d states'</span> % (n))</span><br><span class="line"></span><br><span class="line">        plt.ylabel(<span class="string">'value of start state'</span>)</span><br><span class="line">        plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'computation time, in expected updates'</span>)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_8_9.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_8_9()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 20000/20000 [00:23&lt;00:00, 863.09it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 882.61it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 873.29it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 884.96it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 870.28it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 888.02it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 891.23it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 883.12it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 885.09it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 864.50it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 833.70it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 847.89it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 872.53it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 879.40it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 868.80it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 906.87it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 876.36it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 890.05it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 888.76it/s]
+100%|██████████| 20000/20000 [00:21&lt;00:00, 910.71it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 874.98it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 896.89it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 884.20it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 904.25it/s] 
+100%|██████████| 20000/20000 [00:21&lt;00:00, 924.97it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 881.82it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 904.37it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 896.47it/s]
+100%|██████████| 20000/20000 [00:21&lt;00:00, 909.28it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 884.27it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 857.58it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 861.50it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 858.42it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 876.96it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 872.85it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 900.74it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 889.23it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 896.29it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 891.87it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 879.51it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 854.93it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 853.38it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 851.27it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 839.56it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 868.91it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 858.23it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 869.78it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 883.71it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 894.70it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 886.71it/s]
+100%|██████████| 20000/20000 [00:23&lt;00:00, 868.78it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 882.62it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 887.52it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 881.84it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 878.90it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 902.32it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 901.14it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 882.30it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 872.38it/s]
+100%|██████████| 20000/20000 [00:22&lt;00:00, 894.51it/s]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxxxp6iesaj30gr0vwjus.jpg" alt="png"> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/06/Chapter08-expectation-vs-sample/" rel="next" title="Chapter08 expectation vs sample">
+                <i class="fa fa-chevron-left"></i> Chapter08 expectation vs sample
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/07/Chapter08-Planning-and-Learning-with-Tabular-Methods/" rel="prev" title="Chapter08 Planning and Learning with Tabular Methods">
+                Chapter08 Planning and Learning with Tabular Methods <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过一个MDP的例子比较了均匀采样和on-policy采样的性能"><span class="nav-number">1.</span> <span class="nav-text">通过一个MDP的例子比较了均匀采样和on-policy采样的性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义argmax函数，返回value中最大值的任一个索引"><span class="nav-number">1.3.</span> <span class="nav-text">定义argmax函数，返回value中最大值的任一个索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义Task类，用来模拟agent和环境的交互"><span class="nav-number">1.4.</span> <span class="nav-text">定义Task类，用来模拟agent和环境的交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算使用基于value-function的greedy-policy得到的平均episode-reward"><span class="nav-number">1.5.</span> <span class="nav-text">计算使用基于value function的greedy policy得到的平均episode-reward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用expected-update更新value-function，使用一致采样"><span class="nav-number">1.6.</span> <span class="nav-text">使用expected update更新value function，使用一致采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用基于on-policy的采样方法进行value-function的更新"><span class="nav-number">1.7.</span> <span class="nav-text">使用基于on-policy的采样方法进行value function的更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过图像来比较两种采样方法的性能"><span class="nav-number">1.8.</span> <span class="nav-text">通过图像来比较两种采样方法的性能</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

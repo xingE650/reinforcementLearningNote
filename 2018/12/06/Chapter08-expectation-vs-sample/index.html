@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Reinforcement Learning Note,">
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="希望能以更新博客的方式激励一下自己，目前是准备读一下强化学习的入门书《Reinforcement Learning Introduction》，然后做一下读书笔记。下面是绪论(Introduction)的内容。">
-<meta name="keywords" content="Reinforcement Learning Note">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter08/expectation_vs_sample.py 通过一个简单的示例表现了expected 和sample update的绝对误差">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Chapter01 Introduction">
-<meta property="og:url" content="http://yoursite.com/2018/11/12/Chapter01-Introduction/index.html">
+<meta property="og:title" content="Chapter08 expectation vs sample">
+<meta property="og:url" content="http://yoursite.com/2018/12/06/Chapter08-expectation-vs-sample/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="希望能以更新博客的方式激励一下自己，目前是准备读一下强化学习的入门书《Reinforcement Learning Introduction》，然后做一下读书笔记。下面是绪论(Introduction)的内容。">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter08/expectation_vs_sample.py 通过一个简单的示例表现了expected 和sample update的绝对误差">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-02T09:22:54.737Z">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxwukwflqzj30at07emxd.jpg">
+<meta property="og:updated_time" content="2018-12-06T09:08:11.053Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter01 Introduction">
-<meta name="twitter:description" content="希望能以更新博客的方式激励一下自己，目前是准备读一下强化学习的入门书《Reinforcement Learning Introduction》，然后做一下读书笔记。下面是绪论(Introduction)的内容。">
+<meta name="twitter:title" content="Chapter08 expectation vs sample">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter08/expectation_vs_sample.py 通过一个简单的示例表现了expected 和sample update的绝对误差">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxwukwflqzj30at07emxd.jpg">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/11/12/Chapter01-Introduction/">
+  <link rel="canonical" href="http://yoursite.com/2018/12/06/Chapter08-expectation-vs-sample/">
 
 
 
 
 
-  <title>Chapter01 Introduction | Oppai>///<</title>
+  <title>Chapter08 expectation vs sample | Oppai>///<</title>
   
 
 
@@ -281,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/12/Chapter01-Introduction/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/06/Chapter08-expectation-vs-sample/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -298,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Chapter01 Introduction</h1>
+          <h1 class="post-title" itemprop="name headline">Chapter08 expectation vs sample</h1>
         
 
         <div class="post-meta">
@@ -310,8 +312,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-12T20:36:12+08:00">
-                2018-11-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-06T11:04:17+08:00">
+                2018-12-06
               </time>
             
 
@@ -348,32 +350,17 @@
       
 
       
-        <p>希望能以更新博客的方式激励一下自己，目前是准备读一下强化学习的入门书《Reinforcement Learning Introduction》，然后做一下读书笔记。下面是绪论(Introduction)的内容。<br><a id="more"></a></p>
-<h1 id="What-is-ReinforcementLearning"><a href="#What-is-ReinforcementLearning" class="headerlink" title="What is ReinforcementLearning"></a>What is ReinforcementLearning</h1><h2 id="First-Impression-of-RL"><a href="#First-Impression-of-RL" class="headerlink" title="First Impression of RL"></a>First Impression of RL</h2><p>如果说之前我接触到的机器学习方法，如逻辑回归、svm、决策树、人工神经网络等是数据驱动的，那么强化学习就是“情境”驱动的：行为由当前环境决定，行为导致数值化的reward更新，而reward又影响了环境。这是我对强化学习的初印象。</p>
-<p>强化学习有两个特点：<br>1、trial-and-error search：学习算法并未指导行为，但是却必须得出当行为做出相应的reward(近期)</p>
-<p>2、delayed reward：每个行为之间不是独立的，当前行为可能会有比当前收益更丰盛的远期收益(value)。</p>
-<p>强化学习有三个重要要素，就是学习器(agent，我对学习器的理解就是训练出模型时执行的程序）必须能够感知环境(state)并做出影响它的行为(action)，同时agent must have a goal or goals relating to the state of the environment。</p>
-<h2 id="RL-vs-Supervised-learning"><a href="#RL-vs-Supervised-learning" class="headerlink" title="RL vs Supervised learning"></a>RL vs Supervised learning</h2><p>监督学习就不赘述了，大致来说，监督学习算法通过带标签的训练集学习得到可以对未知样例的判断“能力”。但是如果让监督学习从交互中学习，按照监督学习的思路，获取正确的而且有意义的行为例子是不可取的，所以它没办法从经验中成长，不适合需要和环境交互的算法。</p>
-<p>举一个不太恰当的例子，监督学习就像考前刷题的你，而强化学习就像每天认真学习的学霸，如果考题和你刷的吻合度比较高，那你就稳了，但是学霸每天学习，数据已经内化为他的能力了，所以他一点都不慌。</p>
-<h2 id="RL-vs-Unsupervised-learning"><a href="#RL-vs-Unsupervised-learning" class="headerlink" title="RL vs Unsupervised learning"></a>RL vs Unsupervised learning</h2><p>有不少人认为监督学习和非监督学习已经把机器学习进行详尽的划分了，他们将强化学习归入后者，因为它们都没有带标签的数据，但是从目的上来看，强化学习是为了最大化reward的，而非监督学习是为了学习到数据之中的隐藏结构，非监督学习的方法并没有从实质解决强化学习的问题。</p>
-<h2 id="exploration-and-exploitation"><a href="#exploration-and-exploitation" class="headerlink" title="exploration and exploitation"></a>exploration and exploitation</h2><p>The agent has to <strong><em>exploit</em></strong> what it has already experienced in order to obtain reward, but it also has to <strong><em>explore</em></strong> in order to make better action selections in the future.</p>
-<p>这个问题有点像梯度下降中使用的随机梯度法(SGD)或者模拟退火法，但是SGD是一种加速算法，或者说如果我头铁不用，我也是有可能得到还可以的结果，但是强化学习如果不学习未知的部分，结果肯定是有问题的，但是如果一直在试错 <strong><em>explore</em></strong>，不对“经验”进行总结 <strong><em>exploit</em></strong>，也是没办法使算法收敛的。</p>
-<h1 id="Tic-Tac-Toe"><a href="#Tic-Tac-Toe" class="headerlink" title="Tic-Tac-Toe"></a>Tic-Tac-Toe</h1><p>我觉得先分析一个例子可以更好的帮助理解RL的各个属性之间的关系。<strong><em>Tic-Tac-Toe</em></strong>比较像我们小时候玩的井字棋，图我就不画了。</p>
-<p>强化学习和传统的classical <a href="https://en.wikipedia.org/wiki/Minimax" target="_blank" rel="noopener">minimax</a> solution from game theory以及Classical optimization methods for sequential decision problems, such as dynamic programming有区别，前者是按照有强约束的方式运动的（这里是不会走使自己失败的位置），而后者则是需要有每一步的先验概率才能进行优化。</p>
-<p>强化学习是基于value functions的学习方法，而前面提到的minimax可以认为是基于evolutionary的学习方法，前者是基于value of state来学习的，后者则是通过结果来更新policy，前者对状态的利用优于后者，而后者则是仅利用了结果来修改policy。</p>
-<p>tic-tac-toe的ython代码实现<a href="https://xinge650.github.io/2018/11/14/Tic-Tac-Toe/" target="_blank" rel="noopener">戳这里</a></p>
-<h1 id="Elements-of-RL"><a href="#Elements-of-RL" class="headerlink" title="Elements of RL"></a>Elements of RL</h1><p>Beyond the agent and the environment, one can identify four main subelements of a reinforcement learning system: a <strong><em>policy</em></strong>, a reward <strong><em>signal</em></strong> , a <strong><em>value function</em></strong>, and, optionally, <strong><em>a model of the environment</em></strong>.</p>
-<h2 id="policy"><a href="#policy" class="headerlink" title="policy"></a>policy</h2><p>感觉是从state到action的一个映射关系吧，这里就对应了上面提到的explore和exploit的关系。In general, policies may be stochastic.</p>
-<h2 id="reward"><a href="#reward" class="headerlink" title="reward"></a>reward</h2><p>每个action导致的短期收益。reward会决定policy，使得行为向高reward的方向发展，所以reward一般是state和action的随机函数：In general, reward signals may be stochastic functions of the state of the environment and the actions taken.</p>
-<h2 id="value-function"><a href="#value-function" class="headerlink" title="value function"></a>value function</h2><p>由reward引起的长期收益。value由reward综合而来，而value同时会使reward朝着高的方向发展。value控制action的发展：Action choices are made based on value judgments. We seek actions that bring about states of highest value, not highest reward, because these actions obtain the greatest amount of reward for us over the long run.</p>
-<h2 id="model-of-the-environment"><a href="#model-of-the-environment" class="headerlink" title="model of the environment"></a>model of the environment</h2><p>This is something that mimics(模拟) the behavior of the environment, or more generally, that allows inferences(推断) to be made about how the environment will behave.</p>
-<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>总体来说强化学习和之前学过的其他机器学习方法还是区别挺大的，但是绪论有几点疑问：</p>
-<p>1、action、state、reward、value之间的更新方式还是没搞懂？</p>
-<p>2、如何建立value table？</p>
-<p><strong><em>——————-(answers in 11.14)————————-</em></strong></p>
-<p>1、value建立在state之上，每次state更新伴随着value的更新；action分为两种，explore和exploit，前者随机，后者基于reward最大；reward认为是从current state -&gt; next state update时，对应的next value or (next value - current value)</p>
-<p>2、value table建立基于state，原则视问题而定。比如tic-tac-toe问题，X赢对应的value = 1，O赢对应的value = 0，平局对应value = 0.5，当然我是站在X的角度。</p>
-
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter08/expectation_vs_sample.py" target="_blank" rel="noopener">chapter08/expectation_vs_sample.py</a></p>
+<h1 id="通过一个简单的示例表现了expected-和sample-update的绝对误差"><a href="#通过一个简单的示例表现了expected-和sample-update的绝对误差" class="headerlink" title="通过一个简单的示例表现了expected 和sample update的绝对误差"></a>通过一个简单的示例表现了expected 和sample update的绝对误差</h1><a id="more"></a>
+<h2 id="引入模块"><a href="#引入模块" class="headerlink" title="引入模块"></a>引入模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br></pre></td></tr></table></figure>
+<h2 id="计算next-state的sample和expect的均方误差"><a href="#计算next-state的sample和expect的均方误差" class="headerlink" title="计算next state的sample和expect的均方误差"></a>计算next state的sample和expect的均方误差</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for figure 8.8, run a simulation of 2 * @b steps</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">b_steps</span><span class="params">(b)</span>:</span></span><br><span class="line">    <span class="comment"># set the value of the next b states</span></span><br><span class="line">    <span class="comment"># it is not clear how to set this</span></span><br><span class="line">    <span class="comment"># distribution 是维度为b的正态分布array</span></span><br><span class="line">    distribution = np.random.randn(b)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># true value of the current state</span></span><br><span class="line">    true_v = np.mean(distribution)</span><br><span class="line"></span><br><span class="line">    samples = []</span><br><span class="line">    errors = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># sample 2b steps</span></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">2</span> * b):</span><br><span class="line">        v = np.random.choice(distribution)</span><br><span class="line">        samples.append(v)</span><br><span class="line">        errors.append(np.abs(np.mean(samples) - true_v))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> errors</span><br></pre></td></tr></table></figure>
+<h2 id="绘制图线，表征均方误差随抽样次数的变化"><a href="#绘制图线，表征均方误差随抽样次数的变化" class="headerlink" title="绘制图线，表征均方误差随抽样次数的变化"></a>绘制图线，表征均方误差随抽样次数的变化</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_8_8</span><span class="params">()</span>:</span></span><br><span class="line">    runs = <span class="number">100</span></span><br><span class="line">    branch = [<span class="number">2</span>, <span class="number">10</span>, <span class="number">100</span>, <span class="number">1000</span>]</span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> branch:</span><br><span class="line">        errors = np.zeros((runs, <span class="number">2</span> * b))</span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> tqdm(np.arange(runs)):</span><br><span class="line">            errors[r] = b_steps(b)</span><br><span class="line">        errors = errors.mean(axis=<span class="number">0</span>)</span><br><span class="line">        x_axis = (np.arange(len(errors)) + <span class="number">1</span>) / float(b)</span><br><span class="line">        plt.plot(x_axis, errors, label=<span class="string">'b = %d'</span> % (b))</span><br><span class="line"></span><br><span class="line">    plt.xlabel(<span class="string">'number of computations'</span>)</span><br><span class="line">    plt.xticks([<span class="number">0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>], [<span class="string">'0'</span>, <span class="string">'b'</span>, <span class="string">'2b'</span>])</span><br><span class="line">    plt.ylabel(<span class="string">'RMS error'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_8_8.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_8_8()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 100/100 [00:00&lt;00:00, 9047.05it/s]
+100%|██████████| 100/100 [00:00&lt;00:00, 2282.52it/s]
+100%|██████████| 100/100 [00:00&lt;00:00, 176.76it/s]
+100%|██████████| 100/100 [00:20&lt;00:00,  4.89it/s]
+</code></pre><p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fxwukwflqzj30at07emxd.jpg" alt="png"> </p>
+<h2 id="通过这个示例，可以看到expected-update可以避免偏差，sample相应的误差就凸显出来了，but-no-free-lunch，获得更好的训练效果自然需要付出相应的计算资源消耗。"><a href="#通过这个示例，可以看到expected-update可以避免偏差，sample相应的误差就凸显出来了，but-no-free-lunch，获得更好的训练效果自然需要付出相应的计算资源消耗。" class="headerlink" title="通过这个示例，可以看到expected update可以避免偏差，sample相应的误差就凸显出来了，but no free lunch，获得更好的训练效果自然需要付出相应的计算资源消耗。"></a>通过这个示例，可以看到expected update可以避免偏差，sample相应的误差就凸显出来了，but no free lunch，获得更好的训练效果自然需要付出相应的计算资源消耗。</h2>
       
     </div>
     
@@ -390,7 +377,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
           
         </div>
       
@@ -403,8 +390,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/10/some-config-on-next-theme/" rel="next" title="some config on next theme">
-                <i class="fa fa-chevron-left"></i> some config on next theme
+              <a href="/2018/12/05/Chapter08-maze/" rel="next" title="Chapter08 maze">
+                <i class="fa fa-chevron-left"></i> Chapter08 maze
               </a>
             
           </div>
@@ -413,8 +400,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/11/14/Chapter01-Tic-Tac-Toe/" rel="prev" title="Chapter01 Tic-Tac-Toe">
-                Chapter01 Tic-Tac-Toe <i class="fa fa-chevron-right"></i>
+              <a href="/2018/12/06/Chapter08-trajectory-sampling/" rel="prev" title="Chapter08 trajectory_sampling">
+                Chapter08 trajectory_sampling <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -558,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#What-is-ReinforcementLearning"><span class="nav-number">1.</span> <span class="nav-text">What is ReinforcementLearning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#First-Impression-of-RL"><span class="nav-number">1.1.</span> <span class="nav-text">First Impression of RL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RL-vs-Supervised-learning"><span class="nav-number">1.2.</span> <span class="nav-text">RL vs Supervised learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RL-vs-Unsupervised-learning"><span class="nav-number">1.3.</span> <span class="nav-text">RL vs Unsupervised learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exploration-and-exploitation"><span class="nav-number">1.4.</span> <span class="nav-text">exploration and exploitation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tic-Tac-Toe"><span class="nav-number">2.</span> <span class="nav-text">Tic-Tac-Toe</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elements-of-RL"><span class="nav-number">3.</span> <span class="nav-text">Elements of RL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#policy"><span class="nav-number">3.1.</span> <span class="nav-text">policy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reward"><span class="nav-number">3.2.</span> <span class="nav-text">reward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#value-function"><span class="nav-number">3.3.</span> <span class="nav-text">value function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#model-of-the-environment"><span class="nav-number">3.4.</span> <span class="nav-text">model of the environment</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过一个简单的示例表现了expected-和sample-update的绝对误差"><span class="nav-number">1.</span> <span class="nav-text">通过一个简单的示例表现了expected 和sample update的绝对误差</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块"><span class="nav-number">1.1.</span> <span class="nav-text">引入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算next-state的sample和expect的均方误差"><span class="nav-number">1.2.</span> <span class="nav-text">计算next state的sample和expect的均方误差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图线，表征均方误差随抽样次数的变化"><span class="nav-number">1.3.</span> <span class="nav-text">绘制图线，表征均方误差随抽样次数的变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过这个示例，可以看到expected-update可以避免偏差，sample相应的误差就凸显出来了，but-no-free-lunch，获得更好的训练效果自然需要付出相应的计算资源消耗。"><span class="nav-number">1.4.</span> <span class="nav-text">通过这个示例，可以看到expected update可以避免偏差，sample相应的误差就凸显出来了，but no free lunch，获得更好的训练效果自然需要付出相应的计算资源消耗。</span></a></li></ol></li></ol></div>
             
 
           </div>
