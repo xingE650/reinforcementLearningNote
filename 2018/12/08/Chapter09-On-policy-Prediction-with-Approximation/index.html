@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Note,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="function approximation in reinforcement learning之前在第一部分(Chapter01~Chapter08)讲的value function建立，是一种表格的方法(tabular method)，不管是state-value还是action-value，最终的收敛结果都是以有限的、准确的列表来存储的。这种方法是理解强化学习的基础方法，但是随着state">
+<meta name="keywords" content="Reinforcement Learning Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter09 On-policy Prediction with Approximation">
+<meta property="og:url" content="http://yoursite.com/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="function approximation in reinforcement learning之前在第一部分(Chapter01~Chapter08)讲的value function建立，是一种表格的方法(tabular method)，不管是state-value还是action-value，最终的收敛结果都是以有限的、准确的列表来存储的。这种方法是理解强化学习的基础方法，但是随着state">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxzefiyb3wj30bb02nmx1.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxzeke7xrnj30gh0230sn.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxzep2w6u8j309v02f746.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxzf1xf1y2j30dt030q2w.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxr9n01aloj30p4032jrh.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxzfgpo1bqj30t8098aba.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxzfq33v8pj30t50ce0u6.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy3zs6i8dlj309y0290sl.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy401wre0mj30lm04njrg.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy403325hij30al03hwee.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy4045g51yj30ap02djr8.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fy40b0jrtcj30tg0i5go5.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy40u75ib5j30t906hgmd.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy41ix3gtaj30tg0cowg2.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy41kpt5j2j30t908ywfv.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fy421jj6x0j30r409kq6r.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy42qmmh80j30r90a7ab7.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy42zdpq11j30sb0ku3ze.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy4339oi97j308p02dt8l.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy486sf0o2j306m01qwea.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy48qid5jlj30t30eywg2.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fy49x5u3enj308m020mx0.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy4a6sfi08j306t01ogle.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4vsfh3hrj30nb020a9z.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fy4vthk3w4j30ae01jweb.jpg">
+<meta property="og:updated_time" content="2018-12-13T01:56:19.278Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter09 On-policy Prediction with Approximation">
+<meta name="twitter:description" content="function approximation in reinforcement learning之前在第一部分(Chapter01~Chapter08)讲的value function建立，是一种表格的方法(tabular method)，不管是state-value还是action-value，最终的收敛结果都是以有限的、准确的列表来存储的。这种方法是理解强化学习的基础方法，但是随着state">
+<meta name="twitter:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxzefiyb3wj30bb02nmx1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/">
+
+
+
+
+
+  <title>Chapter09 On-policy Prediction with Approximation | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter09 On-policy Prediction with Approximation</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-08T15:10:05+08:00">
+                2018-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="function-approximation-in-reinforcement-learning"><a href="#function-approximation-in-reinforcement-learning" class="headerlink" title="function approximation in reinforcement learning"></a>function approximation in reinforcement learning</h2><p>之前在第一部分(Chapter01~Chapter08)讲的value function建立，是一种表格的方法(tabular method)，不管是state-value还是action-value，最终的收敛结果都是以有限的、准确的列表来存储的。这种方法是理解强化学习的基础方法，但是随着state space的扩大，传统的精确方法便被计算资源和计算时间所限制，这时，近似的value function估计的方法便出现了。function approximation是value function的近似形式，之所以称之为function，是因为所有的value都是通过一个带参数的函数来近似的，函数参数是通过一部分的学习数据得到，用来在整个state space上推广。</p>
+<p>这种思路比较像监督学习(supervised learning)。但是因为强化学习问题所引入的nonstationarity, bootstrapping, and delayed targets等特性，reinforcement learning with function approximation相较supervised learning还有很多新的问题需要讨论。本章主要讲了function approximation在on-policy的预测问题中的应用。</p>
+<a id="more"></a>
+<h2 id="Value-function-Approximation"><a href="#Value-function-Approximation" class="headerlink" title="Value-function Approximation"></a>Value-function Approximation</h2><p>value-function approximation就是使用s和一组向量w来表示state的estimate value：f(s,w)</p>
+<p>value-function approximation有别于表格方法的参数化值函数表示方法，通过s-&gt;g作为训练样本，最小化训练误差来训练参数，通过有限的样本来拟合state空间上的value值。</p>
+<p>We use these methods for value prediction simply by passing to them the state -&gt;goal of each update as a training example. We then interpret the approximate function they produce as an estimated value function.</p>
+<p>这个函数理论上可以使用任意的监督学习算法：线性模型、决策树、神经网络等。但是针对强化学习问题，对监督学习算法提出以下要求：</p>
+<p>(1)可以随着agent和环境进行交互进行on-line学习，通过可以处理增量形式获取的数据</p>
+<p>(2)算法可以适应变化的目标函数，因为强化学习任务经常遇到nonstationary的问题，比如基于GPI进行的control任务，target policy π经常会发生变化。</p>
+<h2 id="The-Prediction-Objective-VE"><a href="#The-Prediction-Objective-VE" class="headerlink" title="The Prediction Objective (VE)"></a>The Prediction Objective (VE)</h2><p>基于function approximation的预测的目标是尽量减少estimate value和true value之间的误差，这里引入Mean Squared Value Error作为预测目标：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxzefiyb3wj30bb02nmx1.jpg" alt="png"> </p>
+<p>μ(s)是引入的误差权重，在on-policy的预测问题中称为on-policy distribution。在连续任务(continuing tasks)中，该分布是基于policy π的固定分布。</p>
+<p>on-policy distribution是通过以下两步公式计算得到：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxzeke7xrnj30gh0230sn.jpg" alt="png"> </p>
+<p>h(s)表示一个episode从s开始的概率，η(s) 表示一个episode出现s的概率</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxzep2w6u8j309v02f746.jpg" alt="png"> </p>
+<p>μ(s)是η(s)在|S|上的归一化值，μ(s)越大，则说明s出现的概率越大，s引入的value估计误差影响越大。</p>
+<p>最小化VE并不能保证得到全局最优的function approximation，除了像简单的线性拟合函数等，但是对于复杂的监督学习模型，比如决策树，神经网络等，可能达到局部最优，也可能不会收敛。</p>
+<h2 id="Stochastic-gradient-and-Semi-gradient-Methods"><a href="#Stochastic-gradient-and-Semi-gradient-Methods" class="headerlink" title="Stochastic-gradient and Semi-gradient Methods"></a>Stochastic-gradient and Semi-gradient Methods</h2><p>使用梯度下降的方法来训练得到最优的w，以及得到最优的function approximation。</p>
+<p>通过对VE关于w求导，并使用梯度下降的思路来训练得到VE最小的w：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxzf1xf1y2j30dt030q2w.jpg" alt="png"></p>
+<p>这个地方开始就和普通的监督学习问题不同了。考虑之前在监督学习中学习梯度下降的时候，训练时把train data直接带入下降公式训练参数即可。但是在强化学习任务中有一个问题，就是true value是未知的！那么怎么开始梯度下降？</p>
+<p>考虑我们在第三章学过的一个公式：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxr9n01aloj30p4032jrh.jpg" alt="png"> </p>
+<p>如果U_t是无偏的，即E[U_t|S_t = s] = v_π(S_t)，那么梯度下降的结果会收敛到局部最优值。</p>
+<p>下面给出梯度下降(使用SGD)的Monte Carlo方法的伪代码：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxzfgpo1bqj30t8098aba.jpg" alt="png"> </p>
+<p>值得注意的是，如果使用DP方法或者TD方法等bootstrapping方法，上面的更新是有问题的，因为bootstrapping方法中U_t包含了后续状态的estimate，所以此时的U_t就也是w的函数了，那么这个梯度下降公式只考虑了w改变对VE的影响，却忽略了w改变对update target的影响，这种梯度下降方法称为semi-gradient方法。</p>
+<p>尽管semi-gradient方法不能像上面提到的gradient方法那样稳定的收敛，但是在某些特定条件下(such as the linear case discussed in the next section.)这种方法更受偏爱，因为semi-gradient方法不用等待episode完成，更新速度也更快，可以说是on-line learning的，因为更新是随着agent和环境交互同时进行的，所以可以适用于continuing problem。</p>
+<p>下面给出一种典型的semi-gradient方法，semi-gradient TD(0)方法的伪代码：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxzfq33v8pj30t50ce0u6.jpg" alt="png"> </p>
+<p>关于gradient的例子，可以参考<a href="https://xinge650.github.io/2018/12/08/Chapter09-1000-state-Random-Walk/" target="_blank" rel="noopener">Example 9.1: State Aggregation on the 1000-state Random Walk</a>，注意这里采用了状态聚合的SGD方法。</p>
+<h2 id="Linear-Methods"><a href="#Linear-Methods" class="headerlink" title="Linear Methods"></a>Linear Methods</h2><p>this section给出了一种常见的function approximation形式——linear形式：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy3zs6i8dlj309y0290sl.jpg" alt="png"> </p>
+<p>关于semi gradient TD(0)方法的收敛性证明，可以证明这种方法收敛到w_{TD}的不动点(fixed point):</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy401wre0mj30lm04njrg.jpg" alt="png"> </p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy403325hij30al03hwee.jpg" alt="png"> </p>
+<p>同时渐进误差VE可以达到最小VE误差的一个扩大边界范围：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy4045g51yj30ap02djr8.jpg" alt="png"> </p>
+<p>给出了semi-gradient的TD(n)方法的伪代码，因为采样是on-policy的，所以和TD(n)的表格方法预测代码结构基本相似：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fy40b0jrtcj30tg0i5go5.jpg" alt="png"> </p>
+<p>关于使用自举(bootstrapping)的状态聚合semi-gradient TD方法的渐进性能，以及不同n和α对VE的影响，可以参考<a href="https://xinge650.github.io/2018/12/08/Chapter09-1000-state-Random-Walk/" target="_blank" rel="noopener">Example 9.2: Bootstrapping on the 1000-state Random Walk</a></p>
+<h2 id="Feature-Construction-for-Linear-Methods"><a href="#Feature-Construction-for-Linear-Methods" class="headerlink" title="Feature Construction for Linear Methods"></a>Feature Construction for Linear Methods</h2><p>这一部分是本章的重点，讲了如何从给定的state构造相应的feature。直接使用state的原始数字特征，比如一个多维度的S={s1,s2,…,sn}来做特征的话，并不能有效的学习到整个|S|的value function的特性，选择合适的特征可以使得学习到的value function更有效的泛化在整个state空间上。</p>
+<h3 id="Polynomials基函数构造特征"><a href="#Polynomials基函数构造特征" class="headerlink" title="Polynomials基函数构造特征"></a>Polynomials基函数构造特征</h3><p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy40u75ib5j30t906hgmd.jpg" alt="png"> </p>
+<p>多项式构造feature结构简单，并可以自然的考虑到不同维度state数值的联系，但是在大多数的强化学习任务中效果并不是很好。</p>
+<h3 id="Fourier-Basis基函数构造特征"><a href="#Fourier-Basis基函数构造特征" class="headerlink" title="Fourier Basis基函数构造特征"></a>Fourier Basis基函数构造特征</h3><p>使用傅里叶级数表示特征的方法广泛的适用于强化学习任务，因为只要一个函数是给定的，那么它一定存在傅里叶级数展开，当然前提需要满足狄利克雷条件，一般强化学习任务构造的函数都满足这个条件。</p>
+<p>对于有界的函数，我们可以令三角函数的基本周期τ对应区间长度，并只取区间内的三角函数的值来作为基函数。</p>
+<p>更进一步，如果将τ设置为两倍的区间长度，那么可以只使用cos函数来作为基函数，然后只使用(0,τ/2)上的基函数来做特征。</p>
+<p>下面给出一个1维state的Fourier基函数：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy41ix3gtaj30tg0cowg2.jpg" alt="png"> </p>
+<p>同理，多维的state构造Fourier基函数如下所示：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy41kpt5j2j30t908ywfv.jpg" alt="png"> </p>
+<h3 id="Coarse-Coding-粗糙编码"><a href="#Coarse-Coding-粗糙编码" class="headerlink" title="Coarse Coding(粗糙编码)"></a>Coarse Coding(粗糙编码)</h3><p>使用不同的state空间范围来(如1维空间对应随机长度的区间，2维空间对应随机大小和位置的圆)作为特征，对于state空间上任一点，如果落在f_n对应的空间内，则对应feature则置1，反正置0。这就是Coarse Coding的基本原理。</p>
+<p>以二维空间为例，不同的圆的形状、尺寸、分布密度，都对所构造的粗糙编码特征的泛化性能造成影响：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fy421jj6x0j30r409kq6r.jpg" alt="png"> </p>
+<p>以使用黑色阴影内的白色state来更新value function为例：</p>
+<p>在narrow分布下，包含state的circle比较密集，所以泛化的范围比较小；</p>
+<p>在broad分布下，包含state的circle覆盖范围比较大，所以泛化的范围比较大；</p>
+<p>在Asymmetric分布下，因为circle的形状比较窄长，所以泛化会沿着特定方向。</p>
+<p>关于Coarse Coding的例子，可以参考<a href="https://xinge650.github.io/2018/12/08/Chapter09-square-wave/" target="_blank" rel="noopener">Example 9.3: Coarseness of Coarse Coding</a></p>
+<h3 id="Tile-Coding"><a href="#Tile-Coding" class="headerlink" title="Tile Coding"></a>Tile Coding</h3><p>Tile Coding是Coarse Coding的的一种类型，这种方法通过将每个feature的感受野(receptive fields)划分为很多tile，如果训练使用的state落在对应的tile内，则对其进行更新。</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy42qmmh80j30r90a7ab7.jpg" alt="png"> </p>
+<p>使用随机的offset可以使得泛化更加均匀，如果使用统一的offset，泛化效果就会沿着对角线，泛化结果会更差一点：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy42zdpq11j30sb0ku3ze.jpg" alt="png"> </p>
+<h3 id="Radial-Basis-Functions"><a href="#Radial-Basis-Functions" class="headerlink" title="Radial Basis Functions"></a>Radial Basis Functions</h3><p>RBF也是Coarse Coding的一种，但是这种feature构造方法并不是二值化的，而是采用了(0,1)之间的特征：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy4339oi97j308p02dt8l.jpg" alt="png"> </p>
+<p>使用RBF特征产生的value function approximation更加平滑，并且是可微分的。</p>
+<h2 id="Selecting-Step-Size-Parameters-Manually"><a href="#Selecting-Step-Size-Parameters-Manually" class="headerlink" title="Selecting Step-Size Parameters Manually"></a>Selecting Step-Size Parameters Manually</h2><p>这里给出关于学习步长α的直观认识：</p>
+<p>(1)递减的α能有效收敛，但是收敛速度比较慢</p>
+<p>(2)设置α过大，使得最近的样本占得比重提高，极限情况下α=1，这时经验值的比重为0，直接采用当前的样本值。直接消除value估计函数和样本的误差，既不利于在整个样本上达到整体误差最小，甚至有可能引起收敛曲线振荡；也不利于估计函数在状态空间上的泛化。</p>
+<p>(3)在tabular方法中，可以近似认为，α=1/τ代表每个state的估计值是最近τ个样本的平均值。虽然在value function approximation中这种表示不太准确，但是在样本特征的长度变化不大下，有以下的经验公式，可以近似保证被最近τ个experience的平均值更新：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy486sf0o2j306m01qwea.jpg" alt="png"> </p>
+<h2 id="Nonlinear-Function-Approximation-Artificial-Neural-Networks"><a href="#Nonlinear-Function-Approximation-Artificial-Neural-Networks" class="headerlink" title="Nonlinear Function Approximation: Artificial Neural Networks"></a>Nonlinear Function Approximation: Artificial Neural Networks</h2><p>人工神经网络当然也可以作为近似value function，这部分主要介绍了ANN，并没有介绍具体的DeepRL，所以就不在赘述了。</p>
+<h2 id="Least-Squares-TD"><a href="#Least-Squares-TD" class="headerlink" title="Least-Squares TD"></a>Least-Squares TD</h2><p>不使用梯度下降的方法，根据TD方法收敛的不动点w_TD和A矩阵以及b矩阵的关系，直接on-policy更新w_TD，注意这里是直接置更新，不是增量更新。</p>
+<p>这种方法训练速度快，但是相应的计算成本高，尤其是求逆运算，直接求逆复杂度为O(d^3)，使用了Sherman-Morrison formula优化可以达到O(d^2)，但是和梯度下降的O(d)相比仍然很高了。</p>
+<p>使用LSTD方法训练的伪代码如下：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy48qid5jlj30t30eywg2.jpg" alt="png"> </p>
+<h2 id="Memory-based-Function-Approximation"><a href="#Memory-based-Function-Approximation" class="headerlink" title="Memory-based Function Approximation"></a>Memory-based Function Approximation</h2><p>lazy learning，类似监督学习中的knn，通过存储一系列样本，然后预测s的时候，取出和s相似度高的来预测，大概分为以下几种算法：</p>
+<p>(1)nearest neighbor method:返回存储中和s最近的样本的value</p>
+<p>(2)weighted average:返回最近的几个example的加权平均，权重是随着距离递增递减的</p>
+<p>(3)locally weighted regression:通过参数拟合方法，使得拟合结果符合附近state整体的函数形状，即估计值可以最小化VE误差，估计之后会丢弃估计值，这是lazy learning方法的通性，即不存储估计结果。</p>
+<p>相较于参数学习方法，memory-based方法可以提供更快的估计方法，而且估计结果随着训练数据的提升可以显著提升。因为on-policy采样的结果，可以避免全局近似，使得估计更专注于有价值的state集合。</p>
+<p>但是memory-based算法性能同时也受到存储容量和搜索算法的影响，这些都有一些对应的加速算法。</p>
+<h2 id="Kernel-based-Function-Approximation"><a href="#Kernel-based-Function-Approximation" class="headerlink" title="Kernel-based Function Approximation"></a>Kernel-based Function Approximation</h2><p>核函数(Kernel)是描述两个state相关度的函数，核函数可以用于memory-based方法来选取用于估计的样本state对应的weight，对应的memory-based方法为Kernel regression：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fy49x5u3enj308m020mx0.jpg" alt="png"> </p>
+<p>核函数描述了两个state之间的相关度，换句话说，核函数也可以表示一个state泛化到另一个state的能力。比如前面在tile Coding中的图片，state对应的深度即表示了中心state对其的泛化能力。事实上，核函数可以描述所有线性近似函数的泛化能力。</p>
+<p>一个典型的核函数是Gaussian radial basis function (RBF) used in RBF function approximation。在memory-based方法中，RBF的中心是存储的样本，将落在state空间中的待估计s对应的RBF值作为样本weight来完成估计。</p>
+<p>通过前面构造的feature同样可以重新构成Kernel:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy4a6sfi08j306t01ogle.jpg" alt="png"> </p>
+<p>这种形式的Kernel regression可以在相同训练数据情况下和参数估计价值函数达到相同的效果。</p>
+<p>这种方法给我们一个启示：feature空间可能很大，或者说直接构造feature比较麻烦，为何不直接从数据中构造Kernel那？<a href="https://en.wikipedia.org/wiki/Support_vector_machine#Kernel_trick" target="_blank" rel="noopener">SVM</a>方法就是一个很好的例子。对应很多强化学习问题来说，从feature内积得到Kernel可能是困难的，但是所有问题都是可以直接构造Kernel的，这种情况下构造Kernel然后使用Kernel regression会比构造feature使用参数近似函数方法更有效，这就是机器学习中常使用的<a href="https://en.wikipedia.org/wiki/Kernel_method" target="_blank" rel="noopener">kernel trick</a></p>
+<h2 id="Looking-Deeper-at-On-policy-Learning-Interest-and-Emphasis"><a href="#Looking-Deeper-at-On-policy-Learning-Interest-and-Emphasis" class="headerlink" title="Looking Deeper at On-policy Learning: Interest and Emphasis"></a>Looking Deeper at On-policy Learning: Interest and Emphasis</h2><p>本章到这里，我一直有一个问题，就是在VE的section，计算VE的时候，每个state的estimate都有一个对应的weight，即on-policy distribution，但是在后面的算法中并没有体现这个参数的作用。这一部分算是解决了我的一个疑问，就是不同的state训练的结果对w的影响应该是不同的，即引入了interest和emphasis的概念。</p>
+<p>interest表示训练算法对一个state的感兴趣程度，是一个0-1的非负数。</p>
+<p>emphasis即计算w增量时的参数，下面给出带emphasis的semi-gradient TD(n)更新公式:</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy4vsfh3hrj30nb020a9z.jpg" alt="png"> </p>
+<p>对应的emphasis更新公式：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fy4vthk3w4j30ae01jweb.jpg" alt="png"> </p>
+<p>这个更新公式同时也涵盖了Monte Carlo的情况，令n=T-t，G_{t:t+n}=G_t，M_t=I_t</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/07/Chapter08-Planning-and-Learning-with-Tabular-Methods/" rel="next" title="Chapter08 Planning and Learning with Tabular Methods">
+                <i class="fa fa-chevron-left"></i> Chapter08 Planning and Learning with Tabular Methods
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/08/Chapter09-1000-state-Random-Walk/" rel="prev" title="1000-state Random Walk">
+                1000-state Random Walk <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#function-approximation-in-reinforcement-learning"><span class="nav-number">1.</span> <span class="nav-text">function approximation in reinforcement learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Value-function-Approximation"><span class="nav-number">2.</span> <span class="nav-text">Value-function Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Prediction-Objective-VE"><span class="nav-number">3.</span> <span class="nav-text">The Prediction Objective (VE)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stochastic-gradient-and-Semi-gradient-Methods"><span class="nav-number">4.</span> <span class="nav-text">Stochastic-gradient and Semi-gradient Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linear-Methods"><span class="nav-number">5.</span> <span class="nav-text">Linear Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feature-Construction-for-Linear-Methods"><span class="nav-number">6.</span> <span class="nav-text">Feature Construction for Linear Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Polynomials基函数构造特征"><span class="nav-number">6.1.</span> <span class="nav-text">Polynomials基函数构造特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fourier-Basis基函数构造特征"><span class="nav-number">6.2.</span> <span class="nav-text">Fourier Basis基函数构造特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coarse-Coding-粗糙编码"><span class="nav-number">6.3.</span> <span class="nav-text">Coarse Coding(粗糙编码)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tile-Coding"><span class="nav-number">6.4.</span> <span class="nav-text">Tile Coding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Radial-Basis-Functions"><span class="nav-number">6.5.</span> <span class="nav-text">Radial Basis Functions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selecting-Step-Size-Parameters-Manually"><span class="nav-number">7.</span> <span class="nav-text">Selecting Step-Size Parameters Manually</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nonlinear-Function-Approximation-Artificial-Neural-Networks"><span class="nav-number">8.</span> <span class="nav-text">Nonlinear Function Approximation: Artificial Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Least-Squares-TD"><span class="nav-number">9.</span> <span class="nav-text">Least-Squares TD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Memory-based-Function-Approximation"><span class="nav-number">10.</span> <span class="nav-text">Memory-based Function Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kernel-based-Function-Approximation"><span class="nav-number">11.</span> <span class="nav-text">Kernel-based Function Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Looking-Deeper-at-On-policy-Learning-Interest-and-Emphasis"><span class="nav-number">12.</span> <span class="nav-text">Looking Deeper at On-policy Learning: Interest and Emphasis</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

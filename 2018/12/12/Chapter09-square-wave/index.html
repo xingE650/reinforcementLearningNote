@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Reinforcement Learning Note,">
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
 
 
 
@@ -79,27 +79,20 @@
 
 
 
-<meta name="description" content="上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。">
-<meta name="keywords" content="Reinforcement Learning Note">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Chapter04 Dynamic Programming">
-<meta property="og:url" content="http://yoursite.com/2018/11/23/Chapter04-Dynamic-Programming/index.html">
+<meta property="og:title" content="Chapter09-square_wave">
+<meta property="og:url" content="http://yoursite.com/2018/12/12/Chapter09-square-wave/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxi2oqkslmj30e602r3yh.jpg">
-<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxi36flrqnj30pz090q3t.jpg">
-<meta property="og:image" content="https://latex.codecogs.com/gif.latex?q_{\pi&space;}(s,\pi^{'}(s))&space;\geq&space;v_{\pi&space;}(s)">
-<meta property="og:image" content="https://latex.codecogs.com/gif.latex?v_{\pi^{'}}(s)\geq&space;v_{\pi}(s)">
-<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxi48wq3bbj30fc09jmxs.jpg">
-<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxi4c0tsp1j30el04b0sv.jpg">
-<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxi4gvgn4dj30pm0fdabr.jpg">
-<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxi7jp3secj30pu0a1my7.jpg">
-<meta property="og:updated_time" content="2018-12-02T09:24:22.962Z">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yylzgecj319c0u0gsx.jpg">
+<meta property="og:updated_time" content="2018-12-13T03:44:06.920Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter04 Dynamic Programming">
-<meta name="twitter:description" content="上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。">
-<meta name="twitter:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxi2oqkslmj30e602r3yh.jpg">
+<meta name="twitter:title" content="Chapter09-square_wave">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yylzgecj319c0u0gsx.jpg">
 
 
 
@@ -129,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/11/23/Chapter04-Dynamic-Programming/">
+  <link rel="canonical" href="http://yoursite.com/2018/12/12/Chapter09-square-wave/">
 
 
 
 
 
-  <title>Chapter04 Dynamic Programming | Oppai>///<</title>
+  <title>Chapter09-square_wave | Oppai>///<</title>
   
 
 
@@ -290,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/23/Chapter04-Dynamic-Programming/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/12/Chapter09-square-wave/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xingE650">
@@ -307,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Chapter04 Dynamic Programming</h1>
+          <h1 class="post-title" itemprop="name headline">Chapter09-square_wave</h1>
         
 
         <div class="post-meta">
@@ -319,8 +312,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T16:00:37+08:00">
-                2018-11-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-12T16:51:29+08:00">
+                2018-12-12
               </time>
             
 
@@ -357,33 +350,24 @@
       
 
       
-        <p>上一章讲了马尔科夫决策过程的概念，末尾提出了针对MDP的value-state、value-action-state建立方法，很明显可以看出是使用了动态规划的方法，这一章就在上一章基础上，进一步讲述如何使用动态规划来训练以及优化MDP问题的强化学习算法。</p>
-<a id="more"></a>
-<h2 id="4-1-Policy-Evaluation"><a href="#4-1-Policy-Evaluation" class="headerlink" title="4.1 Policy Evaluation"></a>4.1 Policy Evaluation</h2><h3 id="首先理解什么是策略的评估"><a href="#首先理解什么是策略的评估" class="headerlink" title="首先理解什么是策略的评估"></a>首先理解什么是策略的评估</h3><p>策略的评估也可以认为是一种预测行为，是解决MDP问题的必要环节。通过评估，我们使用已有的policy选择action（大部分问题policy是一个随机函数，即按照一定的概率分布产生action），使用动态规划的方法更新整个state-set的value并达到收敛。评估结果即value-table，是我们决策的重要依据，所以可以为未知的player如何行动提供预测的参考。</p>
-<p>评估模型经常使用迭代运算的方式，迭代同时分为原地迭代和旧值迭代，区别仅是在动态规划使用未来状态来更新当前value的时候，是否使用更新后的值，运算通式是：</p>
-<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxi2oqkslmj30e602r3yh.jpg" alt="png"> </p>
-<p>评估算法的伪代码：</p>
-<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxi36flrqnj30pz090q3t.jpg" alt="png"> </p>
-<h2 id="4-2-Policy-Improvement"><a href="#4-2-Policy-Improvement" class="headerlink" title="4.2 Policy Improvement"></a>4.2 Policy Improvement</h2><p>一开始看的时候，一直没明白上一步评估的作用何在，在策略提升这部分就讲了，策略评估是为了改进用的，因为如果在某个state s上，我改变了action a-&gt;a’，那么可以认为我采用了一种新的策略π’，即这一步我采取的行为是π’(s)，如果有：</p>
-<p><img src="https://latex.codecogs.com/gif.latex?q_{\pi&space;}(s,\pi^{'}(s))&space;\geq&space;v_{\pi&space;}(s)" title="q_{\pi }(s,\pi^{'}(s)) \geq v_{\pi }(s)"></p>
-<p>则可以推出新的策略π’一定不差于原来的π，即：</p>
-<p><img src="https://latex.codecogs.com/gif.latex?v_{\pi^{'}}(s)\geq&space;v_{\pi}(s)" title="v_{\pi^{'}}(s)\geq v_{\pi}(s)"></p>
-<p>推导过程：</p>
-<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxi48wq3bbj30fc09jmxs.jpg" alt="png"> </p>
-<p>顺势我们推出一种greedy的提升方法，就是直接获得最大reward的action：</p>
-<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxi4c0tsp1j30el04b0sv.jpg" alt="png"> </p>
-<p>这种方法也为下一部分的Policy迭代优化提供一种优化的思路。</p>
-<h2 id="4-3-Policy-Iteration"><a href="#4-3-Policy-Iteration" class="headerlink" title="4.3 Policy Iteration"></a>4.3 Policy Iteration</h2><p>直接给出迭代优化的伪代码：</p>
-<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxi4gvgn4dj30pm0fdabr.jpg" alt="png"> </p>
-<p>可以看出来算法其实就是评估和提升交替进行的，迭代终止条件就是没办法对当前的v_π(s)进一步优化了。</p>
-<h2 id="4-4-Value-Iteration"><a href="#4-4-Value-Iteration" class="headerlink" title="4.4 Value Iteration"></a>4.4 Value Iteration</h2><p>上面的策略迭代优化的方法很明显有个问题，就是每次提升的前提是需要对策略进行评估，value Iteration提出一种将提升和评估放在一起进行的方法，这个思路比较像4.1中评估的时候使用的in-place方法。</p>
-<p>算法伪代码如下：</p>
-<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxi7jp3secj30pu0a1my7.jpg" alt="png"> </p>
-<p>算法结束条件就是当value-table更新幅度小于阈值Θ时停止。</p>
-<h2 id="4-5-4-6-4-7"><a href="#4-5-4-6-4-7" class="headerlink" title="4.5 4.6 4.7"></a>4.5 4.6 4.7</h2><p>因为后面三部分都很短，也没有给出具体的解释，所以我就放一块写。</p>
-<p>4.5讲的是异步动态规划，其实前面讲的value iteration就是异步动态规划的一种，主要是希望可以改进DP算法会遍历整个state set的问题，有的value state没必要多次更新，而有的可以多次更新，具体的算法会在第8章提出。</p>
-<p>4.6讲的是统一的策略迭代(GPI)，意指evaluation和improvement是相互竞争合作的，大部分强化学习都是这两者相互作用达到最优的policy和state-value。</p>
-<p>4.7讲的是动态规划算法的效率，大致意思就是动规对于large-state的问题计算量仍旧很大，但是可以用异步动规来解决，policy iteration和value iteration现在仍很常用。</p>
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter09/square_wave.py" target="_blank" rel="noopener">chapter09/square_wave.py</a></p>
+<h1 id="使用Coarse-Coding方法构造feature来比较不同参数对近似函数性能的影响"><a href="#使用Coarse-Coding方法构造feature来比较不同参数对近似函数性能的影响" class="headerlink" title="使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响"></a>使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响</h1><a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个例子是书上的Example 9.3: Coarseness of Coarse Coding：</p>
+<p>使用Coarse Coding的方法建立近似函数去近似一个方波函数，即将方波函数的随机采样作为U_t来使用，通过修改区间之间的间隔、尺寸等参数来比较不同参数对Coarse Coding特征的泛化特性的影响。</p>
+<p>9.5讲的几个feature构造方法，并不只是用于强化学习，在函数拟合也是可以适用的，即回归问题上也是适用的。话说本来value function approximation就是监督学习的思想。。。所以本质不要搞混了。</p>
+<h2 id="引入模块"><a href="#引入模块" class="headerlink" title="引入模块"></a>引入模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br></pre></td></tr></table></figure>
+<h2 id="定义区间类"><a href="#定义区间类" class="headerlink" title="定义区间类"></a>定义区间类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrapper class for an interval</span></span><br><span class="line"><span class="comment"># readability is more important than efficiency, so I won't use many tricks</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Interval</span>:</span></span><br><span class="line">    <span class="comment"># [@left, @right)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, left, right)</span>:</span></span><br><span class="line">        self.left = left</span><br><span class="line">        self.right = right</span><br><span class="line"></span><br><span class="line">    <span class="comment"># whether a point is in this interval</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">contain</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.left &lt;= x &lt; self.right</span><br><span class="line"></span><br><span class="line">    <span class="comment"># length of this interval</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">size</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.right - self.left</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># domain of the square wave, [0, 2)</span></span><br><span class="line">DOMAIN = Interval(<span class="number">0.0</span>, <span class="number">2.0</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="定义需要估计的方波波形，以及随机抽样函数"><a href="#定义需要估计的方波波形，以及随机抽样函数" class="headerlink" title="定义需要估计的方波波形，以及随机抽样函数"></a>定义需要估计的方波波形，以及随机抽样函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># square wave function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">square_wave</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="number">0.5</span> &lt; x &lt; <span class="number">1.5</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get @n samples randomly from the square wave</span></span><br><span class="line"><span class="comment"># 返回长度为n的抽样序列</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sample</span><span class="params">(n)</span>:</span></span><br><span class="line">    samples = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, n):</span><br><span class="line">        x = np.random.uniform(DOMAIN.left, DOMAIN.right)</span><br><span class="line">        y = square_wave(x)</span><br><span class="line">        samples.append([x, y])</span><br><span class="line">    <span class="keyword">return</span> samples</span><br></pre></td></tr></table></figure>
+<h2 id="定义Coarse-Coding类来建立近似函数和更新方法"><a href="#定义Coarse-Coding类来建立近似函数和更新方法" class="headerlink" title="定义Coarse Coding类来建立近似函数和更新方法"></a>定义Coarse Coding类来建立近似函数和更新方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrapper class for value function</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValueFunction</span>:</span></span><br><span class="line">    <span class="comment"># @domain: domain of this function, an instance of Interval</span></span><br><span class="line">    <span class="comment"># @alpha: basic step size for one update</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, feature_width, domain=DOMAIN, alpha=<span class="number">0.2</span>, num_of_features=<span class="number">50</span>)</span>:</span></span><br><span class="line">        self.feature_width = feature_width</span><br><span class="line">        self.num_of_featrues = num_of_features</span><br><span class="line">        self.features = []</span><br><span class="line">        self.alpha = alpha</span><br><span class="line">        self.domain = domain</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 选择了一种方法来放置feature，也就是区间Interval</span></span><br><span class="line">        <span class="comment"># there are many ways to place those feature windows,</span></span><br><span class="line">        <span class="comment"># following is just one possible way</span></span><br><span class="line">        <span class="comment"># num_of)feature需要大于1</span></span><br><span class="line">        step = (domain.size() - feature_width) / (num_of_features - <span class="number">1</span>)</span><br><span class="line">        left = domain.left</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, num_of_features - <span class="number">1</span>):</span><br><span class="line">            self.features.append(Interval(left, left + feature_width))</span><br><span class="line">            left += step</span><br><span class="line">        self.features.append(Interval(left, domain.right))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize weight for each feature</span></span><br><span class="line">        self.weights = np.zeros(num_of_features)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># for point @x, return the indices of corresponding feature windows</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_active_features</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        active_features = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(self.features)):</span><br><span class="line">            <span class="keyword">if</span> self.features[i].contain(x):</span><br><span class="line">                active_features.append(i)</span><br><span class="line">        <span class="keyword">return</span> active_features</span><br><span class="line"></span><br><span class="line">    <span class="comment"># estimate the value for point @x</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        active_features = self.get_active_features(x)</span><br><span class="line">        <span class="comment"># 所有active-feature的weight的总和</span></span><br><span class="line">        <span class="keyword">return</span> np.sum(self.weights[active_features])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># update weights given sample of point @x</span></span><br><span class="line">    <span class="comment"># @delta: y - x，这里的delta并没有包含step-size，总感觉这个代码和1000-state不是一个作者。。。</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, delta, x)</span>:</span></span><br><span class="line">        active_features = self.get_active_features(x)</span><br><span class="line">        delta *= self.alpha / len(active_features)</span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> active_features:</span><br><span class="line">            self.weights[index] += delta</span><br></pre></td></tr></table></figure>
+<h2 id="训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width"><a href="#训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width" class="headerlink" title="训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width"></a>训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># train @value_function with a set of samples @samples</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">approximate</span><span class="params">(samples, value_function)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> x, y <span class="keyword">in</span> samples:</span><br><span class="line">        delta = y - value_function.value(x)</span><br><span class="line">        value_function.update(delta, x)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Figure 9.8</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_9_8</span><span class="params">()</span>:</span></span><br><span class="line">    num_of_samples = [<span class="number">10</span>, <span class="number">40</span>, <span class="number">160</span>, <span class="number">640</span>, <span class="number">2560</span>, <span class="number">10240</span>]</span><br><span class="line">    feature_widths = [<span class="number">0.2</span>, <span class="number">0.4</span>, <span class="number">1.0</span>]</span><br><span class="line">    plt.figure(figsize=(<span class="number">30</span>, <span class="number">20</span>))</span><br><span class="line">    axis_x = np.arange(DOMAIN.left, DOMAIN.right, <span class="number">0.02</span>)</span><br><span class="line">    <span class="keyword">for</span> index, num_of_sample <span class="keyword">in</span> enumerate(num_of_samples):</span><br><span class="line">        print(num_of_sample, <span class="string">'samples'</span>)</span><br><span class="line">        samples = sample(num_of_sample)</span><br><span class="line">        value_functions = [ValueFunction(feature_width) <span class="keyword">for</span> feature_width <span class="keyword">in</span> feature_widths]</span><br><span class="line">        plt.subplot(<span class="number">2</span>, <span class="number">3</span>, index + <span class="number">1</span>)</span><br><span class="line">        plt.title(<span class="string">'%d samples'</span> % (num_of_sample))</span><br><span class="line">        <span class="keyword">for</span> value_function <span class="keyword">in</span> value_functions:</span><br><span class="line">            approximate(samples, value_function)</span><br><span class="line">            values = [value_function.value(x) <span class="keyword">for</span> x <span class="keyword">in</span> axis_x]</span><br><span class="line">            plt.plot(axis_x, values, label=<span class="string">'feature width %.01f'</span> % (value_function.feature_width))</span><br><span class="line">        plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_9_8.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_9_8()</span><br></pre></td></tr></table></figure>
+<pre><code>10 samples
+40 samples
+160 samples
+640 samples
+2560 samples
+10240 samples
+</code></pre><p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy4yylzgecj319c0u0gsx.jpg" alt="png"> </p>
+<p>可以看到feature-width对训练结果影响很大，width大对应board feature，泛化范围广，曲线较平坦；width小对应narrow feature，泛化范围窄，曲线毛刺比较多。总体的渐进效果影响不大，但是对具体state的泛化影响就比较大了。</p>
 
       
     </div>
@@ -401,7 +385,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
           
         </div>
       
@@ -414,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/22/Chapter03-gird-world/" rel="next" title="Chapter03 gird-world">
-                <i class="fa fa-chevron-left"></i> Chapter03 gird-world
+              <a href="/2018/12/08/Chapter09-1000-state-Random-Walk/" rel="next" title="1000-state Random Walk">
+                <i class="fa fa-chevron-left"></i> 1000-state Random Walk
               </a>
             
           </div>
@@ -423,10 +407,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/23/Chapter04-gird-world-using-DP/" rel="prev" title="Chapter04 gird-world using DP">
-                Chapter04 gird-world using DP <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -569,7 +549,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-Policy-Evaluation"><span class="nav-number">1.</span> <span class="nav-text">4.1 Policy Evaluation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先理解什么是策略的评估"><span class="nav-number">1.1.</span> <span class="nav-text">首先理解什么是策略的评估</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-Policy-Improvement"><span class="nav-number">2.</span> <span class="nav-text">4.2 Policy Improvement</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-Policy-Iteration"><span class="nav-number">3.</span> <span class="nav-text">4.3 Policy Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-Value-Iteration"><span class="nav-number">4.</span> <span class="nav-text">4.4 Value Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-4-6-4-7"><span class="nav-number">5.</span> <span class="nav-text">4.5 4.6 4.7</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Coarse-Coding方法构造feature来比较不同参数对近似函数性能的影响"><span class="nav-number">1.</span> <span class="nav-text">使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义区间类"><span class="nav-number">1.3.</span> <span class="nav-text">定义区间类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义需要估计的方波波形，以及随机抽样函数"><span class="nav-number">1.4.</span> <span class="nav-text">定义需要估计的方波波形，以及随机抽样函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义Coarse-Coding类来建立近似函数和更新方法"><span class="nav-number">1.5.</span> <span class="nav-text">定义Coarse Coding类来建立近似函数和更新方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width"><span class="nav-number">1.6.</span> <span class="nav-text">训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width</span></a></li></ol></li></ol></div>
             
 
           </div>

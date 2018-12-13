@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter09/random_walk.py 通过1000-state MRP的例子比较了linear近似函数的不同feature构造方法对应的value function approximation强化学习算法性能">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1000-state Random Walk">
+<meta property="og:url" content="http://yoursite.com/2018/12/08/Chapter09-1000-state-Random-Walk/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter09/random_walk.py 通过1000-state MRP的例子比较了linear近似函数的不同feature构造方法对应的value function approximation强化学习算法性能">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yt5glhsj30hf0vkmxy.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy4yttlv60j30hf0vkacc.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yuyqatgj30at07et90.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yvl78noj30at07et9k.jpg">
+<meta property="og:updated_time" content="2018-12-13T03:41:14.458Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1000-state Random Walk">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter09/random_walk.py 通过1000-state MRP的例子比较了linear近似函数的不同feature构造方法对应的value function approximation强化学习算法性能">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yt5glhsj30hf0vkmxy.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/08/Chapter09-1000-state-Random-Walk/">
+
+
+
+
+
+  <title>1000-state Random Walk | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/08/Chapter09-1000-state-Random-Walk/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">1000-state Random Walk</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-08T15:11:08+08:00">
+                2018-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter09/random_walk.py" target="_blank" rel="noopener">chapter09/random_walk.py</a></p>
+<h1 id="通过1000-state-MRP的例子比较了linear近似函数的不同feature构造方法对应的value-function-approximation强化学习算法性能"><a href="#通过1000-state-MRP的例子比较了linear近似函数的不同feature构造方法对应的value-function-approximation强化学习算法性能" class="headerlink" title="通过1000-state MRP的例子比较了linear近似函数的不同feature构造方法对应的value function approximation强化学习算法性能"></a>通过1000-state MRP的例子比较了linear近似函数的不同feature构造方法对应的value function approximation强化学习算法性能</h1><a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个问题是<a href="https://xinge650.github.io/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/" target="_blank" rel="noopener">Examples 6.2 random-walk</a>的扩展:</p>
+<p>(1)状态数扩展到了1000，状态序列[1,1000]，开始状态是500</p>
+<p>(2)State transitions are from the current state to one of the 100 neighboring states to its left, or to one of the 100 neighboring states to its right, all with equal probability. </p>
+<p>(3)if the current state is near an edge, then there may be fewer than 100 neighbors on that side of it. In this case, all the probability that would have gone into those missing neighbors goes into the probability of terminating on that side (thus, state 1 has a 0.5 chance of terminating on the left, and state 950 has a 0.25 chance of terminating on the right).</p>
+<p>(4)在左边达到terminal-state的reward是-1，在右边达到terminal-state的reward是+1</p>
+<h2 id="引入模块并定义常量"><a href="#引入模块并定义常量" class="headerlink" title="引入模块并定义常量"></a>引入模块并定义常量</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># # of states except for terminal states</span></span><br><span class="line">N_STATES = <span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># all states expect terminal state</span></span><br><span class="line">STATES = np.arange(<span class="number">1</span>, N_STATES + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># start from a central state</span></span><br><span class="line">START_STATE = <span class="number">500</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># terminal states</span></span><br><span class="line">END_STATES = [<span class="number">0</span>, N_STATES + <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># possible actions</span></span><br><span class="line">ACTION_LEFT = <span class="number">-1</span></span><br><span class="line">ACTION_RIGHT = <span class="number">1</span></span><br><span class="line">ACTIONS = [ACTION_LEFT, ACTION_RIGHT]</span><br><span class="line"></span><br><span class="line"><span class="comment"># maximum stride for an action</span></span><br><span class="line">STEP_RANGE = <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义函数计算真实的state-value，结果是近似直线，只有在直线两端有非线性部分"><a href="#定义函数计算真实的state-value，结果是近似直线，只有在直线两端有非线性部分" class="headerlink" title="定义函数计算真实的state-value，结果是近似直线，只有在直线两端有非线性部分"></a>定义函数计算真实的state-value，结果是近似直线，只有在直线两端有非线性部分</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_true_value</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># true state value, just a promising guess</span></span><br><span class="line">    true_value = np.arange(<span class="number">-1001</span>, <span class="number">1003</span>, <span class="number">2</span>) / <span class="number">1001.0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Dynamic programming to find the true state values, based on the promising guess above</span></span><br><span class="line">    <span class="comment"># Assume all rewards are 0, given that we have already given value -1 and 1 to terminal states</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="comment"># deep copy</span></span><br><span class="line">        old_value = np.copy(true_value)</span><br><span class="line">        <span class="keyword">for</span> state <span class="keyword">in</span> STATES:</span><br><span class="line">            true_value[state] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> action <span class="keyword">in</span> ACTIONS:</span><br><span class="line">                <span class="keyword">for</span> step <span class="keyword">in</span> range(<span class="number">1</span>, STEP_RANGE + <span class="number">1</span>):</span><br><span class="line">                    step *= action</span><br><span class="line">                    next_state = state + step</span><br><span class="line">                    next_state = max(min(next_state, N_STATES + <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">                    <span class="comment"># asynchronous update for faster convergence</span></span><br><span class="line">                    true_value[state] += <span class="number">1.0</span> / (<span class="number">2</span> * STEP_RANGE) * true_value[next_state]</span><br><span class="line">        error = np.sum(np.abs(old_value - true_value))</span><br><span class="line">        <span class="keyword">if</span> error &lt; <span class="number">1e-2</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="comment"># correct the state value for terminal states to 0</span></span><br><span class="line">    <span class="comment"># 注意这里左右的terminal-state的true_value都是0，第六章里的代码为了计算Monte-Carlo方法方便把true_value[-1]设置成了1</span></span><br><span class="line">    <span class="comment"># 虽然结果来说无伤大雅，因为如果terminal-state value=1，那么可以将reward都设置为0；如果将terminal-state value设置为0</span></span><br><span class="line">    <span class="comment"># 那么需要引入非零的reward</span></span><br><span class="line">    <span class="comment"># 但是terminal-state value到底是0还是不是0，计算可以随意，概念上看来是没有明确规定了</span></span><br><span class="line">    true_value[<span class="number">0</span>] = true_value[<span class="number">-1</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> true_value</span><br><span class="line"></span><br><span class="line">true_value = compute_true_value()</span><br></pre></td></tr></table></figure>
+<h2 id="定义step函数来模拟单步交互，定义get-action函数使用随机policy选择action"><a href="#定义step函数来模拟单步交互，定义get-action函数使用随机policy选择action" class="headerlink" title="定义step函数来模拟单步交互，定义get_action函数使用随机policy选择action"></a>定义step函数来模拟单步交互，定义get_action函数使用随机policy选择action</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take an @action at @state, return new state and reward for this transition</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(state, action)</span>:</span></span><br><span class="line">    step = np.random.randint(<span class="number">1</span>, STEP_RANGE + <span class="number">1</span>)</span><br><span class="line">    step *= action</span><br><span class="line">    state += step</span><br><span class="line">    state = max(min(state, N_STATES + <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> state == <span class="number">0</span>:</span><br><span class="line">        reward = <span class="number">-1</span></span><br><span class="line">    <span class="keyword">elif</span> state == N_STATES + <span class="number">1</span>:</span><br><span class="line">        reward = <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        reward = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> state, reward</span><br><span class="line"></span><br><span class="line"><span class="comment"># get an action, following random policy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_action</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, <span class="number">0.5</span>) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义State-Aggregation的function-approximation"><a href="#定义State-Aggregation的function-approximation" class="headerlink" title="定义State Aggregation的function approximation"></a>定义State Aggregation的function approximation</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a wrapper class for aggregation value function</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValueFunction</span>:</span></span><br><span class="line">    <span class="comment"># @num_of_groups: # of aggregations</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_of_groups)</span>:</span></span><br><span class="line">        self.num_of_groups = num_of_groups</span><br><span class="line">        self.group_size = N_STATES // num_of_groups</span><br><span class="line"></span><br><span class="line">        <span class="comment"># w</span></span><br><span class="line">        self.params = np.zeros(num_of_groups)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the value of @state</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value</span><span class="params">(self, state)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> state <span class="keyword">in</span> END_STATES:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        group_index = (state - <span class="number">1</span>) // self.group_size</span><br><span class="line">        <span class="keyword">return</span> self.params[group_index]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># update parameters</span></span><br><span class="line">    <span class="comment"># @delta: step size * (target - old estimation)</span></span><br><span class="line">    <span class="comment"># @state: state of current sample</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, delta, state)</span>:</span></span><br><span class="line">        group_index = (state - <span class="number">1</span>) // self.group_size</span><br><span class="line">        self.params[group_index] += delta</span><br></pre></td></tr></table></figure>
+<h2 id="定义使用近似函数的Monte-Carlo方法来训练value-function"><a href="#定义使用近似函数的Monte-Carlo方法来训练value-function" class="headerlink" title="定义使用近似函数的Monte-Carlo方法来训练value function"></a>定义使用近似函数的Monte-Carlo方法来训练value function</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gradient Monte Carlo algorithm</span></span><br><span class="line"><span class="comment"># @value_function: an instance of class ValueFunction</span></span><br><span class="line"><span class="comment"># @alpha: step size</span></span><br><span class="line"><span class="comment"># @distribution: array to store the distribution statistics</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_monte_carlo</span><span class="params">(value_function, alpha, distribution=None)</span>:</span></span><br><span class="line">    state = START_STATE</span><br><span class="line">    trajectory = [state]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># We assume gamma = 1, so return is just the same as the latest reward</span></span><br><span class="line">    reward = <span class="number">0.0</span></span><br><span class="line">    <span class="comment"># 模拟一个episode，得到state序列</span></span><br><span class="line">    <span class="keyword">while</span> state <span class="keyword">not</span> <span class="keyword">in</span> END_STATES:</span><br><span class="line">        action = get_action()</span><br><span class="line">        next_state, reward = step(state, action)</span><br><span class="line">        trajectory.append(next_state)</span><br><span class="line">        state = next_state</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Gradient update for each state in this trajectory</span></span><br><span class="line">    <span class="comment"># 因为每一步reward都是0，只有达到terminal-state才会产生非零reward，所以G_t = reward</span></span><br><span class="line">    <span class="comment"># 这个地方的梯度更新和公式(9.7)稍微有点出入，主要是由于这里的function approximation采用了状态聚合的形式</span></span><br><span class="line">    <span class="comment"># 即维度为10的w对应了10个state group，函数求导的时候，只有state对应的group对应的w分量才会更新，并且这里将导数设置成了</span></span><br><span class="line">    <span class="comment"># 0-1函数，所以这样的梯度下降公式可以简化为每次只更新一个对应的w分量</span></span><br><span class="line">    <span class="keyword">for</span> state <span class="keyword">in</span> trajectory[:<span class="number">-1</span>]:</span><br><span class="line">        delta = alpha * (reward - value_function.value(state))</span><br><span class="line">        value_function.update(delta, state)</span><br><span class="line">        <span class="keyword">if</span> distribution <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            distribution[state] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h2 id="绘制图像，比较使用SGD的MC方法的预测value-function和true-value的区别，以及state的分布"><a href="#绘制图像，比较使用SGD的MC方法的预测value-function和true-value的区别，以及state的分布" class="headerlink" title="绘制图像，比较使用SGD的MC方法的预测value function和true_value的区别，以及state的分布"></a>绘制图像，比较使用SGD的MC方法的预测value function和true_value的区别，以及state的分布</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 9.1, gradient Monte Carlo algorithm</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_9_1</span><span class="params">(true_value)</span>:</span></span><br><span class="line">    episodes = int(<span class="number">1e5</span>)</span><br><span class="line">    alpha = <span class="number">2e-5</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># we have 10 aggregations in this example, each has 100 states</span></span><br><span class="line">    value_function = ValueFunction(<span class="number">10</span>)</span><br><span class="line">    distribution = np.zeros(N_STATES + <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">for</span> ep <span class="keyword">in</span> tqdm(range(episodes)):</span><br><span class="line">        gradient_monte_carlo(value_function, alpha, distribution)</span><br><span class="line"></span><br><span class="line">    distribution /= np.sum(distribution)</span><br><span class="line">    state_values = [value_function.value(i) <span class="keyword">for</span> i <span class="keyword">in</span> STATES]</span><br><span class="line"></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    plt.plot(STATES, state_values, label=<span class="string">'Approximate MC value'</span>)</span><br><span class="line">    plt.plot(STATES, true_value[<span class="number">1</span>: <span class="number">-1</span>], label=<span class="string">'True value'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'State'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Value'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    plt.plot(STATES, distribution[<span class="number">1</span>: <span class="number">-1</span>], label=<span class="string">'State distribution'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'State'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Distribution'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_9_1.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line"><span class="comment"># test</span></span><br><span class="line">figure_9_1(true_value)</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 100000/100000 [01:26&lt;00:00, 1156.28it/s]
+</code></pre><p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy4yt5glhsj30hf0vkmxy.jpg" alt="png"> </p>
+<p>可以通过distribution解释更多关于function approximation的细节。最明显的就是estimate value的左下角和右上角，左下角的值基本都比true_value大，右上角的基本都比true_value小。因为在一个state group中，相对的distribution占得越多的state对聚合value的更新贡献越大。可以看到distribution越往中间值越大，但是越靠中间的group内的states的相对distribution就比较接近了，所以estimate value在靠中间的state上基本是均匀分布在true_value附近的。但是两头的state因为group内的相对distribution差别比较大，所以就出现了相对true_value的明显偏差。</p>
+<h2 id="定义使用近似函数的n-step-TD方法训练，使用semi-gradient"><a href="#定义使用近似函数的n-step-TD方法训练，使用semi-gradient" class="headerlink" title="定义使用近似函数的n-step TD方法训练，使用semi-gradient"></a>定义使用近似函数的n-step TD方法训练，使用semi-gradient</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># semi-gradient n-step TD algorithm</span></span><br><span class="line"><span class="comment"># @valueFunction: an instance of class ValueFunction</span></span><br><span class="line"><span class="comment"># @n: # of steps</span></span><br><span class="line"><span class="comment"># @alpha: step size</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">semi_gradient_temporal_difference</span><span class="params">(value_function, n, alpha)</span>:</span></span><br><span class="line">    <span class="comment"># initial starting state</span></span><br><span class="line">    state = START_STATE</span><br><span class="line"></span><br><span class="line">    <span class="comment"># arrays to store states and rewards for an episode</span></span><br><span class="line">    <span class="comment"># space isn't a major consideration, so I didn't use the mod trick</span></span><br><span class="line">    <span class="comment"># mod trick指的是只存储n+1个state，通过观察P169给出的伪代码，更新始终只使用了n个reward以及存储的index(mod n+1之前)最大的</span></span><br><span class="line">    <span class="comment"># state，所以可以采用循环队列的方法来存储reward和state序列，</span></span><br><span class="line">    <span class="comment"># 但是我觉得应该只用mod n就够了，以伪代码的符号为例来解释：</span></span><br><span class="line">    <span class="comment"># 当t=n-1时，τ=0，进入第二部分循环，此时已经存储S1-Sn，共n个state以及n个reward</span></span><br><span class="line">    <span class="comment"># 第二部分循环只使用了R1-Rn和Sn，所以长度n的循环队列理论上就够了</span></span><br><span class="line">    </span><br><span class="line">    states = [state]</span><br><span class="line">    rewards = [<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># track the time</span></span><br><span class="line">    time = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># the length of this episode</span></span><br><span class="line">    T = float(<span class="string">'inf'</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="comment"># go to next time step</span></span><br><span class="line">        time += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> time &lt; T:</span><br><span class="line">            <span class="comment"># choose an action randomly</span></span><br><span class="line">            action = get_action()</span><br><span class="line">            next_state, reward = step(state, action)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># store new state and new reward</span></span><br><span class="line">            states.append(next_state)</span><br><span class="line">            rewards.append(reward)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> next_state <span class="keyword">in</span> END_STATES:</span><br><span class="line">                T = time</span><br><span class="line"></span><br><span class="line">        <span class="comment"># get the time of the state to update</span></span><br><span class="line">        update_time = time - n</span><br><span class="line">        <span class="keyword">if</span> update_time &gt;= <span class="number">0</span>:</span><br><span class="line">            returns = <span class="number">0.0</span></span><br><span class="line">            <span class="comment"># calculate corresponding rewards</span></span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> range(update_time + <span class="number">1</span>, min(T, update_time + n) + <span class="number">1</span>):</span><br><span class="line">                returns += rewards[t]</span><br><span class="line">            <span class="comment"># add state value to the return</span></span><br><span class="line">            <span class="keyword">if</span> update_time + n &lt;= T:</span><br><span class="line">                returns += value_function.value(states[update_time + n])</span><br><span class="line">            state_to_update = states[update_time]</span><br><span class="line">            <span class="comment"># update the value function</span></span><br><span class="line">            <span class="comment"># update the w，but not value table</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> state_to_update <span class="keyword">in</span> END_STATES:</span><br><span class="line">                delta = alpha * (returns - value_function.value(state_to_update))</span><br><span class="line">                value_function.update(delta, state_to_update)</span><br><span class="line">        <span class="keyword">if</span> update_time == T - <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        state = next_state</span><br></pre></td></tr></table></figure>
+<h2 id="绘制图表，观察n-step-TD方法的效果，以及不同n取值对rms-error的影响"><a href="#绘制图表，观察n-step-TD方法的效果，以及不同n取值对rms-error的影响" class="headerlink" title="绘制图表，观察n-step TD方法的效果，以及不同n取值对rms error的影响"></a>绘制图表，观察n-step TD方法的效果，以及不同n取值对rms error的影响</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># semi-gradient TD on 1000-state random walk，使用TD(0)方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_9_2_left</span><span class="params">(true_value)</span>:</span></span><br><span class="line">    episodes = int(<span class="number">1e5</span>)</span><br><span class="line">    alpha = <span class="number">2e-4</span></span><br><span class="line">    value_function = ValueFunction(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">for</span> ep <span class="keyword">in</span> tqdm(range(episodes)):</span><br><span class="line">        semi_gradient_temporal_difference(value_function, <span class="number">1</span>, alpha)</span><br><span class="line"></span><br><span class="line">    stateValues = [value_function.value(i) <span class="keyword">for</span> i <span class="keyword">in</span> STATES]</span><br><span class="line">    plt.plot(STATES, stateValues, label=<span class="string">'Approximate TD value'</span>)</span><br><span class="line">    plt.plot(STATES, true_value[<span class="number">1</span>: <span class="number">-1</span>], label=<span class="string">'True value'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'State'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Value'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line"><span class="comment"># different alphas and steps for semi-gradient TD</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_9_2_right</span><span class="params">(true_value)</span>:</span></span><br><span class="line">    <span class="comment"># all possible steps</span></span><br><span class="line">    steps = np.power(<span class="number">2</span>, np.arange(<span class="number">0</span>, <span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># all possible alphas</span></span><br><span class="line">    alphas = np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># each run has 10 episodes</span></span><br><span class="line">    episodes = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># perform 100 independent runs</span></span><br><span class="line">    runs = <span class="number">100</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># track the errors for each (step, alpha) combination</span></span><br><span class="line">    errors = np.zeros((len(steps), len(alphas)))</span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> tqdm(range(runs)):</span><br><span class="line">        <span class="keyword">for</span> step_ind, step <span class="keyword">in</span> zip(range(len(steps)), steps):</span><br><span class="line">            <span class="keyword">for</span> alpha_ind, alpha <span class="keyword">in</span> zip(range(len(alphas)), alphas):</span><br><span class="line">                <span class="comment"># we have 20 aggregations in this example</span></span><br><span class="line">                value_function = ValueFunction(<span class="number">20</span>)</span><br><span class="line">                <span class="keyword">for</span> ep <span class="keyword">in</span> range(<span class="number">0</span>, episodes):</span><br><span class="line">                    semi_gradient_temporal_difference(value_function, step, alpha)</span><br><span class="line">                    <span class="comment"># calculate the RMS error</span></span><br><span class="line">                    state_value = np.asarray([value_function.value(i) <span class="keyword">for</span> i <span class="keyword">in</span> STATES])</span><br><span class="line">                    errors[step_ind, alpha_ind] += np.sqrt(np.sum(np.power(state_value - true_value[<span class="number">1</span>: <span class="number">-1</span>], <span class="number">2</span>)) / N_STATES)</span><br><span class="line">    <span class="comment"># take average</span></span><br><span class="line">    errors /= episodes * runs</span><br><span class="line">    <span class="comment"># truncate the error</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(steps)):</span><br><span class="line">        plt.plot(alphas, errors[i, :], label=<span class="string">'n = '</span> + str(steps[i]))</span><br><span class="line">    plt.xlabel(<span class="string">'alpha'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'RMS error'</span>)</span><br><span class="line">    plt.ylim([<span class="number">0.25</span>, <span class="number">0.55</span>])</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_9_2</span><span class="params">(true_value)</span>:</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">20</span>))</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    figure_9_2_left(true_value)</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    figure_9_2_right(true_value)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_9_2.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># test</span></span><br><span class="line">figure_9_2(true_value)</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 100000/100000 [01:32&lt;00:00, 1077.20it/s]
+100%|██████████| 100/100 [04:50&lt;00:00,  2.87s/it]
+</code></pre><p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy4yttlv60j30hf0vkacc.jpg" alt="png"> </p>
+<h2 id="下面几个例子分别使用了不同的特征模型-Feature-Construction-来完成VFA-value-function-approximation-，分别对应了-9-5的polynomial-Fourier基函数模型、Tilings-Code模型，使用的强化学习方法是n-step-TD方法"><a href="#下面几个例子分别使用了不同的特征模型-Feature-Construction-来完成VFA-value-function-approximation-，分别对应了-9-5的polynomial-Fourier基函数模型、Tilings-Code模型，使用的强化学习方法是n-step-TD方法" class="headerlink" title="下面几个例子分别使用了不同的特征模型(Feature Construction)来完成VFA(value function approximation)，分别对应了 9.5的polynomial / Fourier基函数模型、Tilings-Code模型，使用的强化学习方法是n-step TD方法"></a>下面几个例子分别使用了不同的特征模型(Feature Construction)来完成VFA(value function approximation)，分别对应了 9.5的polynomial / Fourier基函数模型、Tilings-Code模型，使用的强化学习方法是n-step TD方法</h2><h2 id="Tile-Coding特征的linear-function-approximation"><a href="#Tile-Coding特征的linear-function-approximation" class="headerlink" title="Tile Coding特征的linear function approximation"></a>Tile Coding特征的linear function approximation</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a wrapper class for tile coding value function</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TilingsValueFunction</span>:</span></span><br><span class="line">    <span class="comment"># @num_of_tilings: # of tilings</span></span><br><span class="line">    <span class="comment"># @tileWidth: each tiling has several tiles, this parameter specifies the width of each tile</span></span><br><span class="line">    <span class="comment"># @tilingOffset: specifies how tilings are put together</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, numOfTilings, tileWidth, tilingOffset)</span>:</span></span><br><span class="line">        self.numOfTilings = numOfTilings</span><br><span class="line">        self.tileWidth = tileWidth</span><br><span class="line">        self.tilingOffset = tilingOffset</span><br><span class="line"></span><br><span class="line">        <span class="comment"># To make sure that each sate is covered by same number of tiles,</span></span><br><span class="line">        <span class="comment"># we need one more tile for each tiling</span></span><br><span class="line">        <span class="comment"># self.tilingSize 指的是每个tiling包含的tile的数量，+1是为了保证tiling空间大于state空间，保证每个</span></span><br><span class="line">        <span class="comment"># state都被相同数量的tile覆盖</span></span><br><span class="line">        self.tilingSize = N_STATES // tileWidth + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># weight for each tile</span></span><br><span class="line">        self.params = np.zeros((self.numOfTilings, self.tilingSize))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># For performance, only track the starting position for each tiling</span></span><br><span class="line">        <span class="comment"># 只使用tiling的起始点和对应偏移来表示tiling</span></span><br><span class="line">        <span class="comment"># As we have one more tile for each tiling, the starting position will be negative</span></span><br><span class="line">        self.tilings = np.arange(-tileWidth + <span class="number">1</span>, <span class="number">0</span>, tilingOffset)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the value of @state</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value</span><span class="params">(self, state)</span>:</span></span><br><span class="line">        stateValue = <span class="number">0.0</span></span><br><span class="line">        <span class="comment"># go through all the tilings</span></span><br><span class="line">        <span class="keyword">for</span> tilingIndex <span class="keyword">in</span> range(<span class="number">0</span>, len(self.tilings)):</span><br><span class="line">            <span class="comment"># find the active tile in current tiling</span></span><br><span class="line">            tileIndex = (state - self.tilings[tilingIndex]) // self.tileWidth</span><br><span class="line">            <span class="comment"># estimate value是所有tile对应的weight的求和，可以认为是state聚合的拓展，具有更强的泛化能力</span></span><br><span class="line">            stateValue += self.params[tilingIndex, tileIndex]</span><br><span class="line">        <span class="keyword">return</span> stateValue</span><br><span class="line"></span><br><span class="line">    <span class="comment"># update parameters</span></span><br><span class="line">    <span class="comment"># @delta: step size * (target - old estimation)</span></span><br><span class="line">    <span class="comment"># @state: state of current sample</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, delta, state)</span>:</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># each state is covered by same number of tilings</span></span><br><span class="line">        <span class="comment"># so the delta should be divided equally into each tiling (tile)</span></span><br><span class="line">        <span class="comment"># 这个地方对delta的缩放主要是为了针对tiling codeing缩放step-size α，书上有对应的解释P176 Figure 9.10</span></span><br><span class="line">        delta /= self.numOfTilings</span><br><span class="line"></span><br><span class="line">        <span class="comment"># go through all the tilings</span></span><br><span class="line">        <span class="keyword">for</span> tilingIndex <span class="keyword">in</span> range(<span class="number">0</span>, len(self.tilings)):</span><br><span class="line">            <span class="comment"># find the active tile in current tiling</span></span><br><span class="line">            tileIndex = (state - self.tilings[tilingIndex]) // self.tileWidth</span><br><span class="line">            self.params[tilingIndex, tileIndex] += delta</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line"><span class="comment"># Figure 9.10, it will take quite a while</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_9_10</span><span class="params">(true_value)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># My machine can only afford one run, thus the curve isn't so smooth</span></span><br><span class="line">    runs = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># number of episodes</span></span><br><span class="line">    episodes = <span class="number">5000</span></span><br><span class="line"></span><br><span class="line">    num_of_tilings = <span class="number">50</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># each tile will cover 200 states</span></span><br><span class="line">    tile_width = <span class="number">200</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># how to put so many tilings</span></span><br><span class="line">    tiling_offset = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">    labels = [<span class="string">'tile coding (50 tilings)'</span>, <span class="string">'state aggregation (one tiling)'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># track errors for each episode</span></span><br><span class="line">    errors = np.zeros((len(labels), episodes))</span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> range(runs):</span><br><span class="line">        <span class="comment"># initialize value functions for multiple tilings and single tiling</span></span><br><span class="line">        value_functions = [TilingsValueFunction(num_of_tilings, tile_width, tiling_offset),</span><br><span class="line">                         ValueFunction(N_STATES // tile_width)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(value_functions)):</span><br><span class="line">            <span class="keyword">for</span> episode <span class="keyword">in</span> tqdm(range(episodes)):</span><br><span class="line">                <span class="comment"># I use a changing alpha according to the episode instead of a small fixed alpha</span></span><br><span class="line">                <span class="comment"># With a small fixed alpha, I don't think 5000 episodes is enough for so many</span></span><br><span class="line">                <span class="comment"># parameters in multiple tilings.</span></span><br><span class="line">                <span class="comment"># The asymptotic performance for single tiling stays unchanged under a changing alpha,</span></span><br><span class="line">                <span class="comment"># however the asymptotic performance for multiple tilings improves significantly</span></span><br><span class="line">                <span class="comment"># 递减的alpha使得训练在一开始更重视当前target，加快训练速度</span></span><br><span class="line">                <span class="comment"># 后期的训练更重视经验，有效收敛</span></span><br><span class="line">                alpha = <span class="number">1.0</span> / (episode + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># gradient Monte Carlo algorithm</span></span><br><span class="line">                gradient_monte_carlo(value_functions[i], alpha)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># get state values under current value function</span></span><br><span class="line">                state_values = [value_functions[i].value(state) <span class="keyword">for</span> state <span class="keyword">in</span> STATES]</span><br><span class="line"></span><br><span class="line">                <span class="comment"># get the root-mean-squared error</span></span><br><span class="line">                errors[i][episode] += np.sqrt(np.mean(np.power(true_value[<span class="number">1</span>: <span class="number">-1</span>] - state_values, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average over independent runs</span></span><br><span class="line">    errors /= runs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(labels)):</span><br><span class="line">        plt.plot(errors[i], label=labels[i])</span><br><span class="line">    plt.xlabel(<span class="string">'Episodes'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'RMSVE'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_9_10.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_9_10(true_value)</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 5000/5000 [03:53&lt;00:00, 21.37it/s]
+100%|██████████| 5000/5000 [00:09&lt;00:00, 527.11it/s]
+</code></pre><p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy4yuyqatgj30at07et90.jpg" alt="png"> </p>
+<h2 id="Polynomial-Fourier-Based-value-function-特征的linear-function-approximation"><a href="#Polynomial-Fourier-Based-value-function-特征的linear-function-approximation" class="headerlink" title="Polynomial / Fourier -Based value function 特征的linear function approximation"></a>Polynomial / Fourier -Based value function 特征的linear function approximation</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a wrapper class for polynomial / Fourier -based value function</span></span><br><span class="line">POLYNOMIAL_BASES = <span class="number">0</span></span><br><span class="line">FOURIER_BASES = <span class="number">1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasesValueFunction</span>:</span></span><br><span class="line">    <span class="comment"># @order: # of bases, each function also has one more constant parameter (called bias in machine learning)</span></span><br><span class="line">    <span class="comment"># @type: polynomial bases or Fourier bases</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, order, type)</span>:</span></span><br><span class="line">        self.order = order</span><br><span class="line">        self.weights = np.zeros(order + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># set up bases function</span></span><br><span class="line">        self.bases = []</span><br><span class="line">        <span class="keyword">if</span> type == POLYNOMIAL_BASES:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, order + <span class="number">1</span>):</span><br><span class="line">                self.bases.append(<span class="keyword">lambda</span> s, i=i: pow(s, i))</span><br><span class="line">        <span class="keyword">elif</span> type == FOURIER_BASES:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, order + <span class="number">1</span>):</span><br><span class="line">                self.bases.append(<span class="keyword">lambda</span> s, i=i: np.cos(i * np.pi * s))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the value of @state</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value</span><span class="params">(self, state)</span>:</span></span><br><span class="line">        <span class="comment"># map the state space into [0, 1]</span></span><br><span class="line">        state /= float(N_STATES)</span><br><span class="line">        <span class="comment"># get the feature vector</span></span><br><span class="line">        feature = np.asarray([func(state) <span class="keyword">for</span> func <span class="keyword">in</span> self.bases])</span><br><span class="line">        <span class="keyword">return</span> np.dot(self.weights, feature)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, delta, state)</span>:</span></span><br><span class="line">        <span class="comment"># map the state space into [0, 1]</span></span><br><span class="line">        state /= float(N_STATES)</span><br><span class="line">        <span class="comment"># get derivative value</span></span><br><span class="line">        derivative_value = np.asarray([func(state) <span class="keyword">for</span> func <span class="keyword">in</span> self.bases])</span><br><span class="line">        self.weights += delta * derivative_value</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line"><span class="comment"># Figure 9.5, Fourier basis and polynomials</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_9_5</span><span class="params">(true_value)</span>:</span></span><br><span class="line">    <span class="comment"># my machine can only afford 1 run</span></span><br><span class="line">    runs = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    episodes = <span class="number">5000</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># # of bases</span></span><br><span class="line">    orders = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>]</span><br><span class="line"></span><br><span class="line">    alphas = [<span class="number">1e-4</span>, <span class="number">5e-5</span>]</span><br><span class="line">    labels = [[<span class="string">'polynomial basis'</span>] * <span class="number">3</span>, [<span class="string">'fourier basis'</span>] * <span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># track errors for each episode</span></span><br><span class="line">    errors = np.zeros((len(alphas), len(orders), episodes))</span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> range(runs):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(orders)):</span><br><span class="line">            value_functions = [BasesValueFunction(orders[i], POLYNOMIAL_BASES), BasesValueFunction(orders[i], FOURIER_BASES)]</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(len(value_functions)):</span><br><span class="line">                <span class="keyword">for</span> episode <span class="keyword">in</span> tqdm(range(episodes)):</span><br><span class="line"></span><br><span class="line">                    <span class="comment"># gradient Monte Carlo algorithm</span></span><br><span class="line">                    gradient_monte_carlo(value_functions[j], alphas[j])</span><br><span class="line"></span><br><span class="line">                    <span class="comment"># get state values under current value function</span></span><br><span class="line">                    state_values = [value_functions[j].value(state) <span class="keyword">for</span> state <span class="keyword">in</span> STATES]</span><br><span class="line"></span><br><span class="line">                    <span class="comment"># get the root-mean-squared error</span></span><br><span class="line">                    errors[j, i, episode] += np.sqrt(np.mean(np.power(true_value[<span class="number">1</span>: <span class="number">-1</span>] - state_values, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average over independent runs</span></span><br><span class="line">    errors /= runs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(alphas)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(len(orders)):</span><br><span class="line">            plt.plot(errors[i, j, :], label=<span class="string">'%s order = %d'</span> % (labels[i][j], orders[j]))</span><br><span class="line">    plt.xlabel(<span class="string">'Episodes'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'RMSVE'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_9_5.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_9_5(true_value)</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 5000/5000 [01:18&lt;00:00, 63.43it/s]
+100%|██████████| 5000/5000 [02:05&lt;00:00, 38.65it/s]
+100%|██████████| 5000/5000 [01:36&lt;00:00, 51.71it/s]
+100%|██████████| 5000/5000 [02:54&lt;00:00, 27.98it/s]
+100%|██████████| 5000/5000 [02:06&lt;00:00, 39.42it/s]
+100%|██████████| 5000/5000 [04:38&lt;00:00, 18.22it/s]
+</code></pre><p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy4yvl78noj30at07et9k.jpg" alt="png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" rel="next" title="Chapter09 On-policy Prediction with Approximation">
+                <i class="fa fa-chevron-left"></i> Chapter09 On-policy Prediction with Approximation
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/12/Chapter09-square-wave/" rel="prev" title="Chapter09-square_wave">
+                Chapter09-square_wave <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过1000-state-MRP的例子比较了linear近似函数的不同feature构造方法对应的value-function-approximation强化学习算法性能"><span class="nav-number">1.</span> <span class="nav-text">通过1000-state MRP的例子比较了linear近似函数的不同feature构造方法对应的value function approximation强化学习算法性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义函数计算真实的state-value，结果是近似直线，只有在直线两端有非线性部分"><span class="nav-number">1.3.</span> <span class="nav-text">定义函数计算真实的state-value，结果是近似直线，只有在直线两端有非线性部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义step函数来模拟单步交互，定义get-action函数使用随机policy选择action"><span class="nav-number">1.4.</span> <span class="nav-text">定义step函数来模拟单步交互，定义get_action函数使用随机policy选择action</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义State-Aggregation的function-approximation"><span class="nav-number">1.5.</span> <span class="nav-text">定义State Aggregation的function approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义使用近似函数的Monte-Carlo方法来训练value-function"><span class="nav-number">1.6.</span> <span class="nav-text">定义使用近似函数的Monte-Carlo方法来训练value function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图像，比较使用SGD的MC方法的预测value-function和true-value的区别，以及state的分布"><span class="nav-number">1.7.</span> <span class="nav-text">绘制图像，比较使用SGD的MC方法的预测value function和true_value的区别，以及state的分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义使用近似函数的n-step-TD方法训练，使用semi-gradient"><span class="nav-number">1.8.</span> <span class="nav-text">定义使用近似函数的n-step TD方法训练，使用semi-gradient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图表，观察n-step-TD方法的效果，以及不同n取值对rms-error的影响"><span class="nav-number">1.9.</span> <span class="nav-text">绘制图表，观察n-step TD方法的效果，以及不同n取值对rms error的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下面几个例子分别使用了不同的特征模型-Feature-Construction-来完成VFA-value-function-approximation-，分别对应了-9-5的polynomial-Fourier基函数模型、Tilings-Code模型，使用的强化学习方法是n-step-TD方法"><span class="nav-number">1.10.</span> <span class="nav-text">下面几个例子分别使用了不同的特征模型(Feature Construction)来完成VFA(value function approximation)，分别对应了 9.5的polynomial / Fourier基函数模型、Tilings-Code模型，使用的强化学习方法是n-step TD方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tile-Coding特征的linear-function-approximation"><span class="nav-number">1.11.</span> <span class="nav-text">Tile Coding特征的linear function approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Polynomial-Fourier-Based-value-function-特征的linear-function-approximation"><span class="nav-number">1.12.</span> <span class="nav-text">Polynomial / Fourier -Based value function 特征的linear function approximation</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>
