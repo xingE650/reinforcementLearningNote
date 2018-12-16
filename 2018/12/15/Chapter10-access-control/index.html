@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter10/access_control.py 使用访问控制的例子来测试continuing tasks下使用average reward setting训练action value function approximation的效果。">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter10 access control">
+<meta property="og:url" content="http://yoursite.com/2018/12/15/Chapter10-access-control/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter10/access_control.py 使用访问控制的例子来测试continuing tasks下使用average reward setting训练action value function approximation的效果。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy8n75sd2bj30h50vkgmx.jpg">
+<meta property="og:updated_time" content="2018-12-16T08:18:37.546Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter10 access control">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter10/access_control.py 使用访问控制的例子来测试continuing tasks下使用average reward setting训练action value function approximation的效果。">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy8n75sd2bj30h50vkgmx.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/15/Chapter10-access-control/">
+
+
+
+
+
+  <title>Chapter10 access control | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/15/Chapter10-access-control/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter10 access control</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-15T09:25:03+08:00">
+                2018-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter10/access_control.py" target="_blank" rel="noopener">chapter10/access_control.py</a></p>
+<p>使用访问控制的例子来测试continuing tasks下使用average reward setting训练action value function approximation的效果。</p>
+<a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>有一个永远不会空的customer队列，每位customer都有对应的优先级，每次队列首的customer要求访问server的时候，server可以选择不接受，此时reward=0，也可以选择接受，此时reward根据customer的优先级决定，有1,2,4,8四种，如果server接受了customer的访问请求，那么这台server就判定为busy，不能再接受其余customer的访问请求，每次step每台server都有概率从busy变为free状态；如果没有server自然就会拒绝customer的访问请求。不管队首的customer是否成功访问到server了，本次操作之后customer就从队列剔除，轮到下一位customer来访问server，每个队首的customer的优先级是随机分布的。</p>
+<p>这个问题的state由两部分组成：当前可用的server数量和队首的customer的优先级，action对应有接受和拒绝两种。可以使用tiling code来构造特征。</p>
+<h2 id="引入模块并定义常量"><a href="#引入模块并定义常量" class="headerlink" title="引入模块并定义常量"></a>引入模块并定义常量</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">from</span> mpl_toolkits.mplot3d.axes3d <span class="keyword">import</span> Axes3D</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> floor</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"></span><br><span class="line"><span class="comment"># possible priorities</span></span><br><span class="line">PRIORITIES = np.arange(<span class="number">0</span>, <span class="number">4</span>)</span><br><span class="line"><span class="comment"># reward for each priority</span></span><br><span class="line">REWARDS = np.power(<span class="number">2</span>, np.arange(<span class="number">0</span>, <span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># possible actions</span></span><br><span class="line">REJECT = <span class="number">0</span></span><br><span class="line">ACCEPT = <span class="number">1</span></span><br><span class="line">ACTIONS = [REJECT, ACCEPT]</span><br><span class="line"></span><br><span class="line"><span class="comment"># total number of servers</span></span><br><span class="line">NUM_OF_SERVERS = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># at each time step, a busy server will be free with probability 0.06</span></span><br><span class="line">PROBABILITY_FREE = <span class="number">0.06</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># w的学习率</span></span><br><span class="line"><span class="comment"># step size for learning state-action value</span></span><br><span class="line">ALPHA = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># average reward的学习率</span></span><br><span class="line"><span class="comment"># step size for learning average reward</span></span><br><span class="line">BETA = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># probability for exploration</span></span><br><span class="line">EPSILON = <span class="number">0.1</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用了9-5的Tiling-Coding来将-s-a-转换成feature，这里没有使用custom的Tiling-Coding算法，使用了Richard-S-Sutton的tiling-code-software"><a href="#使用了9-5的Tiling-Coding来将-s-a-转换成feature，这里没有使用custom的Tiling-Coding算法，使用了Richard-S-Sutton的tiling-code-software" class="headerlink" title="使用了9.5的Tiling Coding来将(s,a)转换成feature，这里没有使用custom的Tiling Coding算法，使用了Richard S. Sutton的tiling-code software"></a>使用了9.5的<a href="https://xinge650.github.io/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" target="_blank" rel="noopener">Tiling Coding</a>来将(s,a)转换成feature，这里没有使用custom的Tiling Coding算法，使用了Richard S. Sutton的<a href="http://incompleteideas.net/tiles/tiles3.html" target="_blank" rel="noopener">tiling-code software</a></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#######################################################################</span></span><br><span class="line"><span class="comment"># Following are some utilities for tile coding from Rich.</span></span><br><span class="line"><span class="comment"># To make each file self-contained, I copied them from</span></span><br><span class="line"><span class="comment"># http://incompleteideas.net/tiles/tiles3.py-remove</span></span><br><span class="line"><span class="comment"># with some naming convention changes</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Tile coding starts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IHT</span>:</span></span><br><span class="line">    <span class="string">"Structure to handle collisions"</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, size_val)</span>:</span></span><br><span class="line">        self.size = size_val</span><br><span class="line">        self.overfull_count = <span class="number">0</span></span><br><span class="line">        self.dictionary = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">count</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.dictionary)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">full</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.dictionary) &gt;= self.size</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_index</span><span class="params">(self, obj, read_only=False)</span>:</span></span><br><span class="line">        d = self.dictionary</span><br><span class="line">        <span class="keyword">if</span> obj <span class="keyword">in</span> d:</span><br><span class="line">            <span class="keyword">return</span> d[obj]</span><br><span class="line">        <span class="keyword">elif</span> read_only:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        size = self.size</span><br><span class="line">        count = self.count()</span><br><span class="line">        <span class="keyword">if</span> count &gt;= size:</span><br><span class="line">            <span class="keyword">if</span> self.overfull_count == <span class="number">0</span>: print(<span class="string">'IHT full, starting to allow collisions'</span>)</span><br><span class="line">            self.overfull_count += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> hash(obj) % self.size</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            d[obj] = count</span><br><span class="line">            <span class="keyword">return</span> count</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hash_coords</span><span class="params">(coordinates, m, read_only=False)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(m, IHT): <span class="keyword">return</span> m.get_index(tuple(coordinates), read_only)</span><br><span class="line">    <span class="keyword">if</span> isinstance(m, int): <span class="keyword">return</span> hash(tuple(coordinates)) % m</span><br><span class="line">    <span class="keyword">if</span> m <span class="keyword">is</span> <span class="keyword">None</span>: <span class="keyword">return</span> coordinates</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tiles</span><span class="params">(iht_or_size, num_tilings, floats, ints=None, read_only=False)</span>:</span></span><br><span class="line">    <span class="string">"""returns num-tilings tile indices corresponding to the floats and ints"""</span></span><br><span class="line">    <span class="keyword">if</span> ints <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        ints = []</span><br><span class="line">    qfloats = [floor(f * num_tilings) <span class="keyword">for</span> f <span class="keyword">in</span> floats]</span><br><span class="line">    tiles = []</span><br><span class="line">    <span class="keyword">for</span> tiling <span class="keyword">in</span> range(num_tilings):</span><br><span class="line">        tilingX2 = tiling * <span class="number">2</span></span><br><span class="line">        coords = [tiling]</span><br><span class="line">        b = tiling</span><br><span class="line">        <span class="keyword">for</span> q <span class="keyword">in</span> qfloats:</span><br><span class="line">            coords.append((q + b) // num_tilings)</span><br><span class="line">            b += tilingX2</span><br><span class="line">        coords.extend(ints)</span><br><span class="line">        tiles.append(hash_coords(coords, iht_or_size, read_only))</span><br><span class="line">    <span class="keyword">return</span> tiles</span><br><span class="line"><span class="comment"># Tile coding ends</span></span><br><span class="line"><span class="comment">#######################################################################</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用Tiling-Coding构造特征并建立linear-value-function"><a href="#使用Tiling-Coding构造特征并建立linear-value-function" class="headerlink" title="使用Tiling Coding构造特征并建立linear value function"></a>使用Tiling Coding构造特征并建立linear value function</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a wrapper class for differential semi-gradient Sarsa state-action function</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValueFunction</span>:</span></span><br><span class="line">    <span class="comment"># In this example I use the tiling software instead of implementing standard tiling by myself</span></span><br><span class="line">    <span class="comment"># One important thing is that tiling is only a map from (state, action) to a series of indices</span></span><br><span class="line">    <span class="comment"># It doesn't matter whether the indices have meaning, only if this map satisfy some property</span></span><br><span class="line">    <span class="comment"># View the following webpage for more information</span></span><br><span class="line">    <span class="comment"># http://incompleteideas.net/sutton/tiles/tiles3.html</span></span><br><span class="line">    <span class="comment"># @alpha: step size for learning state-action value</span></span><br><span class="line">    <span class="comment"># @beta: step size for learning average reward</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_of_tilings, alpha=ALPHA, beta=BETA)</span>:</span></span><br><span class="line">        self.num_of_tilings = num_of_tilings</span><br><span class="line">        self.max_size = <span class="number">2048</span></span><br><span class="line">        self.hash_table = IHT(self.max_size)</span><br><span class="line">        self.weights = np.zeros(self.max_size)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># state features needs scaling to satisfy the tile software</span></span><br><span class="line">        self.server_scale = self.num_of_tilings / float(NUM_OF_SERVERS)</span><br><span class="line">        <span class="comment"># 这个地方len(PRIORITIES)-1是因为优先级最大值是3，最小值是0，max-min是3</span></span><br><span class="line">        <span class="comment"># 注意分母始终要是state分量的max-min</span></span><br><span class="line">        self.priority_scale = self.num_of_tilings / float(len(PRIORITIES) - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        self.average_reward = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># divide step size equally to each tiling</span></span><br><span class="line">        self.alpha = alpha / self.num_of_tilings</span><br><span class="line"></span><br><span class="line">        self.beta = beta</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get indices of active tiles for given state and action</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_active_tiles</span><span class="params">(self, free_servers, priority, action)</span>:</span></span><br><span class="line">        active_tiles = tiles(self.hash_table, self.num_of_tilings,</span><br><span class="line">                            [self.server_scale * free_servers, self.priority_scale * priority],</span><br><span class="line">                            [action])</span><br><span class="line">        <span class="keyword">return</span> active_tiles</span><br><span class="line"></span><br><span class="line">    <span class="comment"># estimate the value of given state and action without subtracting average</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value</span><span class="params">(self, free_servers, priority, action)</span>:</span></span><br><span class="line">        active_tiles = self.get_active_tiles(free_servers, priority, action)</span><br><span class="line">        <span class="keyword">return</span> np.sum(self.weights[active_tiles])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># estimate the value of given state without subtracting average</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">state_value</span><span class="params">(self, free_servers, priority)</span>:</span></span><br><span class="line">        values = [self.value(free_servers, priority, action) <span class="keyword">for</span> action <span class="keyword">in</span> ACTIONS]</span><br><span class="line">        <span class="comment"># if no free server, can't accept</span></span><br><span class="line">        <span class="keyword">if</span> free_servers == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> values[REJECT]</span><br><span class="line">        <span class="keyword">return</span> np.max(values)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># learn with given sequence</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">learn</span><span class="params">(self, free_servers, priority, action, new_free_servers, new_priority, new_action, reward)</span>:</span></span><br><span class="line">        active_tiles = self.get_active_tiles(free_servers, priority, action)</span><br><span class="line">        estimation = np.sum(self.weights[active_tiles])</span><br><span class="line">        <span class="comment"># estimation = self.value(free_servers,priority,action)</span></span><br><span class="line">        delta = reward - self.average_reward + self.value(new_free_servers, new_priority, new_action) - estimation</span><br><span class="line">        <span class="comment"># update average reward</span></span><br><span class="line">        self.average_reward += self.beta * delta</span><br><span class="line">        delta *= self.alpha</span><br><span class="line">        <span class="keyword">for</span> active_tile <span class="keyword">in</span> active_tiles:</span><br><span class="line">            self.weights[active_tile] += delta</span><br></pre></td></tr></table></figure>
+<h2 id="通过建立的optimal-policy来指导agent和environment进行交互"><a href="#通过建立的optimal-policy来指导agent和environment进行交互" class="headerlink" title="通过建立的optimal policy来指导agent和environment进行交互"></a>通过建立的optimal policy来指导agent和environment进行交互</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get action based on epsilon greedy policy and @valueFunction</span></span><br><span class="line"><span class="comment"># 返回使用epsilon-policy得到action</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_action</span><span class="params">(free_servers, priority, value_function)</span>:</span></span><br><span class="line">    <span class="comment"># if no free server, can't accept</span></span><br><span class="line">    <span class="keyword">if</span> free_servers == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> REJECT</span><br><span class="line">    <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, EPSILON) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> np.random.choice(ACTIONS)</span><br><span class="line">    values = [value_function.value(free_servers, priority, action) <span class="keyword">for</span> action <span class="keyword">in</span> ACTIONS]</span><br><span class="line">    <span class="keyword">return</span> np.random.choice([action_ <span class="keyword">for</span> action_, value_ <span class="keyword">in</span> enumerate(values) <span class="keyword">if</span> value_ == np.max(values)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># take an action</span></span><br><span class="line"><span class="comment"># 返回交互结果：free_servers，队列中下一个customer的优先级，action得到的reward</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">take_action</span><span class="params">(free_servers, priority, action)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> free_servers &gt; <span class="number">0</span> <span class="keyword">and</span> action == ACCEPT:</span><br><span class="line">        free_servers -= <span class="number">1</span></span><br><span class="line">    reward = REWARDS[priority] * action</span><br><span class="line">    <span class="comment"># some busy servers may become free</span></span><br><span class="line">    busy_servers = NUM_OF_SERVERS - free_servers</span><br><span class="line">    free_servers += np.random.binomial(busy_servers, PROBABILITY_FREE)</span><br><span class="line">    <span class="keyword">return</span> free_servers, np.random.choice(PRIORITIES), reward</span><br></pre></td></tr></table></figure>
+<h2 id="使用differential-semi-gradient-Sarsa-0-进行训练"><a href="#使用differential-semi-gradient-Sarsa-0-进行训练" class="headerlink" title="使用differential semi-gradient Sarsa(0)进行训练"></a>使用differential semi-gradient Sarsa(0)进行训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># differential semi-gradient Sarsa</span></span><br><span class="line"><span class="comment"># @valueFunction: state value function to learn</span></span><br><span class="line"><span class="comment"># @maxSteps: step limit in the continuing task</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">differential_semi_gradient_sarsa</span><span class="params">(value_function, max_steps)</span>:</span></span><br><span class="line">    current_free_servers = NUM_OF_SERVERS</span><br><span class="line">    current_priority = np.random.choice(PRIORITIES)</span><br><span class="line">    current_action = get_action(current_free_servers, current_priority, value_function)</span><br><span class="line">    <span class="comment"># track the hit for each number of free servers</span></span><br><span class="line">    <span class="comment"># 0～11</span></span><br><span class="line">    freq = np.zeros(NUM_OF_SERVERS + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> tqdm(range(max_steps)):</span><br><span class="line">        freq[current_free_servers] += <span class="number">1</span></span><br><span class="line">        new_free_servers, new_priority, reward = take_action(current_free_servers, current_priority, current_action)</span><br><span class="line">        new_action = get_action(new_free_servers, new_priority, value_function)</span><br><span class="line">        value_function.learn(current_free_servers, current_priority, current_action,</span><br><span class="line">                             new_free_servers, new_priority, new_action, reward)</span><br><span class="line">        current_free_servers = new_free_servers</span><br><span class="line">        current_priority = new_priority</span><br><span class="line">        current_action = new_action</span><br><span class="line">    print(<span class="string">'asymptotic average reward: '</span>,value_function.average_reward)</span><br><span class="line">    print(<span class="string">'Frequency of number of free servers:'</span>)</span><br><span class="line">    print(freq / max_steps)</span><br></pre></td></tr></table></figure>
+<h2 id="绘制图表表现differential-value和policy"><a href="#绘制图表表现differential-value和policy" class="headerlink" title="绘制图表表现differential value和policy"></a>绘制图表表现differential value和policy</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 10.5, Differential semi-gradient Sarsa on the access-control queuing task</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_10_5</span><span class="params">()</span>:</span></span><br><span class="line">    max_steps = int(<span class="number">2e6</span>)</span><br><span class="line">    <span class="comment"># use tile coding with 8 tilings</span></span><br><span class="line">    num_of_tilings = <span class="number">8</span></span><br><span class="line">    value_function = ValueFunction(num_of_tilings)</span><br><span class="line">    differential_semi_gradient_sarsa(value_function, max_steps)</span><br><span class="line">    values = np.zeros((len(PRIORITIES), NUM_OF_SERVERS + <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> priority <span class="keyword">in</span> PRIORITIES:</span><br><span class="line">        <span class="keyword">for</span> free_servers <span class="keyword">in</span> range(NUM_OF_SERVERS + <span class="number">1</span>):</span><br><span class="line">            values[priority, free_servers] = value_function.state_value(free_servers, priority)</span><br><span class="line"></span><br><span class="line">    fig = plt.figure(figsize=(<span class="number">10</span>, <span class="number">20</span>))</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> priority <span class="keyword">in</span> PRIORITIES:</span><br><span class="line">        plt.plot(range(NUM_OF_SERVERS + <span class="number">1</span>), values[priority, :], label=<span class="string">'priority %d'</span> % (REWARDS[priority]))</span><br><span class="line">    plt.xlabel(<span class="string">'Number of free servers'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Differential value of best action'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    ax = fig.add_subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    policy = np.zeros((len(PRIORITIES), NUM_OF_SERVERS + <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> priority <span class="keyword">in</span> PRIORITIES:</span><br><span class="line">        <span class="keyword">for</span> free_servers <span class="keyword">in</span> range(NUM_OF_SERVERS + <span class="number">1</span>):</span><br><span class="line">            values = [value_function.value(free_servers, priority, action) <span class="keyword">for</span> action <span class="keyword">in</span> ACTIONS]</span><br><span class="line">            <span class="keyword">if</span> free_servers == <span class="number">0</span>:</span><br><span class="line">                policy[priority, free_servers] = REJECT</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                policy[priority, free_servers] = np.argmax(values)</span><br><span class="line"></span><br><span class="line">    fig = sns.heatmap(policy, cmap=<span class="string">"YlGnBu"</span>, ax=ax, xticklabels=range(NUM_OF_SERVERS + <span class="number">1</span>), yticklabels=PRIORITIES)</span><br><span class="line">    fig.set_title(<span class="string">'Policy (0 Reject, 1 Accept)'</span>)</span><br><span class="line">    fig.set_xlabel(<span class="string">'Number of free servers'</span>)</span><br><span class="line">    fig.set_ylabel(<span class="string">'Priority'</span>)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_10_5.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_10_5()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 2000000/2000000 [05:48&lt;00:00, 5742.25it/s]
+
+
+asymptotic average reward:  2.7830264537085903
+Frequency of number of free servers:
+[1.219660e-01 2.275715e-01 2.717895e-01 2.138460e-01 1.125485e-01
+ 4.154650e-02 9.331000e-03 1.276000e-03 1.150000e-04 8.000000e-06
+ 2.000000e-06]
+</code></pre><p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy8n75sd2bj30h50vkgmx.jpg" alt="png"> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/15/Chapter10-mountain-car/" rel="next" title="Chapter10 mountain car">
+                <i class="fa fa-chevron-left"></i> Chapter10 mountain car
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用了9-5的Tiling-Coding来将-s-a-转换成feature，这里没有使用custom的Tiling-Coding算法，使用了Richard-S-Sutton的tiling-code-software"><span class="nav-number">3.</span> <span class="nav-text">使用了9.5的Tiling Coding来将(s,a)转换成feature，这里没有使用custom的Tiling Coding算法，使用了Richard S. Sutton的tiling-code software</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Tiling-Coding构造特征并建立linear-value-function"><span class="nav-number">4.</span> <span class="nav-text">使用Tiling Coding构造特征并建立linear value function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过建立的optimal-policy来指导agent和environment进行交互"><span class="nav-number">5.</span> <span class="nav-text">通过建立的optimal policy来指导agent和environment进行交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用differential-semi-gradient-Sarsa-0-进行训练"><span class="nav-number">6.</span> <span class="nav-text">使用differential semi-gradient Sarsa(0)进行训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图表表现differential-value和policy"><span class="nav-number">7.</span> <span class="nav-text">绘制图表表现differential value和policy</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

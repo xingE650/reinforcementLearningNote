@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="A unified view of model-based methods and model-free models重要的不是model，而是要结合起来两种方法的训练策略：model-based 方法训练采用planning的形式，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的">
+<meta name="description" content="这章给出了关于model-free方法和model-based方法的一个统一观点，即将两者的思路结合起来解决问题： model-based 方法训练采用基于model进行planning的方法，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的learning，具体也是使用后续的st">
 <meta name="keywords" content="Reinforcement Learning Note">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter08 Planning and Learning with Tabular Methods">
 <meta property="og:url" content="http://yoursite.com/2018/12/07/Chapter08-Planning-and-Learning-with-Tabular-Methods/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="A unified view of model-based methods and model-free models重要的不是model，而是要结合起来两种方法的训练策略：model-based 方法训练采用planning的形式，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的">
+<meta property="og:description" content="这章给出了关于model-free方法和model-based方法的一个统一观点，即将两者的思路结合起来解决问题： model-based 方法训练采用基于model进行planning的方法，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的learning，具体也是使用后续的st">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxxz8qyaqbj30ma021weg.jpg">
 <meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxxzbplpd8j30q405laan.jpg">
@@ -96,10 +96,10 @@
 <meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxy6ribiqnj30db0msta3.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxy6t2p8nlj30c602at8l.jpg">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxy6ubaa7mj30dx01y3yd.jpg">
-<meta property="og:updated_time" content="2018-12-07T13:08:19.135Z">
+<meta property="og:updated_time" content="2018-12-15T01:44:01.704Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter08 Planning and Learning with Tabular Methods">
-<meta name="twitter:description" content="A unified view of model-based methods and model-free models重要的不是model，而是要结合起来两种方法的训练策略：model-based 方法训练采用planning的形式，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的">
+<meta name="twitter:description" content="这章给出了关于model-free方法和model-based方法的一个统一观点，即将两者的思路结合起来解决问题： model-based 方法训练采用基于model进行planning的方法，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的learning，具体也是使用后续的st">
 <meta name="twitter:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxxz8qyaqbj30ma021weg.jpg">
 
 
@@ -358,7 +358,8 @@
       
 
       
-        <h2 id="A-unified-view-of-model-based-methods-and-model-free-models"><a href="#A-unified-view-of-model-based-methods-and-model-free-models" class="headerlink" title="A unified view of model-based methods and model-free models"></a>A unified view of model-based methods and model-free models</h2><p>重要的不是model，而是要结合起来两种方法的训练策略：model-based 方法训练采用planning的形式，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的learning，具体也是使用后续的state(action)-value来backup当前value function。两者之间同时有很多相似点，比如都会update value function，都采用backup的策略update等。这章核心思想就是提出可以将两者结合起来的算法。</p>
+        <p>这章给出了关于model-free方法和model-based方法的一个统一观点，即将两者的思路结合起来解决问题：</p>
+<p>model-based 方法训练采用基于model进行planning的方法，通过向后迭代(backup)来更新value function；而model-free 方法训练采用从环境抽样(sampling)来进行value function的learning，具体也是使用后续的state(action)-value来backup当前value function。两者之间同时有很多相似点，比如都会update value function，都采用backup的策略update等。可见两者的区别主要在于model的维护与否，当然这就是结合起来两种方法的训练策略。</p>
 <a id="more"></a>
 <h2 id="Models-and-Planning"><a href="#Models-and-Planning" class="headerlink" title="Models and Planning"></a>Models and Planning</h2><p>我觉得这里理解sample model就够了，sample model也是本章剩下的部分使用的planning方法的基础——从采样得到随机model进行planning。</p>
 <p>首先理解distribution model和sample model之间的关系：</p>
@@ -557,7 +558,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -621,7 +622,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#A-unified-view-of-model-based-methods-and-model-free-models"><span class="nav-number">1.</span> <span class="nav-text">A unified view of model-based methods and model-free models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Models-and-Planning"><span class="nav-number">2.</span> <span class="nav-text">Models and Planning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dyna-Integrating-Planning-Acting-and-Learning"><span class="nav-number">3.</span> <span class="nav-text">Dyna: Integrating Planning, Acting, and Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#When-the-Model-Is-Wrong"><span class="nav-number">4.</span> <span class="nav-text">When the Model Is Wrong</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prioritized-Sweeping"><span class="nav-number">5.</span> <span class="nav-text">Prioritized Sweeping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expected-vs-Sample-Updates"><span class="nav-number">6.</span> <span class="nav-text">Expected vs Sample Updates</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trajectory-Sampling"><span class="nav-number">7.</span> <span class="nav-text">Trajectory Sampling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Real-time-Dynamic-Programming"><span class="nav-number">8.</span> <span class="nav-text">Real-time Dynamic Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Planning-at-Decision-Time"><span class="nav-number">9.</span> <span class="nav-text">Planning at Decision Time</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Heuristic-Search"><span class="nav-number">10.</span> <span class="nav-text">Heuristic Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rollout-Algorithms"><span class="nav-number">11.</span> <span class="nav-text">Rollout Algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monte-Carlo-Tree-Search"><span class="nav-number">12.</span> <span class="nav-text">Monte Carlo Tree Search</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Models-and-Planning"><span class="nav-number">1.</span> <span class="nav-text">Models and Planning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dyna-Integrating-Planning-Acting-and-Learning"><span class="nav-number">2.</span> <span class="nav-text">Dyna: Integrating Planning, Acting, and Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#When-the-Model-Is-Wrong"><span class="nav-number">3.</span> <span class="nav-text">When the Model Is Wrong</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prioritized-Sweeping"><span class="nav-number">4.</span> <span class="nav-text">Prioritized Sweeping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expected-vs-Sample-Updates"><span class="nav-number">5.</span> <span class="nav-text">Expected vs Sample Updates</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trajectory-Sampling"><span class="nav-number">6.</span> <span class="nav-text">Trajectory Sampling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Real-time-Dynamic-Programming"><span class="nav-number">7.</span> <span class="nav-text">Real-time Dynamic Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Planning-at-Decision-Time"><span class="nav-number">8.</span> <span class="nav-text">Planning at Decision Time</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Heuristic-Search"><span class="nav-number">9.</span> <span class="nav-text">Heuristic Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rollout-Algorithms"><span class="nav-number">10.</span> <span class="nav-text">Rollout Algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monte-Carlo-Tree-Search"><span class="nav-number">11.</span> <span class="nav-text">Monte Carlo Tree Search</span></a></li></ol></div>
             
 
           </div>

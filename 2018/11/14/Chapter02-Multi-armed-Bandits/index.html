@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="2.1.1 什么是k-armed Bandits问题You are faced repeatedly with a choice among k different options, or actions. After each choice you receive a numerical reward chosen from a stationary probability distributi">
+<meta name="description" content="k-arm-Bandits问题可说是强化学习最简单的任务了，因为他只涉及了1个state下的action选取。通过本章可以对强化学习的目标，评估方法和训练方法有一个初步的认识。">
 <meta name="keywords" content="Reinforcement Learning Note">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter02 Multi-armed Bandits">
 <meta property="og:url" content="http://yoursite.com/2018/11/14/Chapter02-Multi-armed-Bandits/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="2.1.1 什么是k-armed Bandits问题You are faced repeatedly with a choice among k different options, or actions. After each choice you receive a numerical reward chosen from a stationary probability distributi">
+<meta property="og:description" content="k-arm-Bandits问题可说是强化学习最简单的任务了，因为他只涉及了1个state下的action选取。通过本章可以对强化学习的目标，评估方法和训练方法有一个初步的认识。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?q_{a}&space;\doteq&space;E[R_{t}|A_{t}=a]">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?Q_{t}(a)&space;\doteq&space;\frac{sum\&space;of\&space;rewards\&space;when\&space;a\&space;taken\&space;prior\&space;to\&space;t}{number\&space;of\&space;times\&space;a\&space;taken\&space;prior\&space;to\&space;t}&space;=&space;\frac{\sum_{i=1}^{t-1}R_{i}*1_{A_{i}&space;=&space;a}}{\sum_{i=1}^{t-1}1_{A_{i}&space;=&space;a}}">
@@ -98,10 +98,10 @@
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?A_{t}\doteq&space;argmax_{a}[Q_{t}(a)+c\sqrt{\frac{\ln&space;t}{N_{t}(a)}}]">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?P_{r}\left&space;\{&space;A_{t}=a&space;\right&space;\}\doteq&space;\frac{e^{H_{t}(a)}}{\sum_{b=1}^{k}e^{H_{t}(b)}}\doteq&space;\pi&space;_{t}(a)">
 <meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fx8u7lft01j30ht022mx5.jpg">
-<meta property="og:updated_time" content="2018-12-02T09:23:06.439Z">
+<meta property="og:updated_time" content="2018-12-15T01:33:39.384Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter02 Multi-armed Bandits">
-<meta name="twitter:description" content="2.1.1 什么是k-armed Bandits问题You are faced repeatedly with a choice among k different options, or actions. After each choice you receive a numerical reward chosen from a stationary probability distributi">
+<meta name="twitter:description" content="k-arm-Bandits问题可说是强化学习最简单的任务了，因为他只涉及了1个state下的action选取。通过本章可以对强化学习的目标，评估方法和训练方法有一个初步的认识。">
 <meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?q_{a}&space;\doteq&space;E[R_{t}|A_{t}=a]">
 
 
@@ -360,7 +360,10 @@
       
 
       
-        <h2 id="2-1-1-什么是k-armed-Bandits问题"><a href="#2-1-1-什么是k-armed-Bandits问题" class="headerlink" title="2.1.1 什么是k-armed Bandits问题"></a>2.1.1 什么是k-armed Bandits问题</h2><p>You are faced repeatedly with a choice among k different options, or <strong><em>actions</em></strong>. After each choice you receive a <strong><em>numerical reward</em></strong> chosen from a stationary probability distribution that depends on the action you selected. Your objective is to <strong><em>maximize the expected total reward</em></strong> over some time period, for example, over 1000 action selections, or time steps.<br><a id="more"></a><br>大致意思就是，每步有k种action选择，每种选择对应不同的reward，完成的目标就是需要在n次执行后，最大化总共的reward。</p>
+        <p>k-arm-Bandits问题可说是强化学习最简单的任务了，因为他只涉及了1个state下的action选取。通过本章可以对强化学习的目标，评估方法和训练方法有一个初步的认识。</p>
+<a id="more"></a>
+<h2 id="2-1-1-什么是k-armed-Bandits问题"><a href="#2-1-1-什么是k-armed-Bandits问题" class="headerlink" title="2.1.1 什么是k-armed Bandits问题"></a>2.1.1 什么是k-armed Bandits问题</h2><p>You are faced repeatedly with a choice among k different options, or <strong><em>actions</em></strong>. After each choice you receive a <strong><em>numerical reward</em></strong> chosen from a stationary probability distribution that depends on the action you selected. Your objective is to <strong><em>maximize the expected total reward</em></strong> over some time period, for example, over 1000 action selections, or time steps.</p>
+<p>大致意思就是，每步有k种action选择，每种选择对应不同的reward，完成的目标就是需要在n次执行后，最大化总共的reward。</p>
 <p>In our k-armed bandit problem, each of the k actions has an expected or mean reward given that that action is selected; let us call this <font color="green">the value of that action</font>:<br><!-- 公式 --><br><a href="https://www.codecogs.com/eqnedit.php?latex=q_{a}&space;\doteq&space;E[R_{t}|A_{t}=a]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?q_{a}&space;\doteq&space;E[R_{t}|A_{t}=a]" title="q_{a} \doteq E[R_{t}|A_{t}=a]"></a></p>
 <h2 id="2-1-2-k-armed-Bandits问题的难点"><a href="#2-1-2-k-armed-Bandits问题的难点" class="headerlink" title="2.1.2 k-armed Bandits问题的难点"></a>2.1.2 k-armed Bandits问题的难点</h2><p>这里主要是explore和exploit的权衡。下面的解释摘自周老师的西瓜书强化学习部分：</p>
 <font color="green">若仅为知道每个摇臂的期望奖赏，则可采用“仅探索”(exploration-only)法：将所有的尝试机会平均分配给每个摇臂，最后以每个摇臂各自的平均吐币概率作为其奖赏期望的近似估计。若仅为执行奖赏最大的动作，则可以用“仅利用”(exploitation-only)法，按下目前最优的摇臂。前者可以很好的估计每个摇臂的奖赏，却会失去很多选择最优摇臂的机会，没办法得到最好的收益；后者刚好相反，它没有很好地估计摇臂期望奖赏，很可能经常选不到最优的摇臂，因此这两种方法都难以使最终的积累奖励最大化。</font> 
@@ -534,7 +537,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

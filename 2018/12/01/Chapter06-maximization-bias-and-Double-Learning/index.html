@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxqdqql678j309i02tglk.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxr3lttqafj30at07et90.jpg">
-<meta property="og:updated_time" content="2018-12-02T09:26:01.094Z">
+<meta property="og:updated_time" content="2018-12-15T01:36:08.608Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter06 maximization-bias and Double-Learning">
 <meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter06/maximization_bias.py 因为TD算法中的target policy建立中经常会用到maximization操作，在这些算法中，a maximum over estimated values is used implicitly as an estimate of the maximum value,这可能会导致显著的正">
@@ -352,7 +352,8 @@
 
       
         <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter06/maximization_bias.py" target="_blank" rel="noopener">chapter06/maximization_bias.py</a></p>
-<h1 id="因为TD算法中的target-policy建立中经常会用到maximization操作，在这些算法中，a-maximum-over-estimated-values-is-used-implicitly-as-an-estimate-of-the-maximum-value-这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。"><a href="#因为TD算法中的target-policy建立中经常会用到maximization操作，在这些算法中，a-maximum-over-estimated-values-is-used-implicitly-as-an-estimate-of-the-maximum-value-这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。" class="headerlink" title="因为TD算法中的target policy建立中经常会用到maximization操作，在这些算法中，a maximum over estimated values is used implicitly as an estimate of the maximum value,这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。"></a>因为TD算法中的target policy建立中经常会用到maximization操作，在这些算法中，<strong><em>a maximum over estimated values is used implicitly as an estimate of the maximum value</em></strong>,这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。</h1><a id="more"></a>
+<p>因为TD算法中的target policy建立中经常会用到maximization操作，在这些算法中，<strong><em>a maximum over estimated values is used implicitly as an estimate of the maximum value</em></strong>,这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。</p>
+<a id="more"></a>
 <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个例子是为了说明并解决TD方法将估计的最大值作为实际Q的最大值造成的正向偏差(bias)，使用了一个简单的MRP:</p>
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxqdqql678j309i02tglk.jpg" alt="png"> </p>
 <p>A是start state，左右的灰色小方格是terminal state。A状态下可以有两个action：left和right；如果向右直接会结束，reward=0；向左则进入B状态，B状态有多个达到左边terminal state的actions可选，并对应reward=N(-0.1,1)，所以(A,left)开始的expect return = -0.1。</p>
@@ -483,7 +484,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -547,7 +548,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#因为TD算法中的target-policy建立中经常会用到maximization操作，在这些算法中，a-maximum-over-estimated-values-is-used-implicitly-as-an-estimate-of-the-maximum-value-这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。"><span class="nav-number">1.</span> <span class="nav-text">因为TD算法中的target policy建立中经常会用到maximization操作，在这些算法中，a maximum over estimated values is used implicitly as an estimate of the maximum value,这可能会导致显著的正向偏差，本例通过一个简单的MRP来讨论这个问题。</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提供choose-action和take-action函数"><span class="nav-number">1.3.</span> <span class="nav-text">提供choose action和take action函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Q-Learning-和-Double-Q-Learning方法来训练并计算policy选择-A-left-的概率"><span class="nav-number">1.4.</span> <span class="nav-text">使用Q-Learning 和 Double Q-Learning方法来训练并计算policy选择(A|left)的概率</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提供choose-action和take-action函数"><span class="nav-number">3.</span> <span class="nav-text">提供choose action和take action函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Q-Learning-和-Double-Q-Learning方法来训练并计算policy选择-A-left-的概率"><span class="nav-number">4.</span> <span class="nav-text">使用Q-Learning 和 Double Q-Learning方法来训练并计算policy选择(A|left)的概率</span></a></li></ol></div>
             
 
           </div>

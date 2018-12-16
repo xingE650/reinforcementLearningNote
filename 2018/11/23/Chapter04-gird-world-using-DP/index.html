@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="引用来自ShangtongZhang的代码chapter04/gird_world.py grid_world(policy evaluation)问题描述4X4 网格：  左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter04/gird_world.py grid_world(policy evaluation) 问题描述4X4 网格：  左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。">
 <meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter04 gird-world using DP">
 <meta property="og:url" content="http://yoursite.com/2018/11/23/Chapter04-gird-world-using-DP/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="引用来自ShangtongZhang的代码chapter04/gird_world.py grid_world(policy evaluation)问题描述4X4 网格：  左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter04/gird_world.py grid_world(policy evaluation) 问题描述4X4 网格：  左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxi8g720auj30fj05v74a.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxiy3tp2wxj30c807odfq.jpg">
-<meta property="og:updated_time" content="2018-12-02T09:28:36.954Z">
+<meta property="og:updated_time" content="2018-12-15T01:35:04.288Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter04 gird-world using DP">
-<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter04/gird_world.py grid_world(policy evaluation)问题描述4X4 网格：  左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter04/gird_world.py grid_world(policy evaluation) 问题描述4X4 网格：  左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。">
 <meta name="twitter:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxi8g720auj30fj05v74a.jpg">
 
 
@@ -352,7 +352,8 @@
 
       
         <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/grid_world.py" target="_blank" rel="noopener">chapter04/gird_world.py</a></p>
-<h1 id="grid-world-policy-evaluation"><a href="#grid-world-policy-evaluation" class="headerlink" title="grid_world(policy evaluation)"></a>grid_world(policy evaluation)</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>4X4 网格：</p>
+<p>grid_world(policy evaluation)</p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>4X4 网格：</p>
 <p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxi8g720auj30fj05v74a.jpg" alt="png"></p>
 <p>左上角和右下角是终止状态(terminal state)，如果action使得state跳转到外面了，就返回上次位置，所有的action造成的reward都是-1。</p>
 <a id="more"></a>
@@ -485,7 +486,7 @@ Synchronous: 218 iterations
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -549,7 +550,7 @@ Synchronous: 218 iterations
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#grid-world-policy-evaluation"><span class="nav-number">1.</span> <span class="nav-text">grid_world(policy evaluation)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#action控制代码"><span class="nav-number">1.3.</span> <span class="nav-text">action控制代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制方格图"><span class="nav-number">1.4.</span> <span class="nav-text">绘制方格图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行policy-evaluation，即计算value-state"><span class="nav-number">1.5.</span> <span class="nav-text">进行policy evaluation，即计算value-state</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行并显示评估结果"><span class="nav-number">1.6.</span> <span class="nav-text">运行并显示评估结果</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#action控制代码"><span class="nav-number">3.</span> <span class="nav-text">action控制代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制方格图"><span class="nav-number">4.</span> <span class="nav-text">绘制方格图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行policy-evaluation，即计算value-state"><span class="nav-number">5.</span> <span class="nav-text">进行policy evaluation，即计算value-state</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行并显示评估结果"><span class="nav-number">6.</span> <span class="nav-text">运行并显示评估结果</span></a></li></ol></div>
             
 
           </div>

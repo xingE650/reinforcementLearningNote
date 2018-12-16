@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Reinforcement Learning Note,">
 
 
 
@@ -79,14 +79,32 @@
 
 
 
-<meta name="keywords" content="Programming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:url" content="http://yoursite.com/archives/2018/12/index.html">
+<meta name="description" content="上一章讲了value function approximation的评估问题，那么将固定的policy转换为需要优化的optimal policy，再加上policy improvement就可以完成控制问题。本章使用on-policy GPI的模式来考虑基于approximation的on-policy control问题。">
+<meta name="keywords" content="Reinforcement Learning Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter10 On-policy Control with Approximation">
+<meta property="og:url" content="http://yoursite.com/2018/12/15/Chapter10-On-policy-Control-with-Approximation/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="上一章讲了value function approximation的评估问题，那么将固定的policy转换为需要优化的optimal policy，再加上policy improvement就可以完成控制问题。本章使用on-policy GPI的模式来考虑基于approximation的on-policy control问题。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy77bubvsdj30et018q2s.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy77dgeyijj30m201ft8l.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy77kbjtb1j30t80dudhn.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy77qa9oh9j30q60483yu.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy79r6gxrgj30dg05baa8.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy79woceiij30b800yglh.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy7ab1wy6bj30iq01pa9w.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy7adeedgcj30g704qweh.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy7ag25nx8j30t00cvtac.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy8mioc3unj30t80k6mz9.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fy8msq9s1ej30q101i0sm.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fy8mtu4o8ij308b01g3yc.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fy8mv6skkzj30t70ew0v3.jpg">
+<meta property="og:updated_time" content="2018-12-16T08:25:33.674Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta name="twitter:title" content="Chapter10 On-policy Control with Approximation">
+<meta name="twitter:description" content="上一章讲了value function approximation的评估问题，那么将固定的policy转换为需要优化的optimal policy，再加上policy improvement就可以完成控制问题。本章使用on-policy GPI的模式来考虑基于approximation的on-policy control问题。">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fy77bubvsdj30et018q2s.jpg">
 
 
 
@@ -116,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2018/12/">
+  <link rel="canonical" href="http://yoursite.com/2018/12/15/Chapter10-On-policy-Control-with-Approximation/">
 
 
 
 
 
-  <title>Archive | Oppai>///<</title>
+  <title>Chapter10 On-policy Control with Approximation | Oppai>///<</title>
   
 
 
@@ -141,7 +159,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -263,390 +281,186 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 33 posts in total. Keep on posting.
-      </span>
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/15/Chapter10-On-policy-Control-with-Approximation/">
 
-      
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">Chapter10 On-policy Control with Approximation</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-15T09:24:28+08:00">
+                2018-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/15/Chapter10-access-control/" itemprop="url">
-              
-                <span itemprop="name">Chapter10 access control</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-15T09:25:03+08:00" content="2018-12-15">
-          12-15
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/15/Chapter10-mountain-car/" itemprop="url">
-              
-                <span itemprop="name">Chapter10 mountain car</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-15T09:24:49+08:00" content="2018-12-15">
-          12-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/15/Chapter10-On-policy-Control-with-Approximation/" itemprop="url">
-              
-                <span itemprop="name">Chapter10 On-policy Control with Approximation</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-15T09:24:28+08:00" content="2018-12-15">
-          12-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p><a href="https://xinge650.github.io/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" target="_blank" rel="noopener">上一章</a>讲了value function approximation的评估问题，那么将固定的policy转换为需要优化的optimal policy，再加上policy improvement就可以完成控制问题。本章使用on-policy GPI的模式来考虑基于approximation的on-policy control问题。</p>
+<a id="more"></a>
+<h2 id="Episodic-Semi-gradient-Control"><a href="#Episodic-Semi-gradient-Control" class="headerlink" title="Episodic Semi-gradient Control"></a>Episodic Semi-gradient Control</h2><p>因为上一章使用的都是state value approximation，所以首先给出action value approximation更新的公式，其实很类似的：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy77bubvsdj30et018q2s.jpg" alt="png"> </p>
+<p>然后给出最常用的on-policy 控制方法——Sarsa的one-step形式的weight更新公式：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy77dgeyijj30m201ft8l.jpg" alt="png"> </p>
+<p>接着需要考虑的就是policy-improvement和action-selection问题了。如果action是连续的，或者可选的action空间比较大，这样的问题现在还在研究中；如果action的选择是从有限的离散空间的，那么可以使用以往的选择方法，比如最常用的epsilon-greedy方法。对应的伪代码如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy77kbjtb1j30t80dudhn.jpg" alt="png"> </p>
+<p>这里有一个强化学习的基本例子<a href="https://xinge650.github.io/2018/12/15/Chapter10-mountain-car/" target="_blank" rel="noopener">mountain car</a>，可以帮助理解approximation的on-policy control问题。</p>
+<h2 id="n-step-Semi-gradient-Sarsa"><a href="#n-step-Semi-gradient-Sarsa" class="headerlink" title="n-step Semi-gradient Sarsa"></a>n-step Semi-gradient Sarsa</h2><p>没什么悬念，这里接着给出了n-step的 Sarsa算法，首先看一下对应的weight更新公式：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy77qa9oh9j30q60483yu.jpg" alt="png"> </p>
+<h2 id="Average-Reward-A-New-Problem-Setting-for-Continuing-Tasks"><a href="#Average-Reward-A-New-Problem-Setting-for-Continuing-Tasks" class="headerlink" title="Average Reward: A New Problem Setting for Continuing Tasks"></a>Average Reward: A New Problem Setting for Continuing Tasks</h2><p>这个section引入了适用于MDP问题的第三个经典设置，前两个分别是episodic和discount，第三个是average reward，这个设置和discount一样都是针对continuing问题的，即MDP问题没有start state也没有terminal state，下面给出average reward r(π)的定义：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy79r6gxrgj30dg05baa8.jpg" alt="png"> </p>
+<p>关于极限收敛的条件，需要满足如下假设：</p>
+<p>可以看到expectation是基于一系列先前的action，A0,A1,…,A_{t-1}，这些action都是基于policy π的。关于policy π，有一个重要的指标就是基于π的稳定state分布μ_π(s):</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy79woceiij30b800yglh.jpg" alt="png"> </p>
+<p>r(π)极限收敛的假设是，上述state分布μ_π(s)必须独立于S0。这表明MDP无论从哪里开始，或者有什么先前的交互发生在agent和environment之间，这都只具有临时的作用，从长远来看的话，只有policy π才能决定稳定状态下每个state的分布。</p>
+<p>这种假设称为ergodicity，即各态历经性。</p>
+<p>我关于average reward是这样理解的：因为average reward的收敛是基于任意start都可以达到distribution最终收敛的假设的，所以如果训练中引入average reward的更新，如果训练r(π)收敛的话，也就保证了continuing task的收敛，这种思路和discount的引入一个道理，都是使得原本无穷的训练任务可以达到收敛。</p>
+<p>接着引入使用average reward的return，即differential return：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy7ab1wy6bj30iq01pa9w.jpg" alt="png"> </p>
+<p>根据differential return建立起来的value function称为differential value function，只需要在原来的更新公式上引入一些小的改动即可得到differential value function，下面给出引入average reward的TD errors:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy7adeedgcj30g704qweh.jpg" alt="png"> </p>
+<p>使用同样的weight更新公式即可，但是需要同时更新average reward的估计，下面给出differential的semi-gradient Sarsa(0)算法伪代码：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fy7ag25nx8j30t00cvtac.jpg" alt="png"> </p>
+<p>关于differential semi-gradient Sarsa(0)的例子可以参考<a href="https://xinge650.github.io/2018/12/15/Chapter10-access-control/" target="_blank" rel="noopener">Example 10.2: An Access-Control Queuing Task</a></p>
+<h2 id="Deprecating-the-Discounted-Setting"><a href="#Deprecating-the-Discounted-Setting" class="headerlink" title="Deprecating the Discounted Setting"></a>Deprecating the Discounted Setting</h2><p>首先证明了，如果在continuing tasks中引入discount因子，得到的平均average reward和undiscount效果是一样的：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fy8mioc3unj30t80k6mz9.jpg" alt="png"> </p>
+<p>可以看到引入discount因子不过是给average reward加了一个比例因子，对于得到optimal的average reward没有什么影响。至于为什么不能使用discount因子，书中讲的比较模糊，给出的观点是discount setting不能满足<a href="https://xinge650.github.io/2018/11/23/Chapter04-Dynamic-Programming/" target="_blank" rel="noopener">policy improvement的理论</a>，以至于在Sarsa的策略提升的内容上，虽然使用了epsilon-greedy的policy，仍然不能保证这种提升是对全体state的提升。</p>
+<p>关于不满足policy improvement理论这点不难理解，因为之前在tabular method的时候，每次提升只改变一个state的policy决策，这种policy提升并没有影响到别的policy，所以整体policy是提升的；但是使用function approximation的policy improvement，因为每次更新是改变的参数，换句话说，每次提升改变了所以state的policy决策，这就不能使用4.2的理论来解释了。</p>
+<p>但是这个问题是function approximation的共性，episodic setting和average reward setting也同样存在啊。。。所以只能说function approximation的控制方法目前来说还是缺乏理论基础的。</p>
+<h2 id="n-step-Differential-Semi-gradient-Sarsa"><a href="#n-step-Differential-Semi-gradient-Sarsa" class="headerlink" title="n-step Differential Semi-gradient Sarsa"></a>n-step Differential Semi-gradient Sarsa</h2><p>给出使用n-step bootstrape的Sarsa return和error:</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fy8msq9s1ej30q101i0sm.jpg" alt="png"> </p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fy8mtu4o8ij308b01g3yc.jpg" alt="png"> </p>
+<p>给出使用n-step bootstrape提升的semi-gradient Sarsa方法伪代码:</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fy8mv6skkzj30t70ew0v3.jpg" alt="png"> </p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/12/Chapter09-square-wave/" itemprop="url">
-              
-                <span itemprop="name">Chapter09 square_wave</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-12T16:51:29+08:00" content="2018-12-12">
-          12-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/Chapter09-1000-state-Random-Walk/" itemprop="url">
-              
-                <span itemprop="name">Chapter09 1000-state Random Walk</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T15:11:08+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" itemprop="url">
-              
-                <span itemprop="name">Chapter09 On-policy Prediction with Approximation</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T15:10:05+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/07/Chapter08-Planning-and-Learning-with-Tabular-Methods/" itemprop="url">
-              
-                <span itemprop="name">Chapter08 Planning and Learning with Tabular Methods</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-07T09:43:39+08:00" content="2018-12-07">
-          12-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/06/Chapter08-trajectory-sampling/" itemprop="url">
-              
-                <span itemprop="name">Chapter08 trajectory_sampling</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-06T19:34:38+08:00" content="2018-12-06">
-          12-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/06/Chapter08-expectation-vs-sample/" itemprop="url">
-              
-                <span itemprop="name">Chapter08 expectation vs sample</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-06T11:04:17+08:00" content="2018-12-06">
-          12-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/05/Chapter08-maze/" itemprop="url">
-              
-                <span itemprop="name">Chapter08 maze</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-05T20:44:45+08:00" content="2018-12-05">
-          12-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/12/Chapter09-square-wave/" rel="next" title="Chapter09 square_wave">
+                <i class="fa fa-chevron-left"></i> Chapter09 square_wave
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/15/Chapter10-mountain-car/" rel="prev" title="Chapter10 mountain car">
+                Chapter10 mountain car <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2018/12/page/2/">2</a><a class="extend next" rel="next" href="/archives/2018/12/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -654,6 +468,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -674,8 +492,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -746,6 +573,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Episodic-Semi-gradient-Control"><span class="nav-number">1.</span> <span class="nav-text">Episodic Semi-gradient Control</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-Semi-gradient-Sarsa"><span class="nav-number">2.</span> <span class="nav-text">n-step Semi-gradient Sarsa</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Average-Reward-A-New-Problem-Setting-for-Continuing-Tasks"><span class="nav-number">3.</span> <span class="nav-text">Average Reward: A New Problem Setting for Continuing Tasks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deprecating-the-Discounted-Setting"><span class="nav-number">4.</span> <span class="nav-text">Deprecating the Discounted Setting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-Differential-Semi-gradient-Sarsa"><span class="nav-number">5.</span> <span class="nav-text">n-step Differential Semi-gradient Sarsa</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -886,6 +729,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

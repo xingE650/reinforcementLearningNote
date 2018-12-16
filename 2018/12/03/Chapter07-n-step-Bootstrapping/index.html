@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="n-step Bootstrapping上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在上一章的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？">
+<meta name="description" content="上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在上一章的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？">
 <meta name="keywords" content="Reinforcement Learning Note">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter07 n-step Bootstrapping">
 <meta property="og:url" content="http://yoursite.com/2018/12/03/Chapter07-n-step-Bootstrapping/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="n-step Bootstrapping上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在上一章的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？">
+<meta property="og:description" content="上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在上一章的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxttp4a4axj30g90df74n.jpg">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxttr475muj30gi01njr8.jpg">
@@ -100,10 +100,10 @@
 <meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxtv5o2ir4j30q703rgls.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxtv6yamauj30py020aa1.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxtvao80kdj30pm0kbq5j.jpg">
-<meta property="og:updated_time" content="2018-12-03T13:21:51.196Z">
+<meta property="og:updated_time" content="2018-12-15T01:36:53.052Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter07 n-step Bootstrapping">
-<meta name="twitter:description" content="n-step Bootstrapping上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在上一章的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？">
+<meta name="twitter:description" content="上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在上一章的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？">
 <meta name="twitter:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxttp4a4axj30g90df74n.jpg">
 
 
@@ -362,7 +362,7 @@
       
 
       
-        <h1 id="n-step-Bootstrapping"><a href="#n-step-Bootstrapping" class="headerlink" title="n-step Bootstrapping"></a>n-step Bootstrapping</h1><p>上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在<a href="https://xinge650.github.io/2018/12/01/Chapter06-Temporal-Difference-Learning/" target="_blank" rel="noopener">上一章</a>的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？</p>
+        <p>上一章提到了强化学习的一种重要方法:TD方法。TD方法结合了DP方法和MC方法的优点，不需要环境信息，并且通过DP的迭代思想大幅提高运算速度。这一章在<a href="https://xinge650.github.io/2018/12/01/Chapter06-Temporal-Difference-Learning/" target="_blank" rel="noopener">上一章</a>的基础上深入思考，如果增加更新时候使用的采样点数，即将TD方法推向MC方法，会有哪些新的算法，会获得更好的效果吗？</p>
 <a id="more"></a>
 <h2 id="n-step-TD-Prediction"><a href="#n-step-TD-Prediction" class="headerlink" title="n-step TD Prediction"></a>n-step TD Prediction</h2><p>在引入一种新的控制算法前首先考虑就是prediction方法的实现。首先思考一下MC方法和TD(0)方法的区别：MC方法使用了episode中产生的所有action对应的reward，而TD(0)方法只使用了episode中需要更新的Q(s,a)的后续一个step的Q(s’,a’)。如果我想在两者中间取一个折中？答案很明显吧，就是使用更多的后续state-action和对应的reward。</p>
 <p>这里我们便引出了n-step TD的想法，为了统一期间，我们把上一章提到的TD(0)也叫作one-step TD方法，下面给出了不同n的n-step方法的backup diagrams(关于这个图形这本书里见太多了，我的理解就是为了update Q(s,a)需要备份的episode产生的数据，比如state、action、reward等，但是像step size、epsilon、gamma等就不包含其中了，它们应该归于updating algorithm中):</p>
@@ -522,7 +522,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -586,7 +586,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#n-step-Bootstrapping"><span class="nav-number">1.</span> <span class="nav-text">n-step Bootstrapping</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-TD-Prediction"><span class="nav-number">1.1.</span> <span class="nav-text">n-step TD Prediction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-Sarsa"><span class="nav-number">1.2.</span> <span class="nav-text">n-step Sarsa</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-Off-policy-Learning-by-Importance-Sampling"><span class="nav-number">1.3.</span> <span class="nav-text">n-step Off-policy Learning by Importance Sampling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Off-policy-Learning-Without-Importance-Sampling-The-n-step-Tree-Backup-Algorithm"><span class="nav-number">1.4.</span> <span class="nav-text">Off-policy Learning Without Importance Sampling: The n-step Tree Backup Algorithm</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-TD-Prediction"><span class="nav-number">1.</span> <span class="nav-text">n-step TD Prediction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-Sarsa"><span class="nav-number">2.</span> <span class="nav-text">n-step Sarsa</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-Off-policy-Learning-by-Importance-Sampling"><span class="nav-number">3.</span> <span class="nav-text">n-step Off-policy Learning by Importance Sampling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Off-policy-Learning-Without-Importance-Sampling-The-n-step-Tree-Backup-Algorithm"><span class="nav-number">4.</span> <span class="nav-text">Off-policy Learning Without Importance Sampling: The n-step Tree Backup Algorithm</span></a></li></ol></div>
             
 
           </div>

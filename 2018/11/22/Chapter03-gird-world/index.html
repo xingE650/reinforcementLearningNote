@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="引用来自ShangtongZhang的代码chapter03/gird_world.py 使用MDP的强化学习算法解决Grid-world问题任务解释(example 3.5 in chapter 03)grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下： 如果action导致agen">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter03/gird_world.py 使用MDP的强化学习算法解决Grid-world问题 任务解释(example 3.5 in chapter 03)grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下： 如果action导致age">
 <meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter03 gird-world">
 <meta property="og:url" content="http://yoursite.com/2018/11/22/Chapter03-gird-world/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="引用来自ShangtongZhang的代码chapter03/gird_world.py 使用MDP的强化学习算法解决Grid-world问题任务解释(example 3.5 in chapter 03)grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下： 如果action导致agen">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter03/gird_world.py 使用MDP的强化学习算法解决Grid-world问题 任务解释(example 3.5 in chapter 03)grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下： 如果action导致age">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxgu88q4qij309a059mx4.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxgvmy63nmj30ek08f3yb.jpg">
 <meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxgvnn03hkj30bs07iq2y.jpg">
 <meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxgvohhmfxj30bs07i3yj.jpg">
-<meta property="og:updated_time" content="2018-12-02T09:23:45.788Z">
+<meta property="og:updated_time" content="2018-12-15T01:34:02.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter03 gird-world">
-<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter03/gird_world.py 使用MDP的强化学习算法解决Grid-world问题任务解释(example 3.5 in chapter 03)grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下： 如果action导致agen">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter03/gird_world.py 使用MDP的强化学习算法解决Grid-world问题 任务解释(example 3.5 in chapter 03)grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下： 如果action导致age">
 <meta name="twitter:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fxgu88q4qij309a059mx4.jpg">
 
 
@@ -354,7 +354,8 @@
 
       
         <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter03/grid_world.py" target="_blank" rel="noopener">chapter03/gird_world.py</a></p>
-<h1 id="使用MDP的强化学习算法解决Grid-world问题"><a href="#使用MDP的强化学习算法解决Grid-world问题" class="headerlink" title="使用MDP的强化学习算法解决Grid-world问题"></a>使用MDP的强化学习算法解决Grid-world问题</h1><h2 id="任务解释-example-3-5-in-chapter-03"><a href="#任务解释-example-3-5-in-chapter-03" class="headerlink" title="任务解释(example 3.5 in chapter 03)"></a>任务解释(example 3.5 in chapter 03)</h2><p>grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下：</p>
+<p>使用MDP的强化学习算法解决Grid-world问题</p>
+<h2 id="任务解释-example-3-5-in-chapter-03"><a href="#任务解释-example-3-5-in-chapter-03" class="headerlink" title="任务解释(example 3.5 in chapter 03)"></a>任务解释(example 3.5 in chapter 03)</h2><p>grid_world代表了一个网格，网格中每个小格子代表一种状态。其中每个状态可以有4种action:left、right、up、down。对应reward规则如下：</p>
 <p>如果action导致agent跑到网格外面去，则reward=-1；</p>
 <p>如果agent从A出发，则reward=10，下个状态是固定的A_PRIME_POS；从B出发，reward=5，下个状态时固定的B_PRIME_POS；</p>
 <p>其他的state上的action均为0。<br><a id="more"></a></p>
@@ -494,7 +495,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -558,7 +559,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用MDP的强化学习算法解决Grid-world问题"><span class="nav-number">1.</span> <span class="nav-text">使用MDP的强化学习算法解决Grid-world问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#任务解释-example-3-5-in-chapter-03"><span class="nav-number">1.1.</span> <span class="nav-text">任务解释(example 3.5 in chapter 03)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引入模块，定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块，定义常量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取next-state（base-on-action），和对应的reward"><span class="nav-number">3.</span> <span class="nav-text">获取next_state（base on action），和对应的reward</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#根据给定的np-array数据类型绘制方格图"><span class="nav-number">4.</span> <span class="nav-text">根据给定的np.array数据类型绘制方格图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Policies-and-Value-Functions"><span class="nav-number">5.</span> <span class="nav-text">Policies and Value Functions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optimal-Policies-and-Value-Functions-Greedy-choose-action"><span class="nav-number">6.</span> <span class="nav-text">Optimal Policies and Value Functions(Greedy choose action)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">7.</span> <span class="nav-text">后记</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#任务解释-example-3-5-in-chapter-03"><span class="nav-number">1.</span> <span class="nav-text">任务解释(example 3.5 in chapter 03)</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#引入模块，定义常量"><span class="nav-number"></span> <span class="nav-text">引入模块，定义常量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取next-state（base-on-action），和对应的reward"><span class="nav-number"></span> <span class="nav-text">获取next_state（base on action），和对应的reward</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#根据给定的np-array数据类型绘制方格图"><span class="nav-number"></span> <span class="nav-text">根据给定的np.array数据类型绘制方格图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Policies-and-Value-Functions"><span class="nav-number"></span> <span class="nav-text">Policies and Value Functions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optimal-Policies-and-Value-Functions-Greedy-choose-action"><span class="nav-number"></span> <span class="nav-text">Optimal Policies and Value Functions(Greedy choose action)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number"></span> <span class="nav-text">后记</span></a></li></div>
             
 
           </div>

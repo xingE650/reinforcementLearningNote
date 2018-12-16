@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fxgoaxpkxuj30gs05hdg3.jpg">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxr2yr4pkgj30js13stcn.jpg">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxr2ysux8pj30az07eaa5.jpg">
-<meta property="og:updated_time" content="2018-12-03T07:20:36.020Z">
+<meta property="og:updated_time" content="2018-12-15T01:36:27.464Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter06 TD(0) vs constant-alpha-MC">
 <meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter06/random_walk.py 通过一个例子比较了TD(0)和constant-α MC方法的训练性能">
@@ -354,7 +354,8 @@
 
       
         <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter06/random_walk.py" target="_blank" rel="noopener">chapter06/random_walk.py</a></p>
-<h1 id="通过一个例子比较了TD-0-和constant-α-MC方法的训练性能"><a href="#通过一个例子比较了TD-0-和constant-α-MC方法的训练性能" class="headerlink" title="通过一个例子比较了TD(0)和constant-α MC方法的训练性能"></a>通过一个例子比较了TD(0)和constant-α MC方法的训练性能</h1><a id="more"></a>
+<p>通过一个例子比较了TD(0)和constant-α MC方法的训练性能</p>
+<a id="more"></a>
 <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>通过一个MRP来比较constant-α MC Method和TD(0)方法之间的训练性能。</p>
 <p>MRP的状态转移示意图：</p>
 <p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxp0stsimwj30gu02d749.jpg" alt="png"> </p>
@@ -508,7 +509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -572,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过一个例子比较了TD-0-和constant-α-MC方法的训练性能"><span class="nav-number">1.</span> <span class="nav-text">通过一个例子比较了TD(0)和constant-α MC方法的训练性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用TD-0-方法update-state-value"><span class="nav-number">1.3.</span> <span class="nav-text">使用TD(0)方法update state-value</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Monte-Carlo方法update-state-value"><span class="nav-number">1.4.</span> <span class="nav-text">使用Monte Carlo方法update state-value</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过使用TD-0-方法建立state-value，并绘制收敛图像"><span class="nav-number">1.5.</span> <span class="nav-text">通过使用TD(0)方法建立state-value，并绘制收敛图像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算并比较TD-0-和constant-α-MC-method的rms-均方差误差"><span class="nav-number">1.6.</span> <span class="nav-text">计算并比较TD(0)和constant α-MC method的rms(均方差误差)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用一般的方法进行state-value收敛并绘制图像"><span class="nav-number">1.7.</span> <span class="nav-text">使用一般的方法进行state-value收敛并绘制图像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用batch-update方法优化state-value的收敛过程并绘制图像"><span class="nav-number">1.8.</span> <span class="nav-text">使用batch-update方法优化state-value的收敛过程并绘制图像</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用TD-0-方法update-state-value"><span class="nav-number">3.</span> <span class="nav-text">使用TD(0)方法update state-value</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Monte-Carlo方法update-state-value"><span class="nav-number">4.</span> <span class="nav-text">使用Monte Carlo方法update state-value</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过使用TD-0-方法建立state-value，并绘制收敛图像"><span class="nav-number">5.</span> <span class="nav-text">通过使用TD(0)方法建立state-value，并绘制收敛图像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算并比较TD-0-和constant-α-MC-method的rms-均方差误差"><span class="nav-number">6.</span> <span class="nav-text">计算并比较TD(0)和constant α-MC method的rms(均方差误差)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用一般的方法进行state-value收敛并绘制图像"><span class="nav-number">7.</span> <span class="nav-text">使用一般的方法进行state-value收敛并绘制图像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用batch-update方法优化state-value的收敛过程并绘制图像"><span class="nav-number">8.</span> <span class="nav-text">使用batch-update方法优化state-value的收敛过程并绘制图像</span></a></li></ol></div>
             
 
           </div>

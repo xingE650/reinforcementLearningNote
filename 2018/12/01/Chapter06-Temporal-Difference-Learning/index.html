@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="TD methodTemporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
+<meta name="description" content="Temporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
 <meta name="keywords" content="Reinforcement Learning Note">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter06 Temporal-Difference Learning">
 <meta property="og:url" content="http://yoursite.com/2018/12/01/Chapter06-Temporal-Difference-Learning/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="TD methodTemporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
+<meta property="og:description" content="Temporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})+\alpha&space;(G_{t}-V(S_{t}))">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})+\alpha&space;\left&space;[&space;R_{t+1}+\gamma&space;V(S_{t+1})-V(S_{t})&space;\right&space;]">
@@ -98,10 +98,10 @@
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsfzjd3bbj30jj02vaa3.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsh2o5fhtj30lj01y3yf.jpg">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxsi31tna0j30bs06mq2u.jpg">
-<meta property="og:updated_time" content="2018-12-03T07:25:32.984Z">
+<meta property="og:updated_time" content="2018-12-15T01:36:40.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter06 Temporal-Difference Learning">
-<meta name="twitter:description" content="TD methodTemporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
+<meta name="twitter:description" content="Temporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。">
 <meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})+\alpha&space;(G_{t}-V(S_{t}))">
 
 
@@ -360,7 +360,7 @@
       
 
       
-        <h1 id="TD-method"><a href="#TD-method" class="headerlink" title="TD method"></a>TD method</h1><p>Temporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：<br>TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；<br>同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。</p>
+        <p>Temporal Difference method 可以说是强化学习算法的代表，它结合了Monte Carlo方法和DP方法的优点：<br>TD方法不需要借助环境的信息(model-free)，可以直接通过模拟得到经验进行学习；<br>同时它像DP算法一样，一个state的估计(estimate)可以通过其它部分的估计来进行更新，而不需要等待完整的episode结束。</p>
 <a id="more"></a>
 <h1 id="TD-Prediction"><a href="#TD-Prediction" class="headerlink" title="TD Prediction"></a>TD Prediction</h1><p>TD方法和MC方法都是根据生成的经验来学习的，但是MC方法需要在episode结束后才能更新，比如对一个非平稳问题有如下更新规则的every-visit MC方法：</p>
 <p><a href="https://www.codecogs.com/eqnedit.php?latex=V(S_{t})\leftarrow&space;V(S_{t})&plus;\alpha&space;(G_{t}-V(S_{t}))" target="_blank"><img src="https://latex.codecogs.com/gif.latex?V(S_{t})\leftarrow&space;V(S_{t})&plus;\alpha&space;(G_{t}-V(S_{t}))" title="V(S_{t})\leftarrow V(S_{t})+\alpha (G_{t}-V(S_{t}))"></a></p>
@@ -555,7 +555,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -619,7 +619,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TD-method"><span class="nav-number">1.</span> <span class="nav-text">TD method</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TD-Prediction"><span class="nav-number">2.</span> <span class="nav-text">TD Prediction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Advantages-of-TD-Prediction-Methods"><span class="nav-number">3.</span> <span class="nav-text">Advantages of TD Prediction Methods</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optimality-of-TD-0"><span class="nav-number">4.</span> <span class="nav-text">Optimality of TD(0)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用batch-updating方法更新的python代码"><span class="nav-number">4.1.</span> <span class="nav-text">使用batch updating方法更新的python代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#现在来讨论一下Example6-4并对TD和MC性能差异给出解释"><span class="nav-number">4.2.</span> <span class="nav-text">现在来讨论一下Example6.4并对TD和MC性能差异给出解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从Example6-4总结得到结论"><span class="nav-number">4.3.</span> <span class="nav-text">从Example6.4总结得到结论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sarsa-On-policy-TD-Control"><span class="nav-number">5.</span> <span class="nav-text">Sarsa: On-policy TD Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Q-learning-Off-policy-TD-Control"><span class="nav-number">6.</span> <span class="nav-text">Q-learning: Off-policy TD Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Expected-Sarsa"><span class="nav-number">7.</span> <span class="nav-text">Expected Sarsa</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Maximization-Bias-and-Double-Learning"><span class="nav-number">8.</span> <span class="nav-text">Maximization Bias and Double Learning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Games-Afterstates-and-Other-Special-Cases"><span class="nav-number">9.</span> <span class="nav-text">Games, Afterstates, and Other Special Cases</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TD-Prediction"><span class="nav-number">1.</span> <span class="nav-text">TD Prediction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Advantages-of-TD-Prediction-Methods"><span class="nav-number">2.</span> <span class="nav-text">Advantages of TD Prediction Methods</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optimality-of-TD-0"><span class="nav-number">3.</span> <span class="nav-text">Optimality of TD(0)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用batch-updating方法更新的python代码"><span class="nav-number">3.1.</span> <span class="nav-text">使用batch updating方法更新的python代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#现在来讨论一下Example6-4并对TD和MC性能差异给出解释"><span class="nav-number">3.2.</span> <span class="nav-text">现在来讨论一下Example6.4并对TD和MC性能差异给出解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从Example6-4总结得到结论"><span class="nav-number">3.3.</span> <span class="nav-text">从Example6.4总结得到结论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sarsa-On-policy-TD-Control"><span class="nav-number">4.</span> <span class="nav-text">Sarsa: On-policy TD Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Q-learning-Off-policy-TD-Control"><span class="nav-number">5.</span> <span class="nav-text">Q-learning: Off-policy TD Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Expected-Sarsa"><span class="nav-number">6.</span> <span class="nav-text">Expected Sarsa</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Maximization-Bias-and-Double-Learning"><span class="nav-number">7.</span> <span class="nav-text">Maximization Bias and Double Learning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Games-Afterstates-and-Other-Special-Cases"><span class="nav-number">8.</span> <span class="nav-text">Games, Afterstates, and Other Special Cases</span></a></li></ol></div>
             
 
           </div>

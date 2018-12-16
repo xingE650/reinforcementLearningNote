@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响 问题描述这个例子是书上的Example 9.3: Coarseness of Coarse Coding： 使用Coarse Coding的方法建立近似函数去近似一个方波函数，即将方波函数的随机采样作为U_t来使用，通过">
 <meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter09 square_wave">
 <meta property="og:url" content="http://yoursite.com/2018/12/12/Chapter09-square-wave/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响 问题描述这个例子是书上的Example 9.3: Coarseness of Coarse Coding： 使用Coarse Coding的方法建立近似函数去近似一个方波函数，即将方波函数的随机采样作为U_t来使用，通过">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yylzgecj319c0u0gsx.jpg">
-<meta property="og:updated_time" content="2018-12-13T03:53:20.545Z">
+<meta property="og:updated_time" content="2018-12-15T01:47:24.996Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter09 square_wave">
-<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter09/square_wave.py 使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响 问题描述这个例子是书上的Example 9.3: Coarseness of Coarse Coding： 使用Coarse Coding的方法建立近似函数去近似一个方波函数，即将方波函数的随机采样作为U_t来使用，通过">
 <meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fy4yylzgecj319c0u0gsx.jpg">
 
 
@@ -351,9 +351,9 @@
 
       
         <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter09/square_wave.py" target="_blank" rel="noopener">chapter09/square_wave.py</a></p>
-<h1 id="使用Coarse-Coding方法构造feature来比较不同参数对近似函数性能的影响"><a href="#使用Coarse-Coding方法构造feature来比较不同参数对近似函数性能的影响" class="headerlink" title="使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响"></a>使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响</h1><a id="more"></a>
+<p>使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响</p>
 <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个例子是书上的Example 9.3: Coarseness of Coarse Coding：</p>
-<p>使用Coarse Coding的方法建立近似函数去近似一个方波函数，即将方波函数的随机采样作为U_t来使用，通过修改区间之间的间隔、尺寸等参数来比较不同参数对Coarse Coding特征的泛化特性的影响。</p>
+<p>使用Coarse Coding的方法建立近似函数去近似一个方波函数，即将方波函数的随机采样作为U_t来使用，通过修改区间之间的间隔、尺寸等参数来比较不同参数对Coarse Coding特征的泛化特性的影响。<br><a id="more"></a></p>
 <p>9.5讲的几个feature构造方法，并不只是用于强化学习，在函数拟合也是可以适用的，即回归问题上也是适用的。话说本来value function approximation就是监督学习的思想。。。所以本质不要搞混了。</p>
 <h2 id="引入模块"><a href="#引入模块" class="headerlink" title="引入模块"></a>引入模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br></pre></td></tr></table></figure>
 <h2 id="定义区间类"><a href="#定义区间类" class="headerlink" title="定义区间类"></a>定义区间类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrapper class for an interval</span></span><br><span class="line"><span class="comment"># readability is more important than efficiency, so I won't use many tricks</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Interval</span>:</span></span><br><span class="line">    <span class="comment"># [@left, @right)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, left, right)</span>:</span></span><br><span class="line">        self.left = left</span><br><span class="line">        self.right = right</span><br><span class="line"></span><br><span class="line">    <span class="comment"># whether a point is in this interval</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">contain</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.left &lt;= x &lt; self.right</span><br><span class="line"></span><br><span class="line">    <span class="comment"># length of this interval</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">size</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.right - self.left</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># domain of the square wave, [0, 2)</span></span><br><span class="line">DOMAIN = Interval(<span class="number">0.0</span>, <span class="number">2.0</span>)</span><br></pre></td></tr></table></figure>
@@ -407,6 +407,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/15/Chapter10-On-policy-Control-with-Approximation/" rel="prev" title="Chapter10 On-policy Control with Approximation">
+                Chapter10 On-policy Control with Approximation <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -485,7 +489,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -549,7 +553,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Coarse-Coding方法构造feature来比较不同参数对近似函数性能的影响"><span class="nav-number">1.</span> <span class="nav-text">使用Coarse Coding方法构造feature来比较不同参数对近似函数性能的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义区间类"><span class="nav-number">1.3.</span> <span class="nav-text">定义区间类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义需要估计的方波波形，以及随机抽样函数"><span class="nav-number">1.4.</span> <span class="nav-text">定义需要估计的方波波形，以及随机抽样函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义Coarse-Coding类来建立近似函数和更新方法"><span class="nav-number">1.5.</span> <span class="nav-text">定义Coarse Coding类来建立近似函数和更新方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width"><span class="nav-number">1.6.</span> <span class="nav-text">训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块"><span class="nav-number">2.</span> <span class="nav-text">引入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义区间类"><span class="nav-number">3.</span> <span class="nav-text">定义区间类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义需要估计的方波波形，以及随机抽样函数"><span class="nav-number">4.</span> <span class="nav-text">定义需要估计的方波波形，以及随机抽样函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义Coarse-Coding类来建立近似函数和更新方法"><span class="nav-number">5.</span> <span class="nav-text">定义Coarse Coding类来建立近似函数和更新方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width"><span class="nav-number">6.</span> <span class="nav-text">训练并绘制图表，比较不同参数的性能，这里只修改了样本数量和feature的width</span></a></li></ol></div>
             
 
           </div>

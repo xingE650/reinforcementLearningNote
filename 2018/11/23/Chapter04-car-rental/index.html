@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="引用来自ShangtongZhang的代码chapter04/car_rental.py car rental 问题问题描述这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租借">
+<meta name="description" content="引用来自ShangtongZhang的代码chapter04/car_rental.py car rental 问题 问题描述这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租">
 <meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter04 car_rental">
 <meta property="og:url" content="http://yoursite.com/2018/11/23/Chapter04-car-rental/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:description" content="引用来自ShangtongZhang的代码chapter04/car_rental.py car rental 问题问题描述这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租借">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter04/car_rental.py car rental 问题 问题描述这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxi9cogra8j306r02ijr9.jpg">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxiy50ur4dj31o00u0ju3.jpg">
-<meta property="og:updated_time" content="2018-12-02T09:28:16.005Z">
+<meta property="og:updated_time" content="2018-12-15T01:34:44.856Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter04 car_rental">
-<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter04/car_rental.py car rental 问题问题描述这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租借">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter04/car_rental.py car rental 问题 问题描述这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租">
 <meta name="twitter:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxi9cogra8j306r02ijr9.jpg">
 
 
@@ -352,9 +352,10 @@
 
       
         <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter04/car_rental.py" target="_blank" rel="noopener">chapter04/car_rental.py</a></p>
-<h1 id="car-rental-问题"><a href="#car-rental-问题" class="headerlink" title="car rental 问题"></a>car rental 问题</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租借和归还的数量都遵循泊松分布：</p>
-<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxi9cogra8j306r02ijr9.jpg" alt="png"> </p>
+<p>car rental 问题</p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这个问题就比较复杂了。。。说是Jack是两个汽车租赁公司的老板，他收入是靠租车出去，租出一辆赚10刀，每次有人还车，那么第二天这车就可以租出去了；每天夜里可以将一个地方的车运到另一个地方，不过每运一辆车要花2刀。关于业务，Jack发现了一些斯巴拉西的规律：每个地方每天汽车租借和归还的数量都遵循泊松分布：</p>
 <a id="more"></a>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxi9cogra8j306r02ijr9.jpg" alt="png"> </p>
 <p>我们就把两个位置称为first和second吧。</p>
 <p>first的汽车每天借出去λ=3，归还λ=3；</p>
 <p>second每天借出去λ=4，归还λ=2；</p>
@@ -486,7 +487,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -550,7 +551,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#car-rental-问题"><span class="nav-number">1.</span> <span class="nav-text">car rental 问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">1.2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行policy-evaluation"><span class="nav-number">1.3.</span> <span class="nav-text">进行policy evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行policy-iteration"><span class="nav-number">1.4.</span> <span class="nav-text">进行policy iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意图片，总共经过4次迭代最终收敛，前5个图片是policy的温度分布图，最后一个是value的分布图。还有一点需要注意，就是这个任务没有终止状态，所以是属于continuing-task，discount因子-lt-1，而本章第一个和第三个都是有终止状态的，所以是undiscount的。"><span class="nav-number">1.5.</span> <span class="nav-text">注意图片，总共经过4次迭代最终收敛，前5个图片是policy的温度分布图，最后一个是value的分布图。还有一点需要注意，就是这个任务没有终止状态，所以是属于continuing task，discount因子&lt;1，而本章第一个和第三个都是有终止状态的，所以是undiscount的。</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行policy-evaluation"><span class="nav-number">3.</span> <span class="nav-text">进行policy evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行policy-iteration"><span class="nav-number">4.</span> <span class="nav-text">进行policy iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意图片，总共经过4次迭代最终收敛，前5个图片是policy的温度分布图，最后一个是value的分布图。还有一点需要注意，就是这个任务没有终止状态，所以是属于continuing-task，discount因子-lt-1，而本章第一个和第三个都是有终止状态的，所以是undiscount的。"><span class="nav-number">5.</span> <span class="nav-text">注意图片，总共经过4次迭代最终收敛，前5个图片是policy的温度分布图，最后一个是value的分布图。还有一点需要注意，就是这个任务没有终止状态，所以是属于continuing task，discount因子&lt;1，而本章第一个和第三个都是有终止状态的，所以是undiscount的。</span></a></li></ol></div>
             
 
           </div>
