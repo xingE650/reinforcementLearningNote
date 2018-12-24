@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Note,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这章在第9章 On-policy Prediction with Approximation和第10章 On-policy Control with Approximation的基础上，讨论off-policy的approximation方法，主要讲解了off-policy with approximation的预测方法。在tubular方法里，从on-policy方法推广到off-policy方">
+<meta name="keywords" content="Reinforcement Learning Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter11 Off-policy Methods with Approximation">
+<meta property="og:url" content="http://yoursite.com/2018/12/19/Chapter11-Off-policy-Methods-with-Approximation/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="这章在第9章 On-policy Prediction with Approximation和第10章 On-policy Control with Approximation的基础上，讨论off-policy的approximation方法，主要讲解了off-policy with approximation的预测方法。在tubular方法里，从on-policy方法推广到off-policy方">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyd0tlqjioj306a01va9v.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyd16wi7njj309r01mq2r.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyd18jc5mtj30b9040jrb.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyd1f2wtr4j30g304i3yo.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyd1tiik92j30qp05iwes.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyd1wgsirhj30jp04m0su.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fydfnct6glj304s01oglf.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fydhvpyn2wj30qu07uabb.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyf9jrxcq9j30pr0d0jsj.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyf9wg3g5yj306l02jq2r.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfa3jq56ej30bm023jr8.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyfajcyp3pj30qf0c1myd.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyfbioca89j30h801u0sn.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyfbldrmszj30gt03edfw.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyfboxgei6j305501u3yb.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyfcdy0jrvj30dn021t8l.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyfchm8ygvj304d01fa9t.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyfdsfz79aj306r01rglf.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyfels0k3sj30ab01ljr7.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfenazhn3j30pf04kaab.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyfep7wse9j30df03n74a.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyff0iwvnxj305x03t3yf.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfg4426faj30np06cdg7.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyfhd426eoj30iw033wej.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyficpbg3qj30aq02sgll.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyfii7q2z0j30b10aqaa7.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfim48tvsj30qx04aq3o.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyfiq6fg6kj30r70e0wfk.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyfixk6p7lj30il0710sz.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyfizqovvjj30eg01pdfp.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyfj3t2ecnj30ff01st8l.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyfjmlyw96j307n01q743.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfkav4wgjj309a01fa9v.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfkav4wgjj309a01fa9v.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfkk86oekj30hs05r0t3.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyfl6hfpzyj30a1034gll.jpg">
+<meta property="og:updated_time" content="2018-12-24T08:53:25.797Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter11 Off-policy Methods with Approximation">
+<meta name="twitter:description" content="这章在第9章 On-policy Prediction with Approximation和第10章 On-policy Control with Approximation的基础上，讨论off-policy的approximation方法，主要讲解了off-policy with approximation的预测方法。在tubular方法里，从on-policy方法推广到off-policy方">
+<meta name="twitter:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyd0tlqjioj306a01va9v.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/19/Chapter11-Off-policy-Methods-with-Approximation/">
+
+
+
+
+
+  <title>Chapter11 Off-policy Methods with Approximation | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/19/Chapter11-Off-policy-Methods-with-Approximation/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter11 Off-policy Methods with Approximation</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-19T09:34:03+08:00">
+                2018-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这章在<a href="https://xinge650.github.io/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" target="_blank" rel="noopener">第9章 On-policy Prediction with Approximation</a>和<a href="https://xinge650.github.io/2018/12/15/Chapter10-On-policy-Control-with-Approximation/" target="_blank" rel="noopener">第10章 On-policy Control with Approximation</a>的基础上，讨论off-policy的approximation方法，主要讲解了off-policy with approximation的预测方法。在tubular方法里，从on-policy方法推广到off-policy方法基本是无痛的，收敛性也可以得到保障，但是这一章会讨论更多关于收敛性和可学习性(Learnable)的话题，理解这些不但可以帮助我们更好的理解off-policy的approximation方法，也可以更好的理解强化学习近似函数训练的本质。</p>
+<p>首先提出off-policy的两个挑战，其实是相对于on-policy算法遇到的一些问题。第一个是target of update，因为off-policy方法使用behavior policy产生的数据更新target policy，所以target in update rule需要做一些改动，这个工作是通过重要采样因子完成的；第二个是distribution of updates，这里的distribution该怎么理解？完成更新所使用的state的分布？老实说我并没有get到this，我能理解的只是，一些显而易见的梯度下降的损失函数，比如BE(Bellman Error)，可能不能保证训练结果，也就是weight的收敛，需要考虑其他的最小化目标。那么我对于distribution of update可以这样理解吗，就是最终学习到的weight会导致value function的分布更趋于哪种，是趋于BE最小，还是RE最小，还是PBE最小等等。换句话说，distribution和target，感觉是approximation function method和tabular method的本质区别，前者更新weight，更新的的是整体state(or action) value的分布，或者函数形式，而后者更新的只是某个具体的value的值。所以两个挑战，只是不同方法的不同表现形式吧？</p>
+<a id="more"></a>
+<pre><code>-----------------------------------------我是分割线( _ゝ`)-----------------------------------------
+</code></pre><p>关于上面提到的distribution of update，我好像懂了。。。因为结合section:Examples of Off-policy Divergence我发现，作者认为on-policy更新时候使用的state，即更新使用的state分布，可以保证收敛，但是因为off-policy的更新取决于behavior policy和target policy，所以自然使用的更新state分布和on-policy不一样，所以导致了例子(就那两个state的短例子)的off-policy方法训练的发散。而且Rich Sutton大佬也说了，如果将counterexample中的DP方法的更新distribution改为on-policy的分布，即使用异步DP，结果就收敛了：</p>
+<font color="green">If we alter just the distribution of DP updates in Baird’s counterexample, from the uniform distribution to the on-policy distribution (which generally requires asynchronous updating), then convergence is guaranteed to a solution with error bounded by (9.14)…..The example shows that even the simplest combination of bootstrapping and function approximation can be unstable if the updates are not done according to the on-policy distribution.</font>
+
+<p>所以一开始我对distribution理解看来是错了( _ゝ`)，不过感觉思考的感觉挺有意思就留着吧。。。</p>
+<h2 id="Semi-gradient-Methods"><a href="#Semi-gradient-Methods" class="headerlink" title="Semi-gradient Methods"></a>Semi-gradient Methods</h2><p>这一部分将前面使用过的off-policy方法推广到approximation function上，主要以semi-gradient的形式，这也是在本书中使用的最多的weight update方法，但是需要注意有的方法可能不会收敛，具体的收敛性证明和改进会在后面的section讨论。</p>
+<p>在off-policy方法中，经常使用重要采样因子importance sampling来调整从behavior policy得到的数据，用于target policy的训练，但是approximation function中使用的采样因子形式和在<a href="https://xinge650.github.io/2018/11/28/Chapter05-Monte-Carlo-Methods/" target="_blank" rel="noopener">第5章</a>使用的形式不太一样，因为这里使用的semi-gradient方法使用的bootstrape(自举)形式，所以相应的采样因子包含的乘积项也比较少:</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyd0tlqjioj306a01va9v.jpg" alt="png"> </p>
+<p>和on-policy的update rule相比，off-policy的update rule很相似了：</p>
+<p><span id="jump2">( _ゝ`)</span></p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyd16wi7njj309r01mq2r.jpg" alt="png"> </p>
+<p>其中的δ_t和on-policy的一致，分为discount setting和average reward setting两种：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyd18jc5mtj30b9040jrb.jpg" alt="png"> </p>
+<p>不过也有例外的，比如expected-Sarsa算法就不使用采样因子：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyd1f2wtr4j30g304i3yo.jpg" alt="png"> </p>
+<p>原因很简单，我们更新q(St,At,w)，使用的next action value是使用target policy π distribution的expected值，所以不需要采样因子进行调整。</p>
+<p>接着给出了off-policy的n-step Sarsa方法，虽然原文中说是expected sarsa的，但是参考<a href="https://xinge650.github.io/2018/12/03/Chapter07-n-step-Bootstrapping/" target="_blank" rel="noopener">第7章 n-step Off-policy Learning by Importance Sampling</a>感觉说是n-step Sarsa的off-policy更合适：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyd1tiik92j30qp05iwes.jpg" alt="png"> </p>
+<p>当然在第7章还提到一个不需要采样因子的n-step off-policy方法，即tree-backup algorithm：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyd1wgsirhj30jp04m0su.jpg" alt="png"> </p>
+<h2 id="Examples-of-Off-policy-Divergence"><a href="#Examples-of-Off-policy-Divergence" class="headerlink" title="Examples of Off-policy Divergence"></a>Examples of Off-policy Divergence</h2><p>这一部分给出了本章第一个反例，就是直接使用on-policy的approximation方法，只仿照tabular method方法改变target of update，而不考虑distribution of update的改变，得到的训练结果是发散的。而且通过后续section的学习，可以看到VE(semi-gradient TD(0))和BE(semi-gradient DP)作为损失函数，是不可学习的(Non-Learnable)。</p>
+<p>首先给出一个包含2个state的MDP的片段，记住这只是一个完整的MDP的一部分，并不是全部，来帮助理解:</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fydfnct6glj304s01oglf.jpg" alt="png"> </p>
+<p>圆圈内的数值代表了估计value值，1st state只有一个action，就是转向2nd state，with reward=0。因为是off-policy update，那么设想这样一种完全可能发生的情形：</p>
+<p>使用semi-gradient TD(0)来分析，设α=0.1，w的初始值设定为10，那么w更新一次之后是10+0.1*(20-10)=11；</p>
+<p>但是因为采样因子可能为0，即behavior policy采取了target policy不可能采取的action，经过了其他一些train后，w的值并没有改变，这时train又重新来到了上图中的state转换；</p>
+<p>于是重复的更新发生了第2次，这次w是11+0.1*(22-11)=12.1；</p>
+<p>以此类推，继续若干次训练，我们可以看到w值会向无穷的方向发散。</p>
+<p>这种情况在off-policy中发生是很常见的，但是on-policy却不存在这样的问题，因为在state转换中，总会存在next state导致w下降，因为有episodic的设定和discount的设定来保证训练的收敛。我们可以在一个完整的例子中看到这个问题的确会发生：<a href="https://xinge650.github.io/2018/12/20/Chapter11-counterexample/" target="_blank" rel="noopener">Baird’s counterexample with semi-gradient TD(0) or semi-gradient DP</a></p>
+<p>看来，不遵循on-policy的update分布，哪怕最简单的bootstraping method with function approximation都收敛不了。</p>
+<p>还有，貌似如果behavior policy和target policy很相似的话(例子里的b和π也差的太离谱了吧QAQ)，使用Q-Learning可以保证收敛？？？据说实验表示可以，但是还没有理论证明。</p>
+<p>书中还提到了两种方法来避免不稳定性和发散发生，都没给出具体的例子，而且效果貌似也( _ゝ`)，还是省省脑子看后面的已经证明可用的方法吧。</p>
+<h2 id="The-Deadly-Triad"><a href="#The-Deadly-Triad" class="headerlink" title="The Deadly Triad"></a>The Deadly Triad</h2><p>这个标题：死亡三巨头。看后的我是( _ゝ`)的。</p>
+<p>通过上面的例子总结得到，下面三个老哥在一起用，就有可能出现不稳定和发散的危险：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fydhvpyn2wj30qu07uabb.jpg" alt="png"> </p>
+<p>而且貌似去掉一种方法就可以避免发散)_(눈<em>눈」∠)</em>。那么去掉哪个那？</p>
+<p>function approximation肯定不能去掉，靠这个来估计大型state空间问题那，至少也要用个linear function approximation那。</p>
+<p>去掉bootstrape当然可行，就是放弃了(小声：大量的)计算的性能( _ゝ`)，还有data efficiency，因为直接使用MC方法可以看到会受到一些不好的数据(噪声)的影响，因为毕竟是一致采样的，但是bootstrape方法引入了自举，之前学习到的value estimate可以在一定程度上衰减那些噪点的影响，一般会通过提高n-step方法中的n来降低bootstrape的使用，但是这个方法也是比较让人难以割舍的。</p>
+<p>最后考虑off-policy，大部分问题使用on-policy就可以很好的解决了，那是不是意味着可以取代了off-policy那？本书中不涉及这部分知识，但是现在有并行学习的方法，想要并行学习多个target policy，那当然要用off-policy方法了。</p>
+<h2 id="Linear-Value-function-Geometry"><a href="#Linear-Value-function-Geometry" class="headerlink" title="Linear Value-function Geometry"></a>Linear Value-function Geometry</h2><p>这一部分引入了估计估计函数和true value之间的不同误差表示，是后面几部分讨论可学习性和有效off-policy学习算法的基础。</p>
+<p>首先考虑一种简单的情况，假设有这样的state空间：S={s1,s2,s3}，对应的function approximation使用2个参数来完成估计：w={w1,w2}，那么估计value可以看做一个三维空间中的点，而对应的估计参数可以看做一个二维平面上的点，如下图所示：</p>
+<p><span id="jump1">( _ゝ`)</span></p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyf9jrxcq9j30pr0d0jsj.jpg" alt="png"> </p>
+<p>但是图上的符号表示远不止两个空间的表示，这就是接下来要讲的逼近误差的问题。</p>
+<p>如果我们假设真实的value function v_π不能用两个分量的w表示，那么就没办法将v_π映射到w的子平面上，那我们就需要了解到，估计函数v_w和目标v_π之间的“误差”有多大？</p>
+<p>首先直觉考虑欧几里得距离，即使用value空间中两个value function v1和v2之间距离v1-v2如何？明显不太合适，因为前面[第九章]在讨论VE的时候就说明了，误差对不同state的敏感度是不同的，所以我们可以使用类似的思路，引入μ(s)~[0,1]来表示误差对不同state的敏感度，并使用如下公式来度量两个value function的距离：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyf9wg3g5yj306l02jq2r.jpg" alt="png"> </p>
+<p>对于每个value function v，找到它对应的w子空间中距离最近的估计函数可以被定义为一种映射操作(projection operation)，并可以通过符号Π来表示如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfa3jq56ej30bm023jr8.jpg" alt="png"> </p>
+<p>同时对应linear方法，映射操作可以通过矩阵变换的方法实现：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyfajcyp3pj30qf0c1myd.jpg" alt="png"> </p>
+<p>上面的使用映射方法得到估计函数v_w的方法可以通过MC方法渐进训练得到，但是TD方法提出了一种新的方法来考虑误差：</p>
+<p>首先考虑自举方法的理论基础——Bellman等式：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyfbioca89j30h801u0sn.jpg" alt="png"> </p>
+<p>如果将右边的v_π换为估计值v_w，然后等式左右作差来得到Bellman error:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyfbldrmszj30gt03edfw.jpg" alt="png"></p>
+<p>可以看到Bellman error是前面提到的TD error的期望值。处理所有state产生的Bellman error，需要下面给出的均方Bellman Error:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyfboxgei6j305501u3yb.jpg" alt="png"> </p>
+<p>通过最小化BE可以在子空间上得到一个使得BE最小的点，但是通过<a href="#jump1">上图</a>可以看到，minBE得到的子空间的点和minVE不是一个点，关于minBE的off-policy训练方法将在后续两个section讨论。</p>
+<p>Bellman error是通过Bellman operate得到的，Bellman operate可以定义为如下变换：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyfcdy0jrvj30dn021t8l.jpg" alt="png"> </p>
+<p>但是Bellman operate通过会将w平面的估计函数v_w变换到w平面之外，即无法通过w的linear形式表示。通过DP的方法(without approximation function)来进行Bellman operate时，就像图中的灰色箭头一样，最终Bellman operate会导致v收敛到v_π，即：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyfchm8ygvj304d01fa9t.jpg" alt="png"> </p>
+<p>但是如果通过function approximation来完成Bellman operate，需要在每次operate之后将w子空间之外的v重新映射到w子平面内，才能重新进行下一次operate，这种Bellman operate+project的方法同样会产生损失函数，我们称之为均方映射Bellman Error(PBE)，公式如下：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyfdsfz79aj306r01rglf.jpg" alt="png"> </p>
+<p>linear近似方法最小化PBE过程中总是可以得到PBE=0的估计函数，即最后可以收敛到<a href="https://xinge650.github.io/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" target="_blank" rel="noopener">第九章 the section of Linear Methods</a>提到的w_TD。但是这种训练方法在off-policy下并不总是稳定的，后续section将会讨论具体的保证收敛的训练算法。</p>
+<h2 id="Stochastic-Gradient-Descent-in-the-Bellman-Error"><a href="#Stochastic-Gradient-Descent-in-the-Bellman-Error" class="headerlink" title="Stochastic Gradient Descent in the Bellman Error"></a>Stochastic Gradient Descent in the Bellman Error</h2><p>这个section和下一个section将会讨论使用基于BE的梯度下降算法的可学习性。</p>
+<p>因为上个section提到，Bellman error是TD error的expected，所以先考虑一个naive的例子，就是使用TD error做损失函数，one-step TD error公式如下：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyfels0k3sj30ab01ljr7.jpg" alt="png"></p>
+<p>对应的损失函数TDE格式如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfenazhn3j30pf04kaab.jpg" alt="png"> </p>
+<p>μ(s)是基于behavior policy的distribution。</p>
+<p>对应的w更新公式如下：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyfep7wse9j30df03n74a.jpg" alt="png"> </p>
+<p>这个公式和本章<a href="#jump2">第一次使用的例子的更新公式</a>除了最后一个因子都是一样的，那个式子是通过on-policy最小化VE的目标直接搬过来的，并且已经证明不稳定和发散。但是这个公式是可以保证收敛的，我们称之为naive residual-gradient方法。</p>
+<p>虽然在on-policy下，naive residual-gradient稳定收敛，但是收敛结果却不那么令人满意，换句话说，收敛得到的TDE最小的v_w，并不是true value：</p>
+<p><strong><em>Minimizing the TDE is naive; by penalizing all TD errors it achieves something more like temporal smoothing than accurate prediction.</em></strong></p>
+<p>下面这个例子解释了这个问题，考虑给定的MDP如下（虽然这会说这个可能不太应景，就是上个section、这个section、下个section，都是基于on-policy讨论的，因为要先讨论可以准确收敛的损失函数）：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyff0iwvnxj305x03t3yf.jpg" alt="png"> </p>
+<p>A等概率跳转到B和C，相应的reward都在图上，灰色方块代表terminal state。那么true value很明显了，通过Bellman Error可以得到v(A)=0.5,v(B)=1,v(C)=0。但是TDE最小的角度考虑，结果却应该是A=1/2，B=3/4,C=1/4，而true value并没有获得最下的TDE。</p>
+<p>但是Bellman error是TD error的expected啊，像上面的问题，如果采用期望的方式，得到的true value的Bellman error应该是0（因为TD error一正一负，平方之后再想加就都是正的了，但是Bellman error是先加再平方，一正一负直接抵消了，具体可以比较一下BE和TDE的表达式，还有就是因为markdown我不会打出上划线，那里有那里没有上划线，即均方，就看自己理解吧( _ゝ`) ）。所以将上述naive residual-gradient方法改为expected形式，即将所有sample的值改为expected形式，我们称之为residual-gradient algorithm：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfg4426faj30np06cdg7.jpg" alt="png"> </p>
+<p>有一个问题，就是关于ρt，为什么从期望符号里面出来就没有v(St,w)前面就没有了？不过考虑到是on-policy情况下评估可学习性，本来给这个更新公式就没什么意义。然后是关于这个更新公式的实际操作，因为SGD嘛，肯定是拿随机抽样来更新的，那不就是和naive版本一样了吗？不过还是有不同的，因为是使用sample值来代替上面式子的最终的公式的expected的，但是有两个expected，所以需要使用不同的sample值，有两种方法：</p>
+<p>1、在实际的确定性环境中，采的两次样肯定是一样的，所以直接用一样的sample</p>
+<p>2、在模拟的环境中，可以采一次样，然后撤回，再重新采一次样</p>
+<p>但是讲了这么多都是废话啊，因为residual-gradient algorithm至少有3点令人不满：</p>
+<p>1、收敛慢，毕竟要采样两次</p>
+<p>2、residual-gradient algorithm仍然会收敛到错误的value</p>
+<p>3、BE是不具有可学习性的</p>
+<h2 id="The-Bellman-Error-is-Not-Learnable"><a href="#The-Bellman-Error-is-Not-Learnable" class="headerlink" title="The Bellman Error is Not Learnable"></a>The Bellman Error is Not Learnable</h2><p>这个section讨论了可学习性(learnable)的概念。以往的机器学习中讨论可学习性，是指可以通过指数数量的例子学习得到多项式表达。强化学习中拓展了这个概念，把学习范围扩展到了任意数量的例子。如果一个强化学习中学习的变量可以在给定环境内部结构知识的情况下计算，但不能从观察到的特征向量、动作和奖励序列中计算或估计，就称之为不可学习的。BE事实上就是不可学习的，参考下面的例子：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyfhd426eoj30iw033wej.jpg" alt="png"></p>
+<p>每个state的两个action都是等概率的，我们可以看到两个不同的MRP产生了相同的reward序列，即随机的0,2序列，所以说state的数目是一个不可学习的对象。</p>
+<p>同时可以证明VE也是不可学习的，因为如果使用VE来梯度下降，另γ=0，得到的两个MRP的VE不同，通过同样的reward序列学习到了不同的VE，所以VE也是不可学习的。但是不太一样的是，虽然两个MRP的VE不同，但是学习到的value却是最优的！</p>
+<p>为了解释这个问题，考虑另外一个比较常见的误差，即均方Return error，这个量明显是learnable的。可以看到RE和VE之间存在如下关系：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyficpbg3qj30aq02sgll.jpg" alt="png"> </p>
+<p>所以可以总结出来这些不同的优化目标之间的关系：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyfii7q2z0j30b10aqaa7.jpg" alt="png"> </p>
+<p>关于上图有如下解释：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfim48tvsj30qx04aq3o.jpg" alt="png"> </p>
+<p>但是相应的BE确实不可学习的，我们讨论的另外的学习目标，如PBE和TDE，可以通过数据决定，即是可学习的。它们之间的关系可以用下图解释：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyfiq6fg6kj30r70e0wfk.jpg" alt="png"> </p>
+<h2 id="Gradient-TD-Methods"><a href="#Gradient-TD-Methods" class="headerlink" title="Gradient-TD Methods"></a>Gradient-TD Methods</h2><p>上面讨论了那么多在off-policy中失效的算法，同时讨论了更多关于强化学习的细节，可以帮助更好的理解问题吧，因为毕竟off-policy的方法现在还是属于开发课题，并没有被很好地解决。</p>
+<p>首先考虑使用矩阵形式来表示PBE：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyfixk6p7lj30il0710sz.jpg" alt="png"> </p>
+<p>为了使用梯度下降，需要求出PBE的梯度：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyfizqovvjj30eg01pdfp.jpg" alt="png"> </p>
+<p>接着给出相应的expected形式：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyfj3t2ecnj30ff01st8l.jpg" alt="png"> </p>
+<p>可以看到表达式是3个expected的乘积，其中1st和3rd的因子是相关的，如果直接采样并应用到这两个式子中，就会导致和naive residual-gradient一样，产生有差估计。</p>
+<p>另一种想法是分别估计3个因式，但是计算资源消耗太大，尤其是矩阵存储和求逆运算。可以改进：估计两个因子，对剩下一个因子采样，比如可以对后两个因子估计，对第一个进行采样，这样复杂度会从O(d^3)-&gt;O(d^2)。</p>
+<p>我们将后两个因子的乘积估计设为v：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyfjmlyw96j307n01q743.jpg" alt="png"> </p>
+<p>并使用如下公式更新v，复杂度为O(d):</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfkav4wgjj309a01fa9v.jpg" alt="png"> </p>
+<p>并使用1st因子的采样代替expected，得到最简单的w更新公式如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfkav4wgjj309a01fa9v.jpg" alt="png"> </p>
+<p>这个算法称为GTD2，并可以通过在对后两项替换成v之前，做一些变换来获得改进：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfkk86oekj30hs05r0t3.jpg" alt="png"> </p>
+<p>这个改进版本的算法称为TDC。老实说这个公式我也不太理解，ρt感觉也是少了一个啊，为什么作者公式里吸收ρt的操作总是不给个提示？</p>
+<p>例子可以参考<a href="https://xinge650.github.io/2018/12/20/Chapter11-counterexample/" target="_blank" rel="noopener">counterexample</a></p>
+<h2 id="Emphatic-TD-Methods"><a href="#Emphatic-TD-Methods" class="headerlink" title="Emphatic-TD Methods"></a>Emphatic-TD Methods</h2><p>The one-step emphatic-TD algorithm for learning episodic state values is defined by:</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyfl6hfpzyj30a1034gll.jpg" alt="png"> </p>
+<p>I_t,the interest, being arbitrary and M_t, the emphasis, being initialized to M_t−1 = 0.</p>
+<p>例子可以参考<a href="https://xinge650.github.io/2018/12/20/Chapter11-counterexample/" target="_blank" rel="noopener">counterexample</a></p>
+<p>这种方法和TDC完全不一样，原理和<a href="https://xinge650.github.io/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" target="_blank" rel="noopener">第九章 Looking Deeper at On-policy Learning: Interest and Emphasis</a>的内容比较相符。</p>
+<p>值得提出的一点是，通过Baird’s counterexample可以看到，TDC方法收敛到PBE为0的optimal value，但是却没有使得VE为0，而是为2，说明这种方法仍然存在偏差(bias)；ETD方法的VE达到0了，但是使用的是expected的值，如果采样sample的话，结果就不会收敛，所以这种方法是一种理论可行但是实际往往难以收敛的方法。</p>
+<p>下一部分也就是本章最后一部分会进一步讨论off-policy的variance问题，我们可以看到本章一直使用的例子Baird’s counterexample本身给定的behavior policy和target policy就在一定程度上影响了off-policy算法的性能，可以说是比较糟糕的设定了。</p>
+<h2 id="Reducing-Variance"><a href="#Reducing-Variance" class="headerlink" title="Reducing Variance"></a>Reducing Variance</h2><p>相较on-policy算法，off-policy算法本身就具有更大的方差(variance)，因为behavior policy和target policy之间不可避免的会存在不同，而这种不同就导致了，学习算法使用的数据和目标policy本身就有不相关性，如果你通过做饭的技巧来学习飙车，能行吗？</p>
+<p>关于这种不相关性，第五章提出的importance sampling ratio可以说是贯穿了本书的off-policy算法，但是正是这个参数会引入较大的方差。我们知道重要采样因子的期望值是1，但是事实上它的实际值却是分布的相当发散，可能会很大也可能会很小。考虑ρ很大的情况下，ρ是和step-size α相乘的，所以这会导致在GD算法中使用了很大的一步梯度下降，这对于GD算法来说可能是致命的，因为过大的步进会导致GD算法陷入不稳定。但是如果将α设置的过小，又会导致训练速度的减慢，所以解决variance问题一种可以考虑的途径就是如果自适应的调整步进α。</p>
+<p>以下列举出一些在以往的章节使用的减少variance的方法：</p>
+<p>1、第五章使用的<a href="https://xinge650.github.io/2018/11/28/Chapter05-Monte-Carlo-Methods/" target="_blank" rel="noopener">weighted importance sampling</a>，但是在function approximation中使用may be a challenge。</p>
+<p>2、第七章使用的<a href="https://xinge650.github.io/2018/12/03/Chapter07-n-step-Bootstrapping/" target="_blank" rel="noopener">Tree Backup Algorithm</a>，通过TB算法可以不使用采样因子，这种方法已经被利用到off-policy中开发出了稳定的算法。</p>
+<p>3、可以通过behavior policy部分的定义出target policy，这样可以不至于得到过大的采样因子。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/15/Chapter10-access-control/" rel="next" title="Chapter10 access control">
+                <i class="fa fa-chevron-left"></i> Chapter10 access control
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/20/Chapter11-counterexample/" rel="prev" title="Chapter11 counterexample">
+                Chapter11 counterexample <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Semi-gradient-Methods"><span class="nav-number">1.</span> <span class="nav-text">Semi-gradient Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Examples-of-Off-policy-Divergence"><span class="nav-number">2.</span> <span class="nav-text">Examples of Off-policy Divergence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Deadly-Triad"><span class="nav-number">3.</span> <span class="nav-text">The Deadly Triad</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linear-Value-function-Geometry"><span class="nav-number">4.</span> <span class="nav-text">Linear Value-function Geometry</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stochastic-Gradient-Descent-in-the-Bellman-Error"><span class="nav-number">5.</span> <span class="nav-text">Stochastic Gradient Descent in the Bellman Error</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Bellman-Error-is-Not-Learnable"><span class="nav-number">6.</span> <span class="nav-text">The Bellman Error is Not Learnable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradient-TD-Methods"><span class="nav-number">7.</span> <span class="nav-text">Gradient-TD Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Emphatic-TD-Methods"><span class="nav-number">8.</span> <span class="nav-text">Emphatic-TD Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reducing-Variance"><span class="nav-number">9.</span> <span class="nav-text">Reducing Variance</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

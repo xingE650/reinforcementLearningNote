@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="通过Baird’s counterexample来分析off-policy的approximation方法的性能。">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter11 counterexample">
+<meta property="og:url" content="http://yoursite.com/2018/12/20/Chapter11-counterexample/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="通过Baird’s counterexample来分析off-policy的approximation方法的性能。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyaqvt6g14j30il09ewfb.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyhxwlsg27j30h30vwabh.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyhxx9ddl3j30gl0vw75x.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/square/0070VybLly1fyhxxs8z67j30ae07qt8u.jpg">
+<meta property="og:updated_time" content="2018-12-24T09:01:09.502Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter11 counterexample">
+<meta name="twitter:description" content="通过Baird’s counterexample来分析off-policy的approximation方法的性能。">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyaqvt6g14j30il09ewfb.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/20/Chapter11-counterexample/">
+
+
+
+
+
+  <title>Chapter11 counterexample | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/20/Chapter11-counterexample/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter11 counterexample</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-20T19:52:19+08:00">
+                2018-12-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>通过Baird’s counterexample来分析off-policy的approximation方法的性能。</p>
+<a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>这是第11章唯一使用的一个例子，使用了一个MRP如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyaqvt6g14j30il09ewfb.jpg" alt="png"> </p>
+<p>其中虚线dashed action对应从任意state到1-6th state的跳转，实线solid action对应从任意state到7th state的跳转，所有action的reward都是0。off-policy的behavior policy b 选取实线action和虚线action按照概率6/7和1/7，所以由behavior policy产生的next-state的分布是均匀的；target policy π 是只选择solid(实线) action的，所以on-policy 分布更集中于7th state，这里的on-policy分布是指的会产生weight更新的state的分布。</p>
+<p>每个state的value都是通过圆圈里的linear function来描述的，如果weight vector是零向量，那么可以精确的推出true value都是0。</p>
+<p>通过使用不同的off-policy approximation方法，来讨论off-policy面临的两大挑战，就是和on-policy相比，update target和update distribution的改变，例子里我们可以看到，直接从on-policy推广得到的off-policy，如果没有解决好这两个问题，效果大都差强人意。</p>
+<h2 id="引入模块，定义常量"><a href="#引入模块，定义常量" class="headerlink" title="引入模块，定义常量"></a>引入模块，定义常量</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">from</span> mpl_toolkits.mplot3d.axes3d <span class="keyword">import</span> Axes3D</span><br><span class="line"></span><br><span class="line"><span class="comment"># all states: state 0-5 are upper states</span></span><br><span class="line">STATES = np.arange(<span class="number">0</span>, <span class="number">7</span>)</span><br><span class="line"><span class="comment"># state 6 is lower state</span></span><br><span class="line">LOWER_STATE = <span class="number">6</span></span><br><span class="line"><span class="comment"># discount factor</span></span><br><span class="line">DISCOUNT = <span class="number">0.99</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># each state is represented by a vector of length 8</span></span><br><span class="line">FEATURE_SIZE = <span class="number">8</span></span><br><span class="line">FEATURES = np.zeros((len(STATES), FEATURE_SIZE))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(LOWER_STATE):</span><br><span class="line">    FEATURES[i, i] = <span class="number">2</span></span><br><span class="line">    FEATURES[i, <span class="number">7</span>] = <span class="number">1</span></span><br><span class="line">FEATURES[LOWER_STATE, <span class="number">6</span>] = <span class="number">1</span></span><br><span class="line">FEATURES[LOWER_STATE, <span class="number">7</span>] = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># all possible actions</span></span><br><span class="line">DASHED = <span class="number">0</span></span><br><span class="line">SOLID = <span class="number">1</span></span><br><span class="line">ACTIONS = [DASHED, SOLID]</span><br><span class="line"></span><br><span class="line"><span class="comment"># reward is always zero</span></span><br><span class="line">REWARD = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义target-policy和behavior-policy，并使用step函数来建立agent和environment之间的交互"><a href="#定义target-policy和behavior-policy，并使用step函数来建立agent和environment之间的交互" class="headerlink" title="定义target policy和behavior policy，并使用step函数来建立agent和environment之间的交互"></a>定义target policy和behavior policy，并使用step函数来建立agent和environment之间的交互</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take @action at @state, return the new state</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(state, action)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> action == SOLID:</span><br><span class="line">        <span class="keyword">return</span> LOWER_STATE</span><br><span class="line">    <span class="keyword">return</span> np.random.choice(STATES[: LOWER_STATE])</span><br><span class="line"></span><br><span class="line"><span class="comment"># target policy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">target_policy</span><span class="params">(state)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> SOLID</span><br><span class="line"></span><br><span class="line"><span class="comment"># behavior policy</span></span><br><span class="line">BEHAVIOR_SOLID_PROBABILITY = <span class="number">1.0</span> / <span class="number">7</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">behavior_policy</span><span class="params">(state)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, BEHAVIOR_SOLID_PROBABILITY) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> SOLID</span><br><span class="line">    <span class="keyword">return</span> DASHED</span><br></pre></td></tr></table></figure>
+<h2 id="使用semi-gradient-off-policy-TD方法完成一次weight-update"><a href="#使用semi-gradient-off-policy-TD方法完成一次weight-update" class="headerlink" title="使用semi-gradient off-policy TD方法完成一次weight update"></a>使用semi-gradient off-policy TD方法完成一次weight update</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Semi-gradient off-policy temporal difference</span></span><br><span class="line"><span class="comment"># @state: current state</span></span><br><span class="line"><span class="comment"># @theta: weight for each component of the feature vector</span></span><br><span class="line"><span class="comment"># @alpha: step size</span></span><br><span class="line"><span class="comment"># @return: next state</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">semi_gradient_off_policy_TD</span><span class="params">(state, theta, alpha)</span>:</span></span><br><span class="line">    action = behavior_policy(state)</span><br><span class="line">    next_state = step(state, action)</span><br><span class="line">    <span class="comment"># get the importance ratio</span></span><br><span class="line">    <span class="keyword">if</span> action == DASHED:</span><br><span class="line">        rho = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        rho = <span class="number">1.0</span> / BEHAVIOR_SOLID_PROBABILITY</span><br><span class="line">    <span class="comment"># theta是w1-w8的值，也就是需要学习的weight</span></span><br><span class="line">    delta = REWARD + DISCOUNT * np.dot(FEATURES[next_state, :], theta) - \</span><br><span class="line">            np.dot(FEATURES[state, :], theta)</span><br><span class="line">    <span class="comment"># ρ×α×δ_t</span></span><br><span class="line">    delta *= rho * alpha</span><br><span class="line">    <span class="comment"># derivatives happen to be the same matrix due to the linearity</span></span><br><span class="line">    theta += FEATURES[state, :] * delta</span><br><span class="line">    <span class="keyword">return</span> next_state</span><br></pre></td></tr></table></figure>
+<h2 id="使用semi-gradient-DP方法完成一次weight-update"><a href="#使用semi-gradient-DP方法完成一次weight-update" class="headerlink" title="使用semi-gradient DP方法完成一次weight update"></a>使用semi-gradient DP方法完成一次weight update</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Semi-gradient DP</span></span><br><span class="line"><span class="comment"># @theta: weight for each component of the feature vector</span></span><br><span class="line"><span class="comment"># @alpha: step size</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">semi_gradient_DP</span><span class="params">(theta, alpha)</span>:</span></span><br><span class="line">    delta = <span class="number">0.0</span></span><br><span class="line">    <span class="comment"># go through all the states</span></span><br><span class="line">    <span class="keyword">for</span> state <span class="keyword">in</span> STATES:</span><br><span class="line">        expected_return = <span class="number">0.0</span></span><br><span class="line">        <span class="comment"># compute bellman error for each state</span></span><br><span class="line">        <span class="keyword">for</span> next_state <span class="keyword">in</span> STATES:</span><br><span class="line">            <span class="comment"># 使用DP方法，直接使用target policy选择action，所以只选择7th state来完成bellman error的计算</span></span><br><span class="line">            <span class="keyword">if</span> next_state == LOWER_STATE:</span><br><span class="line">                expected_return += REWARD + DISCOUNT * np.dot(theta, FEATURES[next_state, :])</span><br><span class="line">        bellmanError = expected_return - np.dot(theta, FEATURES[state, :])</span><br><span class="line">        <span class="comment"># accumulate gradients</span></span><br><span class="line">        delta += bellmanError * FEATURES[state, :]</span><br><span class="line">    <span class="comment"># derivatives happen to be the same matrix due to the linearity</span></span><br><span class="line">    theta += alpha / len(STATES) * delta</span><br></pre></td></tr></table></figure>
+<h2 id="绘制使用semi-gradient-off-policy-TD和semi-gradient-DP方法的weight收敛曲线"><a href="#绘制使用semi-gradient-off-policy-TD和semi-gradient-DP方法的weight收敛曲线" class="headerlink" title="绘制使用semi-gradient off-policy TD和semi-gradient DP方法的weight收敛曲线"></a>绘制使用semi-gradient off-policy TD和semi-gradient DP方法的weight收敛曲线</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 11.2(left), semi-gradient off-policy TD</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_11_2_left</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># Initialize the theta</span></span><br><span class="line">    theta = np.ones(FEATURE_SIZE)</span><br><span class="line">    theta[<span class="number">6</span>] = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">    alpha = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line">    steps = <span class="number">1000</span></span><br><span class="line">    thetas = np.zeros((FEATURE_SIZE, steps))</span><br><span class="line">    state = np.random.choice(STATES)</span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> tqdm(range(steps)):</span><br><span class="line">        state = semi_gradient_off_policy_TD(state, theta, alpha)</span><br><span class="line">        thetas[:, step] = theta</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(FEATURE_SIZE):</span><br><span class="line">        plt.plot(thetas[i, :], label=<span class="string">'theta'</span> + str(i + <span class="number">1</span>))</span><br><span class="line">    plt.xlabel(<span class="string">'Steps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Theta value'</span>)</span><br><span class="line">    plt.title(<span class="string">'semi-gradient off-policy TD'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Figure 11.2(right), semi-gradient DP</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_11_2_right</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># Initialize the theta</span></span><br><span class="line">    theta = np.ones(FEATURE_SIZE)</span><br><span class="line">    theta[<span class="number">6</span>] = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">    alpha = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line">    sweeps = <span class="number">1000</span></span><br><span class="line">    thetas = np.zeros((FEATURE_SIZE, sweeps))</span><br><span class="line">    <span class="keyword">for</span> sweep <span class="keyword">in</span> tqdm(range(sweeps)):</span><br><span class="line">        semi_gradient_DP(theta, alpha)</span><br><span class="line">        thetas[:, sweep] = theta</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(FEATURE_SIZE):</span><br><span class="line">        plt.plot(thetas[i, :], label=<span class="string">'theta'</span> + str(i + <span class="number">1</span>))</span><br><span class="line">    plt.xlabel(<span class="string">'Sweeps'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Theta value'</span>)</span><br><span class="line">    plt.title(<span class="string">'semi-gradient DP'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_11_2</span><span class="params">()</span>:</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">20</span>))</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    figure_11_2_left()</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    figure_11_2_right()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_11_2.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># test</span></span><br><span class="line">figure_11_2()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 1000/1000 [00:00&lt;00:00, 38275.13it/s]
+100%|██████████| 1000/1000 [00:00&lt;00:00, 13016.09it/s]
+</code></pre><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyhxwlsg27j30h30vwabh.jpg" alt="png"> </p>
+<p>可见使用semi-gradient off-policy TD和semi-gradient DP方法训练weight均未收敛</p>
+<h2 id="使用TDC方法训练"><a href="#使用TDC方法训练" class="headerlink" title="使用TDC方法训练"></a>使用TDC方法训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># state distribution for the behavior policy</span></span><br><span class="line">STATE_DISTRIBUTION = np.ones(len(STATES)) / <span class="number">7</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用np.diag构造对角矩阵，即矩阵D</span></span><br><span class="line">STATE_DISTRIBUTION_MAT = np.matrix(np.diag(STATE_DISTRIBUTION))</span><br><span class="line"></span><br><span class="line"><span class="comment"># projection matrix for minimize MSVE</span></span><br><span class="line"><span class="comment"># x*inv(x.T*D*x)*(x.T)*D,书P218</span></span><br><span class="line">PROJECTION_MAT = np.matrix(FEATURES) * \</span><br><span class="line">                 np.linalg.pinv(np.matrix(FEATURES.T) * STATE_DISTRIBUTION_MAT * np.matrix(FEATURES)) * \</span><br><span class="line">                 np.matrix(FEATURES.T) * \</span><br><span class="line">                 STATE_DISTRIBUTION_MAT</span><br><span class="line"></span><br><span class="line"><span class="comment"># temporal difference with gradient correction P228</span></span><br><span class="line"><span class="comment"># @state: current state</span></span><br><span class="line"><span class="comment"># @theta: weight of each component of the feature vector</span></span><br><span class="line"><span class="comment"># @weight: auxiliary trace for gradient correction</span></span><br><span class="line"><span class="comment"># @alpha: step size of @theta</span></span><br><span class="line"><span class="comment"># @beta: step size of @weight</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">TDC</span><span class="params">(state, theta, weight, alpha, beta)</span>:</span></span><br><span class="line">    action = behavior_policy(state)</span><br><span class="line">    next_state = step(state, action)</span><br><span class="line">    <span class="comment"># get the importance ratio</span></span><br><span class="line">    <span class="keyword">if</span> action == DASHED:</span><br><span class="line">        rho = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        rho = <span class="number">1.0</span> / BEHAVIOR_SOLID_PROBABILITY</span><br><span class="line">    delta = REWARD + DISCOUNT * np.dot(FEATURES[next_state, :], theta) - \</span><br><span class="line">            np.dot(FEATURES[state, :], theta)</span><br><span class="line">    theta += alpha * rho * (delta * FEATURES[state, :] - DISCOUNT * FEATURES[next_state, :] * np.dot(FEATURES[state, :], weight))</span><br><span class="line">    weight += beta * rho * (delta - np.dot(FEATURES[state, :], weight)) * FEATURES[state, :]</span><br><span class="line">    <span class="keyword">return</span> next_state</span><br></pre></td></tr></table></figure>
+<h2 id="使用expectedTDC训练"><a href="#使用expectedTDC训练" class="headerlink" title="使用expectedTDC训练"></a>使用expectedTDC训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># expected temporal difference with gradient correction</span></span><br><span class="line"><span class="comment"># @theta: weight of each component of the feature vector</span></span><br><span class="line"><span class="comment"># @weight: auxiliary trace for gradient correction</span></span><br><span class="line"><span class="comment"># @alpha: step size of @theta</span></span><br><span class="line"><span class="comment"># @beta: step size of @weight</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">expected_TDC</span><span class="params">(theta, weight, alpha, beta)</span>:</span></span><br><span class="line">    <span class="comment"># 可以认为使用了均匀distribution，和第一个DP方法一样，current state并没有真正的改变，即没有agent和environment之间的交互</span></span><br><span class="line">    <span class="keyword">for</span> state <span class="keyword">in</span> STATES:</span><br><span class="line">        <span class="comment"># When computing expected update target, if next state is not lower state, importance ratio will be 0,</span></span><br><span class="line">        <span class="comment"># so we can safely ignore this case and assume next state is always lower state</span></span><br><span class="line">        delta = REWARD + DISCOUNT * np.dot(FEATURES[LOWER_STATE, :], theta) - np.dot(FEATURES[state, :], theta)</span><br><span class="line">        rho = <span class="number">1</span> / BEHAVIOR_SOLID_PROBABILITY</span><br><span class="line">        <span class="comment"># Under behavior policy, state distribution is uniform, so the probability for each state is 1.0 / len(STATES)</span></span><br><span class="line">        <span class="comment"># 这里和sample的TDC的区别主要是前面加上了1/len(STATES)*BEHAVIOR_SOLID_PROBABILITY，</span></span><br><span class="line">        <span class="comment"># 是为了计算期望值，注意需要考虑x_t和x_t+1的概率，所以使用了条件概率的乘法</span></span><br><span class="line">        expected_update_theta = <span class="number">1.0</span> / len(STATES) * BEHAVIOR_SOLID_PROBABILITY * rho * (</span><br><span class="line">            delta * FEATURES[state, :] - DISCOUNT * FEATURES[LOWER_STATE, :] * np.dot(weight, FEATURES[state, :]))</span><br><span class="line">        theta += alpha * expected_update_theta</span><br><span class="line">        expected_update_weight = <span class="number">1.0</span> / len(STATES) * BEHAVIOR_SOLID_PROBABILITY * rho * (</span><br><span class="line">            delta - np.dot(weight, FEATURES[state, :])) * FEATURES[state, :]</span><br><span class="line">        weight += beta * expected_update_weight</span><br></pre></td></tr></table></figure>
+<h2 id="使用ETD方法训练"><a href="#使用ETD方法训练" class="headerlink" title="使用ETD方法训练"></a>使用ETD方法训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># interest is 1 for every state</span></span><br><span class="line">INTEREST = <span class="number">1</span></span><br><span class="line"><span class="comment"># ETD方法也是使用的期望值来训练</span></span><br><span class="line"><span class="comment"># expected update of ETD</span></span><br><span class="line"><span class="comment"># @theta: weight of each component of the feature vector</span></span><br><span class="line"><span class="comment"># @emphasis: current emphasis</span></span><br><span class="line"><span class="comment"># @alpha: step size of @theta</span></span><br><span class="line"><span class="comment"># @return: expected next emphasis</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">expected_emphatic_TD</span><span class="params">(theta, emphasis, alpha)</span>:</span></span><br><span class="line">    <span class="comment"># we perform synchronous update for both theta and emphasis</span></span><br><span class="line">    expected_update = <span class="number">0</span></span><br><span class="line">    expected_next_emphasis = <span class="number">0.0</span></span><br><span class="line">    <span class="comment"># go through all the states</span></span><br><span class="line">    <span class="keyword">for</span> state <span class="keyword">in</span> STATES:</span><br><span class="line">        <span class="comment"># compute rho(t-1)</span></span><br><span class="line">        <span class="keyword">if</span> state == LOWER_STATE:</span><br><span class="line">            rho = <span class="number">1.0</span> / BEHAVIOR_SOLID_PROBABILITY</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            rho = <span class="number">0</span></span><br><span class="line">        <span class="comment"># update emphasis</span></span><br><span class="line">        next_emphasis = DISCOUNT * rho * emphasis + INTEREST</span><br><span class="line">        expected_next_emphasis += next_emphasis</span><br><span class="line">        <span class="comment"># When computing expected update target, if next state is not lower state, importance ratio will be 0,</span></span><br><span class="line">        <span class="comment"># so we can safely ignore this case and assume next state is always lower state</span></span><br><span class="line">        next_state = LOWER_STATE</span><br><span class="line">        delta = REWARD + DISCOUNT * np.dot(FEATURES[next_state, :], theta) - np.dot(FEATURES[state, :], theta)</span><br><span class="line">        expected_update += <span class="number">1.0</span> / len(STATES) * BEHAVIOR_SOLID_PROBABILITY * next_emphasis * <span class="number">1</span> / BEHAVIOR_SOLID_PROBABILITY * delta * FEATURES[state, :]</span><br><span class="line">    theta += alpha * expected_update</span><br><span class="line">    <span class="keyword">return</span> expected_next_emphasis / len(STATES)</span><br></pre></td></tr></table></figure>
+<h2 id="计算RMSVE和RMSPBE"><a href="#计算RMSVE和RMSPBE" class="headerlink" title="计算RMSVE和RMSPBE"></a>计算RMSVE和RMSPBE</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># compute RMSVE for a value function parameterized by @theta</span></span><br><span class="line"><span class="comment"># true value function is always 0 in this example</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_RMSVE</span><span class="params">(theta)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> np.sqrt(np.dot(np.power(np.dot(FEATURES, theta), <span class="number">2</span>), STATE_DISTRIBUTION))</span><br><span class="line"></span><br><span class="line"><span class="comment"># compute RMSPBE for a value function parameterized by @theta</span></span><br><span class="line"><span class="comment"># true value function is always 0 in this example</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_RMSPBE</span><span class="params">(theta)</span>:</span></span><br><span class="line">    bellman_error = np.zeros(len(STATES))</span><br><span class="line">    <span class="keyword">for</span> state <span class="keyword">in</span> STATES:</span><br><span class="line">        <span class="keyword">for</span> next_state <span class="keyword">in</span> STATES:</span><br><span class="line">            <span class="keyword">if</span> next_state == LOWER_STATE:</span><br><span class="line">                bellman_error[state] += REWARD + DISCOUNT * np.dot(theta, FEATURES[next_state, :]) - np.dot(theta, FEATURES[state, :])</span><br><span class="line">    bellman_error = np.dot(np.asarray(PROJECTION_MAT), bellman_error)</span><br><span class="line">    <span class="keyword">return</span> np.sqrt(np.dot(np.power(bellman_error, <span class="number">2</span>), STATE_DISTRIBUTION))</span><br></pre></td></tr></table></figure>
+<h2 id="绘制图像比较TDC和expected-TDC性能"><a href="#绘制图像比较TDC和expected-TDC性能" class="headerlink" title="绘制图像比较TDC和expected TDC性能"></a>绘制图像比较TDC和expected TDC性能</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 11.6(left), temporal difference with gradient correction</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_11_6_left</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># Initialize the theta</span></span><br><span class="line">    theta = np.ones(FEATURE_SIZE)</span><br><span class="line">    theta[<span class="number">6</span>] = <span class="number">10</span></span><br><span class="line">    weight = np.zeros(FEATURE_SIZE)</span><br><span class="line"></span><br><span class="line">    alpha = <span class="number">0.005</span></span><br><span class="line">    beta = <span class="number">0.05</span></span><br><span class="line"></span><br><span class="line">    steps = <span class="number">1000</span></span><br><span class="line">    thetas = np.zeros((FEATURE_SIZE, steps))</span><br><span class="line">    RMSVE = np.zeros(steps)</span><br><span class="line">    RMSPBE = np.zeros(steps)</span><br><span class="line">    state = np.random.choice(STATES)</span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> tqdm(range(steps)):</span><br><span class="line">        state = TDC(state, theta, weight, alpha, beta)</span><br><span class="line">        thetas[:, step] = theta</span><br><span class="line">        RMSVE[step] = compute_RMSVE(theta)</span><br><span class="line">        RMSPBE[step] = compute_RMSPBE(theta)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(FEATURE_SIZE):</span><br><span class="line">        plt.plot(thetas[i, :], label=<span class="string">'theta'</span> + str(i + <span class="number">1</span>))</span><br><span class="line">    plt.plot(RMSVE, label=<span class="string">'RMSVE'</span>)</span><br><span class="line">    plt.plot(RMSPBE, label=<span class="string">'RMSPBE'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'Steps'</span>)</span><br><span class="line">    plt.title(<span class="string">'TDC'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Figure 11.6(right), expected temporal difference with gradient correction</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_11_6_right</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># Initialize the theta</span></span><br><span class="line">    theta = np.ones(FEATURE_SIZE)</span><br><span class="line">    theta[<span class="number">6</span>] = <span class="number">10</span></span><br><span class="line">    weight = np.zeros(FEATURE_SIZE)</span><br><span class="line"></span><br><span class="line">    alpha = <span class="number">0.005</span></span><br><span class="line">    beta = <span class="number">0.05</span></span><br><span class="line"></span><br><span class="line">    sweeps = <span class="number">1000</span></span><br><span class="line">    thetas = np.zeros((FEATURE_SIZE, sweeps))</span><br><span class="line">    RMSVE = np.zeros(sweeps)</span><br><span class="line">    RMSPBE = np.zeros(sweeps)</span><br><span class="line">    <span class="keyword">for</span> sweep <span class="keyword">in</span> tqdm(range(sweeps)):</span><br><span class="line">        expected_TDC(theta, weight, alpha, beta)</span><br><span class="line">        thetas[:, sweep] = theta</span><br><span class="line">        RMSVE[sweep] = compute_RMSVE(theta)</span><br><span class="line">        RMSPBE[sweep] = compute_RMSPBE(theta)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(FEATURE_SIZE):</span><br><span class="line">        plt.plot(thetas[i, :], label=<span class="string">'theta'</span> + str(i + <span class="number">1</span>))</span><br><span class="line">    plt.plot(RMSVE, label=<span class="string">'RMSVE'</span>)</span><br><span class="line">    plt.plot(RMSPBE, label=<span class="string">'RMSPBE'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'Sweeps'</span>)</span><br><span class="line">    plt.title(<span class="string">'Expected TDC'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_11_6</span><span class="params">()</span>:</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">20</span>))</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    figure_11_6_left()</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    figure_11_6_right()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_11_6.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">figure_11_6()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 1000/1000 [00:00&lt;00:00, 10149.88it/s]
+100%|██████████| 1000/1000 [00:00&lt;00:00, 4183.01it/s]
+</code></pre><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyhxx9ddl3j30gl0vw75x.jpg" alt="png"> </p>
+<p>可以看到虽然最后结果收敛到了PBE为0，但是VE仍然是2，即和w=(0,0,0,0,0,0,0,0)的true weight仍然有差距。</p>
+<h2 id="绘制图像测试ETD算法性能"><a href="#绘制图像测试ETD算法性能" class="headerlink" title="绘制图像测试ETD算法性能"></a>绘制图像测试ETD算法性能</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 11.7, expected ETD</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_11_7</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># Initialize the theta</span></span><br><span class="line">    theta = np.ones(FEATURE_SIZE)</span><br><span class="line">    theta[<span class="number">6</span>] = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">    alpha = <span class="number">0.03</span></span><br><span class="line"></span><br><span class="line">    sweeps = <span class="number">1000</span></span><br><span class="line">    thetas = np.zeros((FEATURE_SIZE, sweeps))</span><br><span class="line">    RMSVE = np.zeros(sweeps)</span><br><span class="line">    emphasis = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">for</span> sweep <span class="keyword">in</span> tqdm(range(sweeps)):</span><br><span class="line">        emphasis = expected_emphatic_TD(theta, emphasis, alpha)</span><br><span class="line">        thetas[:, sweep] = theta</span><br><span class="line">        RMSVE[sweep] = compute_RMSVE(theta)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(FEATURE_SIZE):</span><br><span class="line">        plt.plot(thetas[i, :], label=<span class="string">'theta'</span> + str(i + <span class="number">1</span>))</span><br><span class="line">    plt.plot(RMSVE, label=<span class="string">'RMSVE'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'Sweeps'</span>)</span><br><span class="line">    plt.title(<span class="string">'emphatic TD'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_11_7.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_11_7()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 1000/1000 [00:00&lt;00:00, 12319.59it/s]
+</code></pre><p><img src="https://wx4.sinaimg.cn/square/0070VybLly1fyhxxs8z67j30ae07qt8u.jpg" alt="png"> </p>
+<p>使用ETD方法训练时使用的期望值，可以看到最后VE收敛到了0，但是实际应用时，即实际sample造成的方差会很大，所以这种方法理论收敛但是实际一般不能收敛。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/19/Chapter11-Off-policy-Methods-with-Approximation/" rel="next" title="Chapter11 Off-policy Methods with Approximation">
+                <i class="fa fa-chevron-left"></i> Chapter11 Off-policy Methods with Approximation
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/24/Chapter12-Eligibility-Traces/" rel="prev" title="Chapter12 Eligibility Traces">
+                Chapter12 Eligibility Traces <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块，定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块，定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义target-policy和behavior-policy，并使用step函数来建立agent和environment之间的交互"><span class="nav-number">3.</span> <span class="nav-text">定义target policy和behavior policy，并使用step函数来建立agent和environment之间的交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用semi-gradient-off-policy-TD方法完成一次weight-update"><span class="nav-number">4.</span> <span class="nav-text">使用semi-gradient off-policy TD方法完成一次weight update</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用semi-gradient-DP方法完成一次weight-update"><span class="nav-number">5.</span> <span class="nav-text">使用semi-gradient DP方法完成一次weight update</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制使用semi-gradient-off-policy-TD和semi-gradient-DP方法的weight收敛曲线"><span class="nav-number">6.</span> <span class="nav-text">绘制使用semi-gradient off-policy TD和semi-gradient DP方法的weight收敛曲线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用TDC方法训练"><span class="nav-number">7.</span> <span class="nav-text">使用TDC方法训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用expectedTDC训练"><span class="nav-number">8.</span> <span class="nav-text">使用expectedTDC训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ETD方法训练"><span class="nav-number">9.</span> <span class="nav-text">使用ETD方法训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算RMSVE和RMSPBE"><span class="nav-number">10.</span> <span class="nav-text">计算RMSVE和RMSPBE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图像比较TDC和expected-TDC性能"><span class="nav-number">11.</span> <span class="nav-text">绘制图像比较TDC和expected TDC性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制图像测试ETD算法性能"><span class="nav-number">12.</span> <span class="nav-text">绘制图像测试ETD算法性能</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

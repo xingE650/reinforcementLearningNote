@@ -102,7 +102,7 @@
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?C_{n}=\sum_{k=1}^{n}W_{k}\&space;\&space;\&space;C_{n+1}\doteq&space;C_{n}+W_{n+1}\&space;\&space;\&space;(C_{0}=0)">
 <meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fxopsoec1zj30pr0bwabc.jpg">
 <meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoq503n3bj30hf0c4myi.jpg">
-<meta property="og:updated_time" content="2018-12-15T01:35:50.020Z">
+<meta property="og:updated_time" content="2018-12-17T01:36:04.337Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter05 Monte Carlo Methods">
 <meta name="twitter:description" content="Unlike the previous chapter, here we do not assume complete knowledge of the environment. Monte Carlo methods require only experience—sample sequences of states, actions, and rewards from actual or si">
@@ -389,7 +389,6 @@
 <p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxoozkoa53j30qb09rwf6.jpg" alt="png"></p>
 <h1 id="Off-policy-Prediction-via-Importance-Sampling"><a href="#Off-policy-Prediction-via-Importance-Sampling" class="headerlink" title="Off-policy Prediction via Importance Sampling"></a>Off-policy Prediction via Importance Sampling</h1><h2 id="behavior-policy-vs-target-policy"><a href="#behavior-policy-vs-target-policy" class="headerlink" title="behavior policy vs target policy"></a>behavior policy vs target policy</h2><p>关于target policy π cover behavior policy b的概念，这里什么才能被称为cover(覆盖)那？</p>
 <p>文中解释是这样的：通过π选取的action一定有概率通过b选取，即通过π(a|s)&gt;0一定可以推出b(a|s)&gt;0，前者是后者的充分条件。</p>
-<p>还有就是这里提一下off-policy和on-policy之间的关系：</p>
 <h2 id="what-is-importance-sampling"><a href="#what-is-importance-sampling" class="headerlink" title="what is importance sampling"></a>what is importance sampling</h2><p>重要取样(Importance Sampling)的推导是通过MDP得到的，它是一种off-policy方法中通过behavior policy来训练target policy的重要途径，其中一个重要的概念就是重要取样比率(importance-sampling ratio)，它的定义式是target policy下的状态轨迹的π(a|s)和behavior policy下的状态轨迹的b(a|s)的比值。具体推导如下：</p>
 <p>首先定义通过behavior policy取样得到的states-chain的联合概率，这里的进一步计算使用了马尔科夫独立性假设：</p>
 <p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnjxhkwkfj30hi0440sr.jpg" alt="png"> </p>
@@ -401,7 +400,7 @@
 <p>这个值是联系episode的return和target policy π下的v_π(s)的关键！</p>
 <p>所以很直观的从这个期望公式引出ordinary importance sampling：</p>
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxnv1wa5y2j30870273yd.jpg" alt="png"></p>
-<p>但是有一个问题，就是如果重要采样因子有可能是方差无限的，这时我们近似得到的state-value就会发散而无法收敛，这个问题很严重，随后也会通过<a href="https://xinge650.github.io/2018/11/28/infinite-variance/" target="_blank" rel="noopener">代码</a>来解释。</p>
+<p>但是有一个问题，就是如果重要采样因子有可能是方差无限的，这时我们近似得到的state-value就会发散而无法收敛，这个问题很严重，随后也会通过<a href="https://xinge650.github.io/2018/11/28/Chapter05-infinite-variance/" target="_blank" rel="noopener">代码</a>来解释。</p>
 <p>所以通过对采样因子做归一化，引出了Weighted importance sampling的概念：</p>
 <p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxnv75ocuij308c02gglh.jpg" alt="png"></p>
 <p>和前者相比，虽然weighted importance sampling是有偏的(bias)，因为它不是直接从上面的期望公式来的，但是经过多次迭代bias会趋于0。但是如果采样因子的方差不是有限的，<br>ordinary importance sampling就很有可能无法收敛，也就是说它的方差(variance)是高于weighted importance sampling的，所以总的来说后者更常用。</p>
@@ -543,7 +542,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
