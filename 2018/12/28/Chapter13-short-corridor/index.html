@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter13/short_corridor.py 使用一个只含3个non-terminal state的简单grid-world问题讨论参数化policy算法的性能。">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter13 short corridor">
+<meta property="og:url" content="http://yoursite.com/2018/12/28/Chapter13-short-corridor/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter13/short_corridor.py 使用一个只含3个non-terminal state的简单grid-world问题讨论参数化policy算法的性能。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fypr8kaw86j306302hglg.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fypyj2cbdpj30b407qaa9.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fypyjnv3ssj30ay07e74d.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fypyk7rh8lj30b407eq38.jpg">
+<meta property="og:updated_time" content="2018-12-31T07:28:39.482Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter13 short corridor">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter13/short_corridor.py 使用一个只含3个non-terminal state的简单grid-world问题讨论参数化policy算法的性能。">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fypr8kaw86j306302hglg.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/28/Chapter13-short-corridor/">
+
+
+
+
+
+  <title>Chapter13 short corridor | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/28/Chapter13-short-corridor/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter13 short corridor</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-28T17:06:08+08:00">
+                2018-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter13/short_corridor.py" target="_blank" rel="noopener">chapter13/short_corridor.py</a></p>
+<p>使用一个只含3个non-terminal state的简单grid-world问题讨论参数化policy算法的性能。</p>
+<a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fypr8kaw86j306302hglg.jpg" alt="png"> </p>
+<p>每个reward=-1，第二个state的action是反转的，即left-&gt;right state, right-&gt;left state</p>
+<h2 id="引入模块，并给出第一个state的true-value计算公式-based-on-Bellman-equation"><a href="#引入模块，并给出第一个state的true-value计算公式-based-on-Bellman-equation" class="headerlink" title="引入模块，并给出第一个state的true value计算公式(based on Bellman equation)"></a>引入模块，并给出第一个state的true value计算公式(based on Bellman equation)</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">true_value</span><span class="params">(p)</span>:</span></span><br><span class="line">    <span class="string">""" True value of the first state</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        p (float): probability of the action 'right'.</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        True value of the first state.</span></span><br><span class="line"><span class="string">        The expression is obtained by manually solving the easy linear system </span></span><br><span class="line"><span class="string">        of Bellman equations using known dynamics.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">return</span> (<span class="number">2</span> * p - <span class="number">4</span>) / (p * (<span class="number">1</span> - p))</span><br></pre></td></tr></table></figure>
+<h2 id="创建环境类，实现agent和环境之间的交互"><a href="#创建环境类，实现agent和环境之间的交互" class="headerlink" title="创建环境类，实现agent和环境之间的交互"></a>创建环境类，实现agent和环境之间的交互</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShortCorridor</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Short corridor environment, see Example 13.1</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.reset()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.state = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(self, go_right)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            go_right (bool): chosen action</span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            tuple of (reward, episode terminated?)</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> self.state == <span class="number">0</span> <span class="keyword">or</span> self.state == <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">if</span> go_right:</span><br><span class="line">                self.state += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.state = max(<span class="number">0</span>, self.state - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> go_right:</span><br><span class="line">                self.state -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.state += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.state == <span class="number">3</span>:</span><br><span class="line">            <span class="comment"># terminal state</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>, <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>, <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建agent类，实现参数化policy算法"><a href="#创建agent类，实现参数化policy算法" class="headerlink" title="创建agent类，实现参数化policy算法"></a>创建agent类，实现参数化policy算法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ReinforceAgent</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    ReinforceAgent that follows algorithm</span></span><br><span class="line"><span class="string">    'REINFORNCE Monte-Carlo Policy-Gradient Control (episodic)'</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, alpha, gamma)</span>:</span></span><br><span class="line">        <span class="comment"># set values such that initial conditions correspond to left-epsilon greedy</span></span><br><span class="line">        self.theta = np.array([<span class="number">-1.47</span>, <span class="number">1.47</span>])</span><br><span class="line">        self.alpha = alpha</span><br><span class="line">        self.gamma = gamma</span><br><span class="line">        <span class="comment"># first column - left, second - right</span></span><br><span class="line">        self.x = np.array([[<span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">                           [<span class="number">1</span>, <span class="number">0</span>]])</span><br><span class="line">        self.rewards = []</span><br><span class="line">        self.actions = []</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_pi</span><span class="params">(self)</span>:</span></span><br><span class="line">        h = np.dot(self.theta, self.x)</span><br><span class="line">        t = np.exp(h - np.max(h))</span><br><span class="line">        pmf = t / np.sum(t)</span><br><span class="line">        <span class="comment"># never become deterministic,</span></span><br><span class="line">        <span class="comment"># guarantees episode finish</span></span><br><span class="line">        imin = np.argmin(pmf)</span><br><span class="line">        epsilon = <span class="number">0.05</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> pmf[imin] &lt; epsilon:</span><br><span class="line">            pmf[:] = <span class="number">1</span> - epsilon</span><br><span class="line">            pmf[imin] = epsilon</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pmf</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_p_right</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 返回action=right的概率</span></span><br><span class="line">        <span class="keyword">return</span> self.get_pi()[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">choose_action</span><span class="params">(self, reward)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> reward <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            self.rewards.append(reward)</span><br><span class="line"></span><br><span class="line">        pmf = self.get_pi()</span><br><span class="line">        go_right = np.random.uniform() &lt;= pmf[<span class="number">1</span>]</span><br><span class="line">        self.actions.append(go_right)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> go_right</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 此时一次episode完成了，开始进行更新</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">episode_end</span><span class="params">(self, last_reward)</span>:</span></span><br><span class="line">        self.rewards.append(last_reward)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># learn theta</span></span><br><span class="line">        G = np.zeros(len(self.rewards))</span><br><span class="line">        G[<span class="number">-1</span>] = self.rewards[<span class="number">-1</span>]</span><br><span class="line">        <span class="comment"># 更新顺序是反向的</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, len(G) + <span class="number">1</span>):</span><br><span class="line">            G[-i] = self.gamma * G[-i + <span class="number">1</span>] + self.rewards[-i]</span><br><span class="line"></span><br><span class="line">        gamma_pow = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(G)):</span><br><span class="line">            j = <span class="number">1</span> <span class="keyword">if</span> self.actions[i] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">            pmf = self.get_pi()</span><br><span class="line">            grad_ln_pi = self.x[j] - np.dot(self.x, pmf)</span><br><span class="line">            update = self.alpha * gamma_pow * G[i] * grad_ln_pi</span><br><span class="line"></span><br><span class="line">            self.theta += update</span><br><span class="line">            gamma_pow *= self.gamma</span><br><span class="line"></span><br><span class="line">        self.rewards = []</span><br><span class="line">        self.actions = []</span><br></pre></td></tr></table></figure>
+<h2 id="构造使用baseline的agent类，实现approximation-policy-with-baseline算法"><a href="#构造使用baseline的agent类，实现approximation-policy-with-baseline算法" class="headerlink" title="构造使用baseline的agent类，实现approximation policy with baseline算法"></a>构造使用baseline的agent类，实现approximation policy with baseline算法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ReinforceBaselineAgent</span><span class="params">(ReinforceAgent)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, alpha, gamma, alpha_w)</span>:</span></span><br><span class="line">        super(ReinforceBaselineAgent, self).__init__(alpha, gamma)</span><br><span class="line">        self.alpha_w = alpha_w</span><br><span class="line">        self.w = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">episode_end</span><span class="params">(self, last_reward)</span>:</span></span><br><span class="line">        self.rewards.append(last_reward)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># learn theta</span></span><br><span class="line">        G = np.zeros(len(self.rewards))</span><br><span class="line">        G[<span class="number">-1</span>] = self.rewards[<span class="number">-1</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, len(G) + <span class="number">1</span>):</span><br><span class="line">            G[-i] = self.gamma * G[-i + <span class="number">1</span>] + self.rewards[-i]</span><br><span class="line"></span><br><span class="line">        gamma_pow = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(G)):</span><br><span class="line">            self.w += self.alpha_w * gamma_pow * (G[i] - self.w)</span><br><span class="line"></span><br><span class="line">            j = <span class="number">1</span> <span class="keyword">if</span> self.actions[i] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">            pmf = self.get_pi()</span><br><span class="line">            grad_ln_pi = self.x[j] - np.dot(self.x, pmf)</span><br><span class="line">            update = self.alpha * gamma_pow * (G[i] - self.w) * grad_ln_pi</span><br><span class="line"></span><br><span class="line">            self.theta += update</span><br><span class="line">            gamma_pow *= self.gamma</span><br><span class="line"></span><br><span class="line">        self.rewards = []</span><br><span class="line">        self.actions = []</span><br></pre></td></tr></table></figure>
+<h2 id="完成一个episode的训练"><a href="#完成一个episode的训练" class="headerlink" title="完成一个episode的训练"></a>完成一个episode的训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">trial</span><span class="params">(num_episodes, agent_generator)</span>:</span></span><br><span class="line">    env = ShortCorridor()</span><br><span class="line">    agent = agent_generator()</span><br><span class="line"></span><br><span class="line">    rewards = np.zeros(num_episodes)</span><br><span class="line">    <span class="keyword">for</span> episode_idx <span class="keyword">in</span> range(num_episodes):</span><br><span class="line">        rewards_sum = <span class="number">0</span></span><br><span class="line">        reward = <span class="keyword">None</span></span><br><span class="line">        env.reset()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            go_right = agent.choose_action(reward)</span><br><span class="line">            reward, episode_end = env.step(go_right)</span><br><span class="line">            rewards_sum += reward</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> episode_end:</span><br><span class="line">                agent.episode_end(reward)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        rewards[episode_idx] = rewards_sum</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> rewards</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">example_13_1</span><span class="params">()</span>:</span></span><br><span class="line">    epsilon = <span class="number">0.05</span></span><br><span class="line">    fig, ax = plt.subplots(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 绘制true value of start state，用来和J(Θ)比较</span></span><br><span class="line">    p = np.linspace(<span class="number">0.01</span>, <span class="number">0.99</span>, <span class="number">100</span>)</span><br><span class="line">    y = true_value(p)</span><br><span class="line">    ax.plot(p, y, color=<span class="string">'red'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Find a maximum point, can also be done analytically by taking a derivative</span></span><br><span class="line">    imax = np.argmax(y)</span><br><span class="line">    pmax = p[imax]</span><br><span class="line">    ymax = y[imax]</span><br><span class="line">    ax.plot(pmax, ymax, color=<span class="string">'green'</span>, marker=<span class="string">"*"</span>, label=<span class="string">"optimal point: f(&#123;0:.2f&#125;) = &#123;1:.2f&#125;"</span>.format(pmax, ymax))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Plot points of two epsilon-greedy policies</span></span><br><span class="line">    ax.plot(epsilon, true_value(epsilon), color=<span class="string">'magenta'</span>, marker=<span class="string">"o"</span>, label=<span class="string">"epsilon-greedy left"</span>)</span><br><span class="line">    ax.plot(<span class="number">1</span> - epsilon, true_value(<span class="number">1</span> - epsilon), color=<span class="string">'blue'</span>, marker=<span class="string">"o"</span>, label=<span class="string">"epsilon-greedy right"</span>)</span><br><span class="line"></span><br><span class="line">    ax.set_ylabel(<span class="string">"Value of the first state"</span>)</span><br><span class="line">    ax.set_xlabel(<span class="string">"Probability of the action 'right'"</span>)</span><br><span class="line">    ax.set_title(<span class="string">"Short corridor with switched actions"</span>)</span><br><span class="line">    ax.set_ylim(ymin=<span class="number">-105.0</span>, ymax=<span class="number">5</span>)</span><br><span class="line">    ax.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./example_13_1.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_13_1</span><span class="params">()</span>:</span></span><br><span class="line">    num_trials = <span class="number">30</span></span><br><span class="line">    num_episodes = <span class="number">1000</span></span><br><span class="line">    alpha = <span class="number">2e-4</span></span><br><span class="line">    gamma = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    rewards = np.zeros((num_trials, num_episodes))</span><br><span class="line">    <span class="comment"># 使用匿名函数，可以在后续代码改变agent的参数进行比较</span></span><br><span class="line">    agent_generator = <span class="keyword">lambda</span> : ReinforceAgent(alpha=alpha, gamma=gamma)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(num_trials)):</span><br><span class="line">        reward = trial(num_episodes, agent_generator)</span><br><span class="line">        rewards[i, :] = reward</span><br><span class="line"></span><br><span class="line">    plt.plot(np.arange(num_episodes) + <span class="number">1</span>, <span class="number">-11.6</span> * np.ones(num_episodes), ls=<span class="string">'dashed'</span>, color=<span class="string">'red'</span>, label=<span class="string">'-11.6'</span>)</span><br><span class="line">    plt.plot(np.arange(num_episodes) + <span class="number">1</span>, rewards.mean(axis=<span class="number">0</span>), color=<span class="string">'blue'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'total reward on episode'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'episode'</span>)</span><br><span class="line">    plt.legend(loc=<span class="string">'lower right'</span>)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_13_1.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_13_2</span><span class="params">()</span>:</span></span><br><span class="line">    num_trials = <span class="number">30</span></span><br><span class="line">    num_episodes = <span class="number">1000</span></span><br><span class="line">    alpha = <span class="number">2e-4</span></span><br><span class="line">    gamma = <span class="number">1</span></span><br><span class="line">    agent_generators = [<span class="keyword">lambda</span> : ReinforceAgent(alpha=alpha, gamma=gamma),</span><br><span class="line">                        <span class="keyword">lambda</span> : ReinforceBaselineAgent(alpha=alpha, gamma=gamma, alpha_w=alpha*<span class="number">100</span>)]</span><br><span class="line">    labels = [<span class="string">'Reinforce with baseline'</span>,</span><br><span class="line">              <span class="string">'Reinforce without baseline'</span>]</span><br><span class="line"></span><br><span class="line">    rewards = np.zeros((len(agent_generators), num_trials, num_episodes))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> agent_index, agent_generator <span class="keyword">in</span> enumerate(agent_generators):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(num_trials)):</span><br><span class="line">            reward = trial(num_episodes, agent_generator)</span><br><span class="line">            rewards[agent_index, i, :] = reward</span><br><span class="line"></span><br><span class="line">    plt.plot(np.arange(num_episodes) + <span class="number">1</span>, <span class="number">-11.6</span> * np.ones(num_episodes), ls=<span class="string">'dashed'</span>, color=<span class="string">'red'</span>, label=<span class="string">'-11.6'</span>)</span><br><span class="line">    <span class="keyword">for</span> i, label <span class="keyword">in</span> enumerate(labels):</span><br><span class="line">        plt.plot(np.arange(num_episodes) + <span class="number">1</span>, rewards[i].mean(axis=<span class="number">0</span>), label=label)</span><br><span class="line">    plt.ylabel(<span class="string">'total reward on episode'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'episode'</span>)</span><br><span class="line">    <span class="comment"># 用来设置注解小方框的位置</span></span><br><span class="line">    plt.legend(loc=<span class="string">'lower right'</span>)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_13_2.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    example_13_1()</span><br><span class="line">    figure_13_1()</span><br><span class="line">    figure_13_2()</span><br></pre></td></tr></table></figure>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fypyj2cbdpj30b407qaa9.jpg" alt="png"> </p>
+<pre><code>100%|██████████| 30/30 [00:23&lt;00:00,  1.18it/s]
+</code></pre><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fypyjnv3ssj30ay07e74d.jpg" alt="png"> </p>
+<pre><code>100%|██████████| 30/30 [00:23&lt;00:00,  1.26it/s]
+100%|██████████| 30/30 [00:29&lt;00:00,  1.09it/s]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fypyk7rh8lj30b407eq38.jpg" alt="png"> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/28/Chapter13-Policy-Gradient-Methods/" rel="next" title="Chapter13 Policy Gradient Methods">
+                <i class="fa fa-chevron-left"></i> Chapter13 Policy Gradient Methods
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块，并给出第一个state的true-value计算公式-based-on-Bellman-equation"><span class="nav-number">2.</span> <span class="nav-text">引入模块，并给出第一个state的true value计算公式(based on Bellman equation)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建环境类，实现agent和环境之间的交互"><span class="nav-number">3.</span> <span class="nav-text">创建环境类，实现agent和环境之间的交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建agent类，实现参数化policy算法"><span class="nav-number">4.</span> <span class="nav-text">创建agent类，实现参数化policy算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造使用baseline的agent类，实现approximation-policy-with-baseline算法"><span class="nav-number">5.</span> <span class="nav-text">构造使用baseline的agent类，实现approximation policy with baseline算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完成一个episode的训练"><span class="nav-number">6.</span> <span class="nav-text">完成一个episode的训练</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

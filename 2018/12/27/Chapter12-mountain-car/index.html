@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter12/mountain_car.py 使用喜闻乐见的MountainCar来测试Sarsa(λ)算法的性能 因为一直在纠结true online Sarsa(λ)的问题，然后我发现效果惨不忍睹。。。不知道是自己的问题还是不太合适用在这，可以在下面看出来。因为训练速度很慢(全部训练完差不多一下午，中间我还在sao改)，所以就借鉴一下大佬的结果。">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter12 mountain car">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Chapter12-mountain-car/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter12/mountain_car.py 使用喜闻乐见的MountainCar来测试Sarsa(λ)算法的性能 因为一直在纠结true online Sarsa(λ)的问题，然后我发现效果惨不忍睹。。。不知道是自己的问题还是不太合适用在这，可以在下面看出来。因为训练速度很慢(全部训练完差不多一下午，中间我还在sao改)，所以就借鉴一下大佬的结果。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fymlegs9wlj30hs0dct9r.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fymley6ipaj30hs0dcwfe.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fymlfjrqclj30b407e74f.jpg">
+<meta property="og:updated_time" content="2018-12-31T07:28:27.160Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter12 mountain car">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter12/mountain_car.py 使用喜闻乐见的MountainCar来测试Sarsa(λ)算法的性能 因为一直在纠结true online Sarsa(λ)的问题，然后我发现效果惨不忍睹。。。不知道是自己的问题还是不太合适用在这，可以在下面看出来。因为训练速度很慢(全部训练完差不多一下午，中间我还在sao改)，所以就借鉴一下大佬的结果。">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fymlegs9wlj30hs0dct9r.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/27/Chapter12-mountain-car/">
+
+
+
+
+
+  <title>Chapter12 mountain car | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/27/Chapter12-mountain-car/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter12 mountain car</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-27T14:52:58+08:00">
+                2018-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter12/mountain_car.py" target="_blank" rel="noopener">chapter12/mountain_car.py</a></p>
+<p>使用喜闻乐见的MountainCar来测试Sarsa(λ)算法的性能</p>
+<p>因为一直在纠结true online Sarsa(λ)的问题，然后我发现效果惨不忍睹。。。不知道是自己的问题还是不太合适用在这，可以在下面看出来。因为训练速度很慢(全部训练完差不多一下午，中间我还在sao改)，所以就借鉴一下大佬的结果。</p>
+<a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>使用强化学习中的经典任务——Mountain Car来测试Sarsa(λ)和true on-line Sarsa(λ)算法的性能，同时也测试了不同的Eligibility trace对Sarsa(λ)算法性能的影响。</p>
+<p>Mountain Car的具体描述可以参考例子<a href="https://xinge650.github.io/2018/12/15/Chapter10-mountain-car/" target="_blank" rel="noopener">mountain car</a></p>
+<h2 id="引入模块"><a href="#引入模块" class="headerlink" title="引入模块"></a>引入模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> floor</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br></pre></td></tr></table></figure>
+<h2 id="下面模块的代码和mountain-car一致，建议看之前再熟悉一下Tile-Coding的原理"><a href="#下面模块的代码和mountain-car一致，建议看之前再熟悉一下Tile-Coding的原理" class="headerlink" title="下面模块的代码和mountain car一致，建议看之前再熟悉一下Tile Coding的原理"></a>下面模块的代码和<a href="https://xinge650.github.io/2018/12/15/Chapter10-mountain-car/" target="_blank" rel="noopener">mountain car</a>一致，建议看之前再熟悉一下Tile Coding的原理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#######################################################################</span></span><br><span class="line"><span class="comment"># Following are some utilities for tile coding from Rich.</span></span><br><span class="line"><span class="comment"># To make each file self-contained, I copied them from</span></span><br><span class="line"><span class="comment"># http://incompleteideas.net/tiles/tiles3.py-remove</span></span><br><span class="line"><span class="comment"># with some naming convention changes</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Tile coding starts</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IHT</span>:</span></span><br><span class="line">    <span class="string">"Structure to handle collisions"</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, size_val)</span>:</span></span><br><span class="line">        self.size = size_val</span><br><span class="line">        self.overfull_count = <span class="number">0</span></span><br><span class="line">        self.dictionary = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">count</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.dictionary)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">full</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.dictionary) &gt;= self.size</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_index</span><span class="params">(self, obj, read_only=False)</span>:</span></span><br><span class="line">        d = self.dictionary</span><br><span class="line">        <span class="keyword">if</span> obj <span class="keyword">in</span> d:</span><br><span class="line">            <span class="keyword">return</span> d[obj]</span><br><span class="line">        <span class="keyword">elif</span> read_only:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        size = self.size</span><br><span class="line">        count = self.count()</span><br><span class="line">        <span class="keyword">if</span> count &gt;= size:</span><br><span class="line">            <span class="keyword">if</span> self.overfull_count == <span class="number">0</span>: print(<span class="string">'IHT full, starting to allow collisions'</span>)</span><br><span class="line">            self.overfull_count += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> hash(obj) % self.size</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            d[obj] = count</span><br><span class="line">            <span class="keyword">return</span> count</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hash_coords</span><span class="params">(coordinates, m, read_only=False)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(m, IHT): <span class="keyword">return</span> m.get_index(tuple(coordinates), read_only)</span><br><span class="line">    <span class="keyword">if</span> isinstance(m, int): <span class="keyword">return</span> hash(tuple(coordinates)) % m</span><br><span class="line">    <span class="keyword">if</span> m <span class="keyword">is</span> <span class="keyword">None</span>: <span class="keyword">return</span> coordinates</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tiles</span><span class="params">(iht_or_size, num_tilings, floats, ints=None, read_only=False)</span>:</span></span><br><span class="line">    <span class="string">"""returns num-tilings tile indices corresponding to the floats and ints"""</span></span><br><span class="line">    <span class="keyword">if</span> ints <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        ints = []</span><br><span class="line">    qfloats = [floor(f * num_tilings) <span class="keyword">for</span> f <span class="keyword">in</span> floats]</span><br><span class="line">    tiles = []</span><br><span class="line">    <span class="keyword">for</span> tiling <span class="keyword">in</span> range(num_tilings):</span><br><span class="line">        tilingX2 = tiling * <span class="number">2</span></span><br><span class="line">        coords = [tiling]</span><br><span class="line">        b = tiling</span><br><span class="line">        <span class="keyword">for</span> q <span class="keyword">in</span> qfloats:</span><br><span class="line">            coords.append((q + b) // num_tilings)</span><br><span class="line">            b += tilingX2</span><br><span class="line">        coords.extend(ints)</span><br><span class="line">        tiles.append(hash_coords(coords, iht_or_size, read_only))</span><br><span class="line">    <span class="keyword">return</span> tiles</span><br><span class="line"><span class="comment"># Tile coding ends</span></span><br><span class="line"><span class="comment">#######################################################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># all possible actions</span></span><br><span class="line">ACTION_REVERSE = <span class="number">-1</span></span><br><span class="line">ACTION_ZERO = <span class="number">0</span></span><br><span class="line">ACTION_FORWARD = <span class="number">1</span></span><br><span class="line"><span class="comment"># order is important</span></span><br><span class="line">ACTIONS = [ACTION_REVERSE, ACTION_ZERO, ACTION_FORWARD]</span><br><span class="line"></span><br><span class="line"><span class="comment"># bound for position and velocity</span></span><br><span class="line">POSITION_MIN = <span class="number">-1.2</span></span><br><span class="line">POSITION_MAX = <span class="number">0.5</span></span><br><span class="line">VELOCITY_MIN = <span class="number">-0.07</span></span><br><span class="line">VELOCITY_MAX = <span class="number">0.07</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># discount is always 1.0 in these experiments</span></span><br><span class="line">DISCOUNT = <span class="number">1.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># use optimistic initial value, so it's ok to set epsilon to 0</span></span><br><span class="line">EPSILON = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># maximum steps per episode</span></span><br><span class="line">STEP_LIMIT = <span class="number">5000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># take an @action at @position and @velocity</span></span><br><span class="line"><span class="comment"># @return: new position, new velocity, reward (always -1)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(position, velocity, action)</span>:</span></span><br><span class="line">    new_velocity = velocity + <span class="number">0.001</span> * action - <span class="number">0.0025</span> * np.cos(<span class="number">3</span> * position)</span><br><span class="line">    new_velocity = min(max(VELOCITY_MIN, new_velocity), VELOCITY_MAX)</span><br><span class="line">    new_position = position + new_velocity</span><br><span class="line">    new_position = min(max(POSITION_MIN, new_position), POSITION_MAX)</span><br><span class="line">    reward = <span class="number">-1.0</span></span><br><span class="line">    <span class="keyword">if</span> new_position == POSITION_MIN:</span><br><span class="line">        new_velocity = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">return</span> new_position, new_velocity, reward</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># get action at @position and @velocity based on epsilon greedy policy and @valueFunction</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_action</span><span class="params">(position, velocity, valueFunction)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> np.random.binomial(<span class="number">1</span>, EPSILON) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> np.random.choice(ACTIONS)</span><br><span class="line">    values = []</span><br><span class="line">    <span class="keyword">for</span> action <span class="keyword">in</span> ACTIONS:</span><br><span class="line">        values.append(valueFunction.value(position, velocity, action))</span><br><span class="line">    <span class="keyword">return</span> np.argmax(values) - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义3种常见的Eligibility-trace，就是更新公式里常见的z"><a href="#定义3种常见的Eligibility-trace，就是更新公式里常见的z" class="headerlink" title="定义3种常见的Eligibility trace，就是更新公式里常见的z"></a>定义3种常见的Eligibility trace，就是更新公式里常见的z</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># accumulating trace update rule</span></span><br><span class="line"><span class="comment"># @trace: old trace (will be modified)</span></span><br><span class="line"><span class="comment"># @activeTiles: current active tile indices</span></span><br><span class="line"><span class="comment"># @lam: lambda</span></span><br><span class="line"><span class="comment"># @return: new trace for convenience</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">accumulating_trace</span><span class="params">(trace, active_tiles, lam)</span>:</span></span><br><span class="line">    trace *= lam * DISCOUNT</span><br><span class="line">    trace[active_tiles] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> trace</span><br><span class="line"></span><br><span class="line"><span class="comment"># replacing trace update rule</span></span><br><span class="line"><span class="comment"># 这种trace只适用于Tile Coding这种的binary feature vector</span></span><br><span class="line"><span class="comment"># @trace: old trace (will be modified)</span></span><br><span class="line"><span class="comment"># @activeTiles: current active tile indices</span></span><br><span class="line"><span class="comment"># @lam: lambda</span></span><br><span class="line"><span class="comment"># @return: new trace for convenience</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">replacing_trace</span><span class="params">(trace, activeTiles, lam)</span>:</span></span><br><span class="line">    active = np.in1d(np.arange(len(trace)), activeTiles)</span><br><span class="line">    trace[active] = <span class="number">1</span></span><br><span class="line">    trace[~active] *= lam * DISCOUNT</span><br><span class="line">    <span class="keyword">return</span> trace</span><br><span class="line"></span><br><span class="line"><span class="comment"># replacing trace update rule, 'clearing' means set all tiles corresponding to non-selected actions to 0</span></span><br><span class="line"><span class="comment"># @trace: old trace (will be modified)</span></span><br><span class="line"><span class="comment"># @activeTiles: current active tile indices</span></span><br><span class="line"><span class="comment"># @lam: lambda</span></span><br><span class="line"><span class="comment"># @clearingTiles: tiles to be cleared</span></span><br><span class="line"><span class="comment"># @return: new trace for convenience</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">replacing_trace_with_clearing</span><span class="params">(trace, active_tiles, lam, clearing_tiles)</span>:</span></span><br><span class="line">    active = np.in1d(np.arange(len(trace)), active_tiles)</span><br><span class="line">    trace[~active] *= lam * DISCOUNT</span><br><span class="line">    trace[clearing_tiles] = <span class="number">0</span></span><br><span class="line">    trace[active] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> trace</span><br><span class="line"></span><br><span class="line"><span class="comment"># dutch trace update rule</span></span><br><span class="line"><span class="comment"># @trace: old trace (will be modified)</span></span><br><span class="line"><span class="comment"># @activeTiles: current active tile indices</span></span><br><span class="line"><span class="comment"># @lam: lambda</span></span><br><span class="line"><span class="comment"># @alpha: step size for all tiles</span></span><br><span class="line"><span class="comment"># @return: new trace for convenience</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dutch_trace</span><span class="params">(trace, active_tiles, lam, alpha)</span>:</span></span><br><span class="line">    coef = <span class="number">1</span> - alpha * DISCOUNT * lam * np.sum(trace[active_tiles])</span><br><span class="line">    trace *= DISCOUNT * lam</span><br><span class="line">    trace[active_tiles] += coef</span><br><span class="line">    <span class="keyword">return</span> trace</span><br></pre></td></tr></table></figure>
+<h2 id="定义Sarsa-λ-算法类"><a href="#定义Sarsa-λ-算法类" class="headerlink" title="定义Sarsa(λ)算法类"></a>定义Sarsa(λ)算法类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrapper class for Sarsa(lambda)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sarsa</span>:</span></span><br><span class="line">    <span class="comment"># In this example I use the tiling software instead of implementing standard tiling by myself</span></span><br><span class="line">    <span class="comment"># One important thing is that tiling is only a map from (state, action) to a series of indices</span></span><br><span class="line">    <span class="comment"># It doesn't matter whether the indices have meaning, only if this map satisfy some property</span></span><br><span class="line">    <span class="comment"># View the following webpage for more information</span></span><br><span class="line">    <span class="comment"># http://incompleteideas.net/sutton/tiles/tiles3.html</span></span><br><span class="line">    <span class="comment"># @maxSize: the maximum # of indices</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, step_size, lam, trace_update=accumulating_trace, num_of_tilings=<span class="number">8</span>, max_size=<span class="number">2048</span>)</span>:</span></span><br><span class="line">        self.max_size = max_size</span><br><span class="line">        self.num_of_tilings = num_of_tilings</span><br><span class="line">        self.trace_update = trace_update</span><br><span class="line">        self.lam = lam </span><br><span class="line">        self.last_value = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># divide step size equally to each tiling</span></span><br><span class="line">        self.step_size = step_size / num_of_tilings</span><br><span class="line"></span><br><span class="line">        self.hash_table = IHT(max_size)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># weight for each tile</span></span><br><span class="line">        self.weights = np.zeros(max_size)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># trace for each tile</span></span><br><span class="line">        self.trace = np.zeros(max_size)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># position and velocity needs scaling to satisfy the tile software</span></span><br><span class="line">        self.position_scale = self.num_of_tilings / (POSITION_MAX - POSITION_MIN)</span><br><span class="line">        self.velocity_scale = self.num_of_tilings / (VELOCITY_MAX - VELOCITY_MIN)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get indices of active tiles for given state and action</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_active_tiles</span><span class="params">(self, position, velocity, action)</span>:</span></span><br><span class="line">        <span class="comment"># I think positionScale * (position - position_min) would be a good normalization.</span></span><br><span class="line">        <span class="comment"># However positionScale * position_min is a constant, so it's ok to ignore it.</span></span><br><span class="line">        active_tiles = tiles(self.hash_table, self.num_of_tilings,</span><br><span class="line">                            [self.position_scale * position, self.velocity_scale * velocity],</span><br><span class="line">                            [action])</span><br><span class="line">        <span class="keyword">return</span> active_tiles</span><br><span class="line"></span><br><span class="line">    <span class="comment"># estimate the value of given state and action</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value</span><span class="params">(self, position, velocity, action)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> position == POSITION_MAX:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.0</span></span><br><span class="line">        active_tiles = self.get_active_tiles(position, velocity, action)</span><br><span class="line">        <span class="keyword">return</span> np.sum(self.weights[active_tiles])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># learn with given state, action and target</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">learn</span><span class="params">(self, position, velocity, action, target, next_value)</span>:</span></span><br><span class="line">        active_tiles = self.get_active_tiles(position, velocity, action)</span><br><span class="line">        estimation = np.sum(self.weights[active_tiles])</span><br><span class="line">        delta = target - estimation</span><br><span class="line">        <span class="keyword">if</span> self.trace_update == accumulating_trace <span class="keyword">or</span> self.trace_update == replacing_trace:</span><br><span class="line">            self.trace_update(self.trace, active_tiles, self.lam)</span><br><span class="line">        <span class="keyword">elif</span> self.trace_update == dutch_trace:</span><br><span class="line">            self.trace_update(self.trace, active_tiles, self.lam, self.step_size)</span><br><span class="line">            <span class="comment"># use true on-line update</span></span><br><span class="line">            self.weights += self.step_size * (estimation - self.last_value) * self.trace</span><br><span class="line">            self.weights[active_tiles] -= self.step_size * (estimation - self.last_value)</span><br><span class="line">            self.last_value = next_value</span><br><span class="line">        <span class="keyword">elif</span> self.trace_update == replacing_trace_with_clearing:</span><br><span class="line">            clearing_tiles = []</span><br><span class="line">            <span class="keyword">for</span> act <span class="keyword">in</span> ACTIONS:</span><br><span class="line">                <span class="keyword">if</span> act != action:</span><br><span class="line">                    clearing_tiles.extend(self.get_active_tiles(position, velocity, act))</span><br><span class="line">            self.trace_update(self.trace, active_tiles, self.lam, clearing_tiles)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> Exception(<span class="string">'Unexpected Trace Type'</span>)</span><br><span class="line">        self.weights += self.step_size * delta * self.trace</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get # of steps to reach the goal under current state value function</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cost_to_go</span><span class="params">(self, position, velocity)</span>:</span></span><br><span class="line">        costs = []</span><br><span class="line">        <span class="keyword">for</span> action <span class="keyword">in</span> ACTIONS:</span><br><span class="line">            costs.append(self.value(position, velocity, action))</span><br><span class="line">        <span class="keyword">return</span> -np.max(costs)</span><br></pre></td></tr></table></figure>
+<h2 id="agent完成play，并绘制使用不同trace的cost-map"><a href="#agent完成play，并绘制使用不同trace的cost-map" class="headerlink" title="agent完成play，并绘制使用不同trace的cost map"></a>agent完成play，并绘制使用不同trace的cost map</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># play Mountain Car for one episode based on given method @evaluator</span></span><br><span class="line"><span class="comment"># @return: total steps in this episode</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">play</span><span class="params">(evaluator)</span>:</span></span><br><span class="line">    position = np.random.uniform(<span class="number">-0.6</span>, <span class="number">-0.4</span>)</span><br><span class="line">    velocity = <span class="number">0.0</span></span><br><span class="line">    action = get_action(position, velocity, evaluator)</span><br><span class="line">    steps = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        next_position, next_velocity, reward = step(position, velocity, action)</span><br><span class="line">        next_action = get_action(next_position, next_velocity, evaluator)</span><br><span class="line">        steps += <span class="number">1</span></span><br><span class="line">        target = reward + DISCOUNT * evaluator.value(next_position, next_velocity, next_action)</span><br><span class="line">        next_value = evaluator.value(next_position, next_velocity, next_action)</span><br><span class="line">        evaluator.learn(position, velocity, action, target,next_value)</span><br><span class="line">        position = next_position</span><br><span class="line">        velocity = next_velocity</span><br><span class="line">        action = next_action</span><br><span class="line">        <span class="keyword">if</span> next_position == POSITION_MAX:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> steps &gt;= STEP_LIMIT:</span><br><span class="line">            print(<span class="string">'Step Limit Exceeded!'</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> steps</span><br><span class="line"></span><br><span class="line"><span class="comment"># figure 12.10, effect of the lambda and alpha on early performance of Sarsa(lambda)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_12_10</span><span class="params">()</span>:</span></span><br><span class="line">    runs = <span class="number">30</span></span><br><span class="line">    episodes = <span class="number">50</span></span><br><span class="line">    alphas = np.arange(<span class="number">1</span>, <span class="number">8</span>) / <span class="number">4.0</span></span><br><span class="line">    lams = [<span class="number">0.99</span>, <span class="number">0.95</span>, <span class="number">0.5</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    steps = np.zeros((len(lams), len(alphas), runs, episodes))</span><br><span class="line">    <span class="keyword">for</span> lamInd, lam <span class="keyword">in</span> enumerate(lams):</span><br><span class="line">        <span class="keyword">for</span> alphaInd, alpha <span class="keyword">in</span> enumerate(alphas):</span><br><span class="line">            <span class="keyword">for</span> run <span class="keyword">in</span> tqdm(range(runs)):</span><br><span class="line">                evaluator = Sarsa(alpha, lam, replacing_trace)</span><br><span class="line">                <span class="keyword">for</span> ep <span class="keyword">in</span> range(episodes):</span><br><span class="line">                    step = play(evaluator)</span><br><span class="line">                    steps[lamInd, alphaInd, run, ep] = step</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average over episodes</span></span><br><span class="line">    steps = np.mean(steps, axis=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average over runs</span></span><br><span class="line">    steps = np.mean(steps, axis=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> lamInd, lam <span class="keyword">in</span> enumerate(lams):</span><br><span class="line">        plt.plot(alphas, steps[lamInd, :], label=<span class="string">'lambda = %s'</span> % (str(lam)))</span><br><span class="line">    plt.xlabel(<span class="string">'alpha * # of tilings (8)'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'averaged steps per episode'</span>)</span><br><span class="line">    plt.ylim([<span class="number">180</span>, <span class="number">300</span>])</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_12_10.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># figure 12.11, summary comparision of Sarsa(lambda) algorithms</span></span><br><span class="line"><span class="comment"># I use 8 tilings rather than 10 tilings</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_12_11</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># traceTypes = [dutch_trace, replacing_trace, replacing_trace_with_clearing, accumulating_trace]</span></span><br><span class="line">    traceTypes = [dutch_trace,replacing_trace] </span><br><span class="line">    alphas = np.arange(<span class="number">0.2</span>, <span class="number">1.8</span>, <span class="number">0.2</span>)</span><br><span class="line">    episodes = <span class="number">20</span></span><br><span class="line">    runs = <span class="number">30</span></span><br><span class="line">    lam = <span class="number">0.9</span></span><br><span class="line">    rewards = np.zeros((len(traceTypes), len(alphas), runs, episodes))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> traceInd, trace <span class="keyword">in</span> enumerate(traceTypes):</span><br><span class="line">        <span class="keyword">for</span> alphaInd, alpha <span class="keyword">in</span> enumerate(alphas):</span><br><span class="line">            <span class="keyword">for</span> run <span class="keyword">in</span> tqdm(range(runs)):</span><br><span class="line">                evaluator = Sarsa(alpha, lam, trace)</span><br><span class="line">                <span class="keyword">for</span> ep <span class="keyword">in</span> range(episodes):</span><br><span class="line">                    <span class="keyword">if</span> trace == accumulating_trace <span class="keyword">and</span> alpha &gt; <span class="number">0.6</span>:</span><br><span class="line">                        steps = STEP_LIMIT</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        steps = play(evaluator)</span><br><span class="line">                    rewards[traceInd, alphaInd, run, ep] = -steps</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average over episodes</span></span><br><span class="line">    rewards = np.mean(rewards, axis=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average over runs</span></span><br><span class="line">    rewards = np.mean(rewards, axis=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> traceInd, trace <span class="keyword">in</span> enumerate(traceTypes):</span><br><span class="line">        plt.plot(alphas, rewards[traceInd, :], label=trace.__name__)</span><br><span class="line">    plt.xlabel(<span class="string">'alpha * # of tilings (8)'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'averaged rewards pre episode'</span>)</span><br><span class="line">    <span class="comment"># plt.ylim([-550, -150])</span></span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_12_11.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_12_10()</span><br><span class="line">figure_12_11()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 30/30 [02:07&lt;00:00,  4.19s/it]
+100%|██████████| 30/30 [01:49&lt;00:00,  3.72s/it]
+100%|██████████| 30/30 [01:42&lt;00:00,  3.45s/it]
+100%|██████████| 30/30 [01:37&lt;00:00,  3.13s/it]
+100%|██████████| 30/30 [01:44&lt;00:00,  3.31s/it]
+100%|██████████| 30/30 [01:42&lt;00:00,  3.17s/it]
+100%|██████████| 30/30 [01:40&lt;00:00,  3.37s/it]
+100%|██████████| 30/30 [01:36&lt;00:00,  3.14s/it]
+100%|██████████| 30/30 [01:36&lt;00:00,  3.36s/it]
+100%|██████████| 30/30 [01:07&lt;00:00,  2.24s/it]
+100%|██████████| 30/30 [00:57&lt;00:00,  1.90s/it]
+100%|██████████| 30/30 [00:53&lt;00:00,  1.77s/it]
+100%|██████████| 30/30 [00:49&lt;00:00,  1.63s/it]
+100%|██████████| 30/30 [00:46&lt;00:00,  1.56s/it]
+100%|██████████| 30/30 [00:45&lt;00:00,  1.45s/it]
+100%|██████████| 30/30 [00:45&lt;00:00,  1.54s/it]
+</code></pre><p>figure_12_10:</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fymlegs9wlj30hs0dct9r.jpg" alt="png"> </p>
+<p>figure_12_11:</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fymley6ipaj30hs0dcwfe.jpg" alt="png"> </p>
+<p>why online Sarsa(λ) so terrible QAQ:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fymlfjrqclj30b407e74f.jpg" alt="png"> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/27/Chapter12-19-states-random-walk/" rel="next" title="Chapter12 19-states random-walk">
+                <i class="fa fa-chevron-left"></i> Chapter12 19-states random-walk
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/28/Chapter13-Policy-Gradient-Methods/" rel="prev" title="Chapter13 Policy Gradient Methods">
+                Chapter13 Policy Gradient Methods <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块"><span class="nav-number">2.</span> <span class="nav-text">引入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下面模块的代码和mountain-car一致，建议看之前再熟悉一下Tile-Coding的原理"><span class="nav-number">3.</span> <span class="nav-text">下面模块的代码和mountain car一致，建议看之前再熟悉一下Tile Coding的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义3种常见的Eligibility-trace，就是更新公式里常见的z"><span class="nav-number">4.</span> <span class="nav-text">定义3种常见的Eligibility trace，就是更新公式里常见的z</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义Sarsa-λ-算法类"><span class="nav-number">5.</span> <span class="nav-text">定义Sarsa(λ)算法类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#agent完成play，并绘制使用不同trace的cost-map"><span class="nav-number">6.</span> <span class="nav-text">agent完成play，并绘制使用不同trace的cost map</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

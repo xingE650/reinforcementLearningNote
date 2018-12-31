@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reinforcement Learning Jupyter Notebook,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引用来自ShangtongZhang的代码chapter12/random_walk.py 使用random walk问题来测试TD(λ)算法的性能">
+<meta name="keywords" content="Reinforcement Learning Jupyter Notebook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter12 19-states random-walk">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Chapter12-19-states-random-walk/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="引用来自ShangtongZhang的代码chapter12/random_walk.py 使用random walk问题来测试TD(λ)算法的性能">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fymkhhdwisj30az07e74z.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fymki2gso6j30az07ejrz.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fymkiydu9hj30az07et9e.jpg">
+<meta property="og:updated_time" content="2018-12-31T07:29:12.594Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter12 19-states random-walk">
+<meta name="twitter:description" content="引用来自ShangtongZhang的代码chapter12/random_walk.py 使用random walk问题来测试TD(λ)算法的性能">
+<meta name="twitter:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fymkhhdwisj30az07e74z.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/27/Chapter12-19-states-random-walk/">
+
+
+
+
+
+  <title>Chapter12 19-states random-walk | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/27/Chapter12-19-states-random-walk/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Chapter12 19-states random-walk</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-27T09:46:00+08:00">
+                2018-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引用来自<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" target="_blank" rel="noopener">ShangtongZhang</a>的代码<a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/tree/master/chapter12/random_walk.py" target="_blank" rel="noopener">chapter12/random_walk.py</a></p>
+<p>使用random walk问题来测试TD(λ)算法的性能</p>
+<a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>本例通过将不同类型的的TD(λ)方法应用在Chapter06的<a href="https://xinge650.github.io/2018/12/01/Chapter06-TD-0-vs-constant-alpha-MC/" target="_blank" rel="noopener">random-walk</a>问题中，不过将原来的5-state问题修改为了19-state问题。</p>
+<h2 id="引入模块并定义常量"><a href="#引入模块并定义常量" class="headerlink" title="引入模块并定义常量"></a>引入模块并定义常量</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"><span class="comment"># all states</span></span><br><span class="line">N_STATES = <span class="number">19</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># all states but terminal states</span></span><br><span class="line">STATES = np.arange(<span class="number">1</span>, N_STATES + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># start from the middle state</span></span><br><span class="line">START_STATE = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># two terminal states</span></span><br><span class="line"><span class="comment"># an action leading to the left terminal state has reward -1</span></span><br><span class="line"><span class="comment"># an action leading to the right terminal state has reward 1</span></span><br><span class="line">END_STATES = [<span class="number">0</span>, N_STATES + <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># true state values from Bellman equation</span></span><br><span class="line">TRUE_VALUE = np.arange(<span class="number">-20</span>, <span class="number">22</span>, <span class="number">2</span>) / <span class="number">20.0</span></span><br><span class="line">TRUE_VALUE[<span class="number">0</span>] = TRUE_VALUE[N_STATES + <span class="number">1</span>] = <span class="number">0.0</span></span><br></pre></td></tr></table></figure>
+<h2 id="将TD-λ-算法封装为类，提供接口给agent，用来在交互过程中训练weight"><a href="#将TD-λ-算法封装为类，提供接口给agent，用来在交互过程中训练weight" class="headerlink" title="将TD(λ)算法封装为类，提供接口给agent，用来在交互过程中训练weight"></a>将TD(λ)算法封装为类，提供接口给agent，用来在交互过程中训练weight</h2><h3 id="基本算法类，只对TD-λ-算法使用的数据进行定义，用来在其他算法类中使用"><a href="#基本算法类，只对TD-λ-算法使用的数据进行定义，用来在其他算法类中使用" class="headerlink" title="基本算法类，只对TD(λ)算法使用的数据进行定义，用来在其他算法类中使用"></a>基本算法类，只对TD(λ)算法使用的数据进行定义，用来在其他算法类中使用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># base class for lambda-based algorithms in this chapter</span></span><br><span class="line"><span class="comment"># In this example, we use the simplest linear feature function, state aggregation.</span></span><br><span class="line"><span class="comment"># And we use exact 19 groups, so the weights for each group is exact the value for that state</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValueFunction</span>:</span></span><br><span class="line">    <span class="comment"># @rate: lambda, as it's a keyword in python, so I call it rate</span></span><br><span class="line">    <span class="comment"># @stepSize: alpha, step size for update</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rate, step_size)</span>:</span></span><br><span class="line">        self.rate = rate</span><br><span class="line">        self.step_size = step_size</span><br><span class="line">        <span class="comment"># 需要考虑terminal state</span></span><br><span class="line">        self.weights = np.zeros(N_STATES + <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># the state value is just the weight</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value</span><span class="params">(self, state)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.weights[state]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># feed the algorithm with new observation</span></span><br><span class="line">    <span class="comment"># derived class should override this function</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">learn</span><span class="params">(self, state, reward)</span>:</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># initialize some variables at the beginning of each episode</span></span><br><span class="line">    <span class="comment"># must be called at the very beginning of each episode</span></span><br><span class="line">    <span class="comment"># derived class should override this function</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">new_episode</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+<h3 id="off-line-λ-return算法类"><a href="#off-line-λ-return算法类" class="headerlink" title="off-line λ-return算法类"></a>off-line λ-return算法类</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Off-line lambda-return algorithm</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OffLineLambdaReturn</span><span class="params">(ValueFunction)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rate, step_size)</span>:</span></span><br><span class="line">        ValueFunction.__init__(self, rate, step_size)</span><br><span class="line">        <span class="comment"># To accelerate learning, set a truncate value for power of lambda</span></span><br><span class="line">        self.rate_truncate = <span class="number">1e-3</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">new_episode</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># initialize the trajectory</span></span><br><span class="line">        self.trajectory = [START_STATE]</span><br><span class="line">        <span class="comment"># only need to track the last reward in one episode, as all others are 0</span></span><br><span class="line">        self.reward = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">learn</span><span class="params">(self, state, reward)</span>:</span></span><br><span class="line">        <span class="comment"># add the new state to the trajectory</span></span><br><span class="line">        self.trajectory.append(state)</span><br><span class="line">        <span class="keyword">if</span> state <span class="keyword">in</span> END_STATES:</span><br><span class="line">            <span class="comment"># start off-line learning once the episode ends</span></span><br><span class="line">            self.reward = reward</span><br><span class="line">            self.T = len(self.trajectory) - <span class="number">1</span></span><br><span class="line">            self.off_line_learn()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the n-step return from the given time</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">n_step_return_from_time</span><span class="params">(self, n, time)</span>:</span></span><br><span class="line">        <span class="comment"># gamma is always 1 and rewards are zero except for the last reward</span></span><br><span class="line">        <span class="comment"># the formula can be simplified</span></span><br><span class="line">        end_time = min(time + n, self.T)</span><br><span class="line">        returns = self.value(self.trajectory[end_time])</span><br><span class="line">        <span class="keyword">if</span> end_time == self.T:</span><br><span class="line">            returns += self.reward</span><br><span class="line">        <span class="keyword">return</span> returns</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the lambda-return from the given time</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lambda_return_from_time</span><span class="params">(self, time)</span>:</span></span><br><span class="line">        returns = <span class="number">0.0</span></span><br><span class="line">        lambda_power = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">1</span>, self.T - time):</span><br><span class="line">            returns += lambda_power * self.n_step_return_from_time(n, time)</span><br><span class="line">            lambda_power *= self.rate</span><br><span class="line">            <span class="keyword">if</span> lambda_power &lt; self.rate_truncate:</span><br><span class="line">                <span class="comment"># If the power of lambda has been too small, discard all the following sequences</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        returns *= <span class="number">1</span> - self.rate</span><br><span class="line">        <span class="keyword">if</span> lambda_power &gt;= self.rate_truncate:</span><br><span class="line">            returns += lambda_power * self.reward</span><br><span class="line">        <span class="keyword">return</span> returns</span><br><span class="line"></span><br><span class="line">    <span class="comment"># perform off-line learning at the end of an episode</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">off_line_learn</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> time <span class="keyword">in</span> range(self.T):</span><br><span class="line">            <span class="comment"># update for each state in the trajectory</span></span><br><span class="line">            state = self.trajectory[time]</span><br><span class="line">            delta = self.lambda_return_from_time(time) - self.value(state)</span><br><span class="line">            delta *= self.step_size</span><br><span class="line">            self.weights[state] += delta</span><br></pre></td></tr></table></figure>
+<h3 id="TD-λ-算法类"><a href="#TD-λ-算法类" class="headerlink" title="TD(λ)算法类"></a>TD(λ)算法类</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># TD(lambda) algorithm</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TemporalDifferenceLambda</span><span class="params">(ValueFunction)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rate, step_size)</span>:</span></span><br><span class="line">        ValueFunction.__init__(self, rate, step_size)</span><br><span class="line">        self.new_episode()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">new_episode</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># initialize the eligibility trace</span></span><br><span class="line">        self.eligibility = np.zeros(N_STATES + <span class="number">2</span>)</span><br><span class="line">        <span class="comment"># initialize the beginning state</span></span><br><span class="line">        self.last_state = START_STATE</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">learn</span><span class="params">(self, state, reward)</span>:</span></span><br><span class="line">        <span class="comment"># update the eligibility trace and weights</span></span><br><span class="line">        self.eligibility *= self.rate</span><br><span class="line">        <span class="comment"># 注意这里使用的self.last_state</span></span><br><span class="line">        <span class="comment"># 因为提供的参数state实际上是next_state，而self.last_state才是需要更新的current_state，</span></span><br><span class="line">        <span class="comment"># 这个问题在下面的代码中也存在，需要注意一下</span></span><br><span class="line">        self.eligibility[self.last_state] += <span class="number">1</span></span><br><span class="line">        delta = reward + self.value(state) - self.value(self.last_state)</span><br><span class="line">        delta *= self.step_size</span><br><span class="line">        self.weights += delta * self.eligibility</span><br><span class="line">        self.last_state = state</span><br></pre></td></tr></table></figure>
+<h3 id="true-on-line-TD-λ-算法类"><a href="#true-on-line-TD-λ-算法类" class="headerlink" title="true on-line TD(λ)算法类"></a>true on-line TD(λ)算法类</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># True online TD(lambda) algorithm</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrueOnlineTemporalDifferenceLambda</span><span class="params">(ValueFunction)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rate, step_size)</span>:</span></span><br><span class="line">        ValueFunction.__init__(self, rate, step_size)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">new_episode</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># initialize the eligibility trace</span></span><br><span class="line">        self.eligibility = np.zeros(N_STATES + <span class="number">2</span>)</span><br><span class="line">        <span class="comment"># initialize the beginning state</span></span><br><span class="line">        self.last_state = START_STATE</span><br><span class="line">        <span class="comment"># initialize the old state value</span></span><br><span class="line">        <span class="comment"># 第一次更新的时候，比较纠结的就是w_t-1的值，如果这样设置，</span></span><br><span class="line">        <span class="comment"># 说明初始化w_t-1为0</span></span><br><span class="line">        self.old_state_value = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">learn</span><span class="params">(self, state, reward)</span>:</span></span><br><span class="line">        <span class="comment"># update the eligibility trace and weights</span></span><br><span class="line">        <span class="comment"># 公式12.11，仔细看。。。</span></span><br><span class="line">        last_state_value = self.value(self.last_state)</span><br><span class="line">        state_value = self.value(state)</span><br><span class="line">        dutch = <span class="number">1</span> - self.step_size * self.rate * self.eligibility[self.last_state]</span><br><span class="line">        self.eligibility *= self.rate</span><br><span class="line">        self.eligibility[self.last_state] += dutch</span><br><span class="line">        delta = reward + state_value - last_state_value</span><br><span class="line">        self.weights += self.step_size * (delta + last_state_value - self.old_state_value) * self.eligibility</span><br><span class="line">        self.weights[self.last_state] -= self.step_size * (last_state_value - self.old_state_value)</span><br><span class="line">        self.old_state_value = state_value</span><br><span class="line">        self.last_state = state</span><br></pre></td></tr></table></figure>
+<h2 id="完成一次更新"><a href="#完成一次更新" class="headerlink" title="完成一次更新"></a>完成一次更新</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 19-state random walk</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_walk</span><span class="params">(value_function)</span>:</span></span><br><span class="line">    value_function.new_episode()</span><br><span class="line">    state = START_STATE</span><br><span class="line">    <span class="keyword">while</span> state <span class="keyword">not</span> <span class="keyword">in</span> END_STATES:</span><br><span class="line">        next_state = state + np.random.choice([<span class="number">-1</span>, <span class="number">1</span>])</span><br><span class="line">        <span class="keyword">if</span> next_state == <span class="number">0</span>:</span><br><span class="line">            reward = <span class="number">-1</span></span><br><span class="line">        <span class="keyword">elif</span> next_state == N_STATES + <span class="number">1</span>:</span><br><span class="line">            reward = <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            reward = <span class="number">0</span></span><br><span class="line">        value_function.learn(next_state, reward)</span><br><span class="line">        state = next_state</span><br></pre></td></tr></table></figure>
+<h2 id="该函数用来计算给定不同的参数的学习算法的均方误差-square-value-error"><a href="#该函数用来计算给定不同的参数的学习算法的均方误差-square-value-error" class="headerlink" title="该函数用来计算给定不同的参数的学习算法的均方误差(square value error)"></a>该函数用来计算给定不同的参数的学习算法的均方误差(square value error)</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># general plot framework</span></span><br><span class="line"><span class="comment"># @valueFunctionGenerator: generate an instance of value function</span></span><br><span class="line"><span class="comment"># @runs: specify the number of independent runs</span></span><br><span class="line"><span class="comment"># @lambdas: a series of different lambda values</span></span><br><span class="line"><span class="comment"># @alphas: sequences of step size for each lambda</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parameter_sweep</span><span class="params">(value_function_generator, runs, lambdas, alphas)</span>:</span></span><br><span class="line">    <span class="comment"># play for 10 episodes for each run</span></span><br><span class="line">    episodes = <span class="number">10</span></span><br><span class="line">    <span class="comment"># track the rms errors</span></span><br><span class="line">    errors = [np.zeros(len(alphas_)) <span class="keyword">for</span> alphas_ <span class="keyword">in</span> alphas]</span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> tqdm(range(runs)):</span><br><span class="line">        <span class="keyword">for</span> lambdaIndex, rate <span class="keyword">in</span> zip(range(len(lambdas)), lambdas):</span><br><span class="line">            <span class="keyword">for</span> alphaIndex, alpha <span class="keyword">in</span> zip(range(len(alphas[lambdaIndex])), alphas[lambdaIndex]):</span><br><span class="line">                valueFunction = value_function_generator(rate, alpha)</span><br><span class="line">                <span class="keyword">for</span> episode <span class="keyword">in</span> range(episodes):</span><br><span class="line">                    random_walk(valueFunction)</span><br><span class="line">                    stateValues = [valueFunction.value(state) <span class="keyword">for</span> state <span class="keyword">in</span> STATES]</span><br><span class="line">                    errors[lambdaIndex][alphaIndex] += np.sqrt(np.mean(np.power(stateValues - TRUE_VALUE[<span class="number">1</span>: <span class="number">-1</span>], <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># average over runs and episodes</span></span><br><span class="line">    <span class="keyword">for</span> error <span class="keyword">in</span> errors:</span><br><span class="line">        error /= episodes * runs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(lambdas)):</span><br><span class="line">        plt.plot(alphas[i], errors[i], label=<span class="string">'lambda = '</span> + str(lambdas[i]))</span><br><span class="line">    plt.xlabel(<span class="string">'alpha'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'RMS error'</span>)</span><br><span class="line">    plt.legend()</span><br></pre></td></tr></table></figure>
+<h2 id="将上述3种算法不同参数下的均方误差绘制成图像"><a href="#将上述3种算法不同参数下的均方误差绘制成图像" class="headerlink" title="将上述3种算法不同参数下的均方误差绘制成图像"></a>将上述3种算法不同参数下的均方误差绘制成图像</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Figure 12.3: Off-line lambda-return algorithm</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_12_3</span><span class="params">()</span>:</span></span><br><span class="line">    lambdas = [<span class="number">0.0</span>, <span class="number">0.4</span>, <span class="number">0.8</span>, <span class="number">0.9</span>, <span class="number">0.95</span>, <span class="number">0.975</span>, <span class="number">0.99</span>, <span class="number">1</span>]</span><br><span class="line">    alphas = [np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.55</span>, <span class="number">0.05</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.22</span>, <span class="number">0.02</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.11</span>, <span class="number">0.01</span>)]</span><br><span class="line">    parameter_sweep(OffLineLambdaReturn, <span class="number">50</span>, lambdas, alphas)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_12_3.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Figure 12.6: TD(lambda) algorithm</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_12_6</span><span class="params">()</span>:</span></span><br><span class="line">    lambdas = [<span class="number">0.0</span>, <span class="number">0.4</span>, <span class="number">0.8</span>, <span class="number">0.9</span>, <span class="number">0.95</span>, <span class="number">0.975</span>, <span class="number">0.99</span>, <span class="number">1</span>]</span><br><span class="line">    alphas = [np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.99</span>, <span class="number">0.09</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.55</span>, <span class="number">0.05</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.33</span>, <span class="number">0.03</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.22</span>, <span class="number">0.02</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.11</span>, <span class="number">0.01</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.044</span>, <span class="number">0.004</span>)]</span><br><span class="line">    parameter_sweep(TemporalDifferenceLambda, <span class="number">50</span>, lambdas, alphas)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_12_6.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Figure 12.7: True online TD(lambda) algorithm</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_12_8</span><span class="params">()</span>:</span></span><br><span class="line">    lambdas = [<span class="number">0.0</span>, <span class="number">0.4</span>, <span class="number">0.8</span>, <span class="number">0.9</span>, <span class="number">0.95</span>, <span class="number">0.975</span>, <span class="number">0.99</span>, <span class="number">1</span>]</span><br><span class="line">    alphas = [np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">1.1</span>, <span class="number">0.1</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.88</span>, <span class="number">0.08</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.44</span>, <span class="number">0.04</span>),</span><br><span class="line">              np.arange(<span class="number">0</span>, <span class="number">0.11</span>, <span class="number">0.01</span>)]</span><br><span class="line">    parameter_sweep(TrueOnlineTemporalDifferenceLambda, <span class="number">50</span>, lambdas, alphas)</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_12_8.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_12_3()</span><br><span class="line">figure_12_6()</span><br><span class="line">figure_12_8()</span><br></pre></td></tr></table></figure>
+<pre><code>100%|██████████| 50/50 [04:19&lt;00:00,  5.09s/it]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fymkhhdwisj30az07e74z.jpg" alt="png"> </p>
+<pre><code>100%|██████████| 50/50 [01:05&lt;00:00,  1.26s/it]
+</code></pre><p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fymki2gso6j30az07ejrz.jpg" alt="png"> </p>
+<pre><code>100%|██████████| 50/50 [01:13&lt;00:00,  1.46s/it]
+</code></pre><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fymkiydu9hj30az07et9e.jpg" alt="png"> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Jupyter-Notebook/" rel="tag"># Reinforcement Learning Jupyter Notebook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/24/Chapter12-Eligibility-Traces/" rel="next" title="Chapter12 Eligibility Traces">
+                <i class="fa fa-chevron-left"></i> Chapter12 Eligibility Traces
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/27/Chapter12-mountain-car/" rel="prev" title="Chapter12 mountain car">
+                Chapter12 mountain car <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入模块并定义常量"><span class="nav-number">2.</span> <span class="nav-text">引入模块并定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将TD-λ-算法封装为类，提供接口给agent，用来在交互过程中训练weight"><span class="nav-number">3.</span> <span class="nav-text">将TD(λ)算法封装为类，提供接口给agent，用来在交互过程中训练weight</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本算法类，只对TD-λ-算法使用的数据进行定义，用来在其他算法类中使用"><span class="nav-number">3.1.</span> <span class="nav-text">基本算法类，只对TD(λ)算法使用的数据进行定义，用来在其他算法类中使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#off-line-λ-return算法类"><span class="nav-number">3.2.</span> <span class="nav-text">off-line λ-return算法类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TD-λ-算法类"><span class="nav-number">3.3.</span> <span class="nav-text">TD(λ)算法类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#true-on-line-TD-λ-算法类"><span class="nav-number">3.4.</span> <span class="nav-text">true on-line TD(λ)算法类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完成一次更新"><span class="nav-number">4.</span> <span class="nav-text">完成一次更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#该函数用来计算给定不同的参数的学习算法的均方误差-square-value-error"><span class="nav-number">5.</span> <span class="nav-text">该函数用来计算给定不同的参数的学习算法的均方误差(square value error)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将上述3种算法不同参数下的均方误差绘制成图像"><span class="nav-number">6.</span> <span class="nav-text">将上述3种算法不同参数下的均方误差绘制成图像</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

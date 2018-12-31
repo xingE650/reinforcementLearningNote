@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Reinforcement Learning Note,">
 
 
 
@@ -79,14 +79,47 @@
 
 
 
-<meta name="keywords" content="Programming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
-<meta property="og:url" content="http://yoursite.com/archives/2018/11/page/2/index.html">
+<meta name="description" content="目前为止讨论的的强化学习算法都是基于value的，即通过学习value来决定policy，这章绕过value这个学习目标，虽然仍然会更新value，但是学习目标是得到一个参数化的policy，来直接进行决策。">
+<meta name="keywords" content="Reinforcement Learning Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter13 Policy Gradient Methods">
+<meta property="og:url" content="http://yoursite.com/2018/12/28/Chapter13-Policy-Gradient-Methods/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="目前为止讨论的的强化学习算法都是基于value的，即通过学习value来决定policy，这章绕过value这个学习目标，虽然仍然会更新value，但是学习目标是得到一个参数化的policy，来直接进行决策。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyoisy11laj308r01ut8l.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyokfm3loej306r01owed.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyokq8bm0kj30ix09kaal.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyolzgxay9j305901nmwy.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyotvhdy5mj30b601odfp.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyotz965oyj30qg0erq53.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyouuzhclmj30nf0dadh1.jpg">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?\sum_{a}^{&space;}\bigtriangledown&space;\pi&space;(a|s)q_{\pi}(s,a)\&space;+&space;\&space;\sum_{s^{'}}^{&space;}p(s^{'}|s,a)\sum_{a}^{&space;}\pi(a|s)\sum_{a^{'}}^{&space;}\bigtriangledown&space;\pi&space;(a^{'}|s^{'})q_{\pi}(s^{'},a^{'})+...">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyovec517xj30ny09xjs6.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyovv4aaqzj30bp046dfu.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyovvzgwa3j30q106aaao.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyovx8lal3j309001zdfp.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyow6ent2xj30qe08fwfn.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fypoh1k0fgj30cd023745.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fypommf6l1j30dq01qjra.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fypoo8xo0lj30h80213yd.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fypp1i0ei7j30qi0ahq4j.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyppnpcapzj30gh0563yu.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyppopro2vj30qc0ddjt3.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyppst8ln2j30qb0g8acb.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fypq00qkg1j30qb0fhdhz.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fypq7o8fcuj30ok074q3h.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fypqc374voj30l40cm3zc.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fypqe821d9j30et02ca9y.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fypqsdq38fj309802mt8l.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fypquurbrbj30ct028wef.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fypqwcu4lsj30fa02et8l.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fypqygkie1j30hy04wwep.jpg">
+<meta property="og:updated_time" content="2018-12-31T03:05:33.976Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta name="twitter:title" content="Chapter13 Policy Gradient Methods">
+<meta name="twitter:description" content="目前为止讨论的的强化学习算法都是基于value的，即通过学习value来决定policy，这章绕过value这个学习目标，虽然仍然会更新value，但是学习目标是得到一个参数化的policy，来直接进行决策。">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyoisy11laj308r01ut8l.jpg">
 
 
 
@@ -116,13 +149,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2018/11/page/2/">
+  <link rel="canonical" href="http://yoursite.com/2018/12/28/Chapter13-Policy-Gradient-Methods/">
 
 
 
 
 
-  <title>Archive | Oppai>///<</title>
+  <title>Chapter13 Policy Gradient Methods | Oppai>///<</title>
   
 
 
@@ -141,7 +174,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -263,285 +296,219 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 40 posts in total. Keep on posting.
-      </span>
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/28/Chapter13-Policy-Gradient-Methods/">
 
-      
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">Chapter13 Policy Gradient Methods</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-28T17:05:39+08:00">
+                2018-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/15/Chapter02-softmax-theory/" itemprop="url">
-              
-                <span itemprop="name">Chapter02 softmax-theory</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-15T17:28:19+08:00" content="2018-11-15">
-          11-15
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/14/Chapter02-Multi-armed-Bandits/" itemprop="url">
-              
-                <span itemprop="name">Chapter02 Multi-armed Bandits</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-14T19:42:41+08:00" content="2018-11-14">
-          11-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/14/Chapter01-Tic-Tac-Toe/" itemprop="url">
-              
-                <span itemprop="name">Chapter01 Tic-Tac-Toe</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-14T17:28:04+08:00" content="2018-11-14">
-          11-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p>目前为止讨论的的强化学习算法都是基于value的，即通过学习value来决定policy，这章绕过value这个学习目标，虽然仍然会更新value，但是学习目标是得到一个参数化的policy，来直接进行决策。</p>
+<a id="more"></a>
+<h2 id="Policy-Approximation-and-its-Advantages"><a href="#Policy-Approximation-and-its-Advantages" class="headerlink" title="Policy Approximation and its Advantages"></a>Policy Approximation and its Advantages</h2><p>policy可以以任意形式参数化，前提是policy：π(a|s,Θ)关于它的参数是可微分的，即∇_θ π(a|s,θ)存在且有限，同时为了保证policy可以提供exploration，π(s|a,Θ)不能是决定的，即∈(0,1), for all s,a,θ.这个section首先讨论离散的action的一种常见的参数化policy方式，以及其对应的优点，关于连续的action会在本章后续section进行讨论。</p>
+<p>如果action离散且有限，那么一种常见的参数化方法就是为每个state-action对设置偏爱值：preferences h(s, a, θ) ∈ R，对应的公式和在<a href="https://xinge650.github.io/2018/11/14/Chapter02-Multi-armed-Bandits/" target="_blank" rel="noopener">第二章</a>里使用的preference一致，通过如下的softmax分布来选取对应的偏爱值高的action：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyoisy11laj308r01ut8l.jpg" alt="png"> </p>
+<p>使用基于action preference: h(s|a)有以下3个优点：</p>
+<p>1、最直接的优点就是基于action preference的参数化policy更接近于deterministic policy，而前面经常用的基于action value的epsilon-greedy会有一定概率选择随机的action。当然你会考虑是否可以使用基于action value的softmax分布来选择action?这也是不无依据的，wiki上关于softmax在RL的应用有如下公式：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyokfm3loej306r01owed.jpg" alt="png"> </p>
+<p>随着训练过程，action value将会收敛，导致基于action value的softmax分布收敛到一系列确定的值。但是注意到这里还有一个 temperature parameter:τ，如果τ过大，会导致softmax分布近似为均匀分布，所以希望τ可以适应action value的变化。一般情况下，在训练中随着action value的收敛，需要不断减少τ的值来增强deterministic，但是减少的方法以及τ的初始值都需要对action value有一定的先验知识，使得实现起来比较困难。但是基于action preference的softmax分布就不存在这样的问题，因为它得到的不是确定的值，而是得到optimal stochastic policy。</p>
+<p>2、在讨论第二个优点前，先看一个如下的MDP例子：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyokq8bm0kj30ix09kaal.jpg" alt="png"> </p>
+<p>第一个和第三个state的action导致的结果是正常的，但是第二个state的action导致的结果是相反的，每个action的reward都是-1，最右边是terminal state。</p>
+<p>首先是作者对这个问题的认识：</p>
+<p>这个MDP问题是困难的，因为所有的non-terminal state都是相同的；使用epsilon-greedy方法只有两个方法，epsilon-left或者epsilon-right。但是效果很差，如果使用action preference可以得到确定的optimal policy，对应大约0.59的right action，效果优于epsilon-greedy方法。</p>
+<p>个人觉得这个说法有问题，因为使用epsilon-greedy方法其实是一个评估(evaluation)问题，得到不同的甚至较差的value都是正常的，毕竟你没做优化啊，但是使用action preference的时候通过梯度优化了偏爱函数h(a|s,Θ)，所以拿优化问题的结果和评估问题的结果对比本身就是有问题的。其次就是state的相同性(identical)，个人觉得random walk问题里的state按照这个说法是不是也都一样的呢？明显总体趋势向右可以达到较优化的结果，而且考虑到第二个state的相反性，结果不应该是完全的右向，所以不太认同这里的一致性。</p>
+<p>好了岔远了，现在来讨论第二个优点，即有的问题中最优的policy可能是在多个选择中随机选择的，但是epsilon-greedy不具有这个功能，action preference可以。好吧说实话不太认同。</p>
+<p>3、有的问题action preference效果更好。。。感觉除了第一个优点我觉得可能接近deterministic的approximate policy可能会更快收敛，后两个感觉有点片面了。</p>
+<h2 id="The-Policy-Gradient-Theorem"><a href="#The-Policy-Gradient-Theorem" class="headerlink" title="The Policy Gradient Theorem"></a>The Policy Gradient Theorem</h2><p>要使用GD方法训练policy的参数的话，需要确定一个loss function，这里换了一个名字：performance measure，这里使用符号J(Θ)来表示。在这个section我们先讨论episodic问题，这里我们将episode的start state的基于估计policy π_Θ的state value作为J(Θ):</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyolzgxay9j305901nmwy.jpg" alt="png"> </p>
+<p>那么如何给出J(Θ)对应的梯度那，首先考虑一下J(Θ)的影响元素，应该是action selections and the distribution of states.前者好理解，就是π(a|s,Θ)嘛，但是state distribution还会受到环境的影响，不能直接给出distribution关于参数Θ的微分。但是我们可以借助如下的Policy Gradient Theorem来避开考虑distribution的微分计算梯度：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyotvhdy5mj30b601odfp.jpg" alt="png"> </p>
+<p>正比符号∝在episodic task中表示后者需要乘上episode的平均长度，在continuing task中则直接等价于”=”。上式中的μ(s)可以通过下面的公式理解，可以看到μ(s)不但和policy π有关，同时也受到环境的影响：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyotz965oyj30qg0erq53.jpg" alt="png"> </p>
+<p>关于Policy Gradient Theorem的证明，书上给出了如下公式变换，先看第一部分：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyouuzhclmj30nf0dadh1.jpg" alt="png"> </p>
+<p>看完之后问题最大的就是最后一步，其中Pr(s-&gt;x,k,π)指的是在policy π的条件下，从state s经过k步转换到state x的概率。其实如果把最后一步拆开看就比较明显了：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?\sum_{a}^{&space;}\bigtriangledown&space;\pi&space;(a|s)q_{\pi}(s,a)\&space;&plus;&space;\&space;\sum_{s^{'}}^{&space;}p(s^{'}|s,a)\sum_{a}^{&space;}\pi(a|s)\sum_{a^{'}}^{&space;}\bigtriangledown&space;\pi&space;(a^{'}|s^{'})q_{\pi}(s^{'},a^{'})&plus;..." title="\sum_{a}^{ }\bigtriangledown \pi (a|s)q_{\pi}(s,a)\ + \ \sum_{s^{'}}^{ }p(s^{'}|s,a)\sum_{a}^{ }\pi(a|s)\sum_{a^{'}}^{ }\bigtriangledown \pi (a^{'}|s^{'})q_{\pi}(s^{'},a^{'})+..."></p>
+<p>太长了我就只写2项吧，是不是就可以理解了那？这里还有关于x∈S和k的两个积分号的交换，当k=0时，令Pr(s-&gt;x,0,π)=0 when x≠s即顺利完成交换。</p>
+<p>理解了第一部分第二部分就好办多了，接下来看第二部分的推导：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyovec517xj30ny09xjs6.jpg" alt="png"> </p>
+<p>关于η(s)的替换应该比较清楚了，因为h(s_0) = 1，所以h(s) = 0 when s ≠s_0,可以看到如果是continuing task的话，前面的常数部分=1，如果是episodic task，前面的常数部分等于一个episode的平均长度，因为η(s)代表一个episode中state s出现的平均次数，刚好和上面说的相符。</p>
+<h2 id="REINFORCE-Monte-Carlo-Policy-Gradient"><a href="#REINFORCE-Monte-Carlo-Policy-Gradient" class="headerlink" title="REINFORCE: Monte Carlo Policy Gradient"></a>REINFORCE: Monte Carlo Policy Gradient</h2><p>We are now ready for our first policy-gradient learning algorithm. 8说了，开冲。</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyovv4aaqzj30bp046dfu.jpg" alt="png"> </p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyovvzgwa3j30q106aaao.jpg" alt="png"> </p>
+<p>对应的更新公式如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyovx8lal3j309001zdfp.jpg" alt="png"> </p>
+<p>We call this algorithm REINFORCE.因为使用了Gt，所以需要等待一个episode结束才能完成一次更新，属于MC方法。下面给出对应的伪代码，因为使用了所以的样本来完成更新，所以属于batch-gradient算法。同时这里使用了ln函数，一种在数学上很常见的替换。</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyow6ent2xj30qe08fwfn.jpg" alt="png"> </p>
+<p>当π(a|s,Θ)使用线性h(Θ)的softmax函数时，微分项可以写作如下形式：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fypoh1k0fgj30cd023745.jpg" alt="png"> </p>
+<h2 id="REINFORCE-with-Baseline"><a href="#REINFORCE-with-Baseline" class="headerlink" title="REINFORCE with Baseline"></a>REINFORCE with Baseline</h2><p>可以给policy gradient theorem的action value部分添加一个baseline，公式如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fypommf6l1j30dq01qjra.jpg" alt="png"> </p>
+<p>原理是因为baseline引入的总和为0，所以总体上并没有改变梯度的值：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fypoo8xo0lj30h80213yd.jpg" alt="png"> </p>
+<p>因为上一个section使用的是MC方法的REINFORCE方法，所以自然想到使用由MC方法训练得到的w来估计v(St,w)并作为baseline，因为不同的state的value差别可能很大，使用和Gt相适应的baseline，可以有效的降低方差(variance)，下面给出对应的伪代码：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fypp1i0ei7j30qi0ahq4j.jpg" alt="png"> </p>
+<h2 id="Actor–Critic-Methods"><a href="#Actor–Critic-Methods" class="headerlink" title="Actor–Critic Methods"></a>Actor–Critic Methods</h2><p>前面使用的MC方法，并没有引入bootstrape，给定的baseline也只是单独的更新，而没有借助到其它的value。事实上通过actor-critic，借助其它value来维护baseline，可以进一步提高训练速度，通过在训练过程中适当的引入bias，可以降低最终的variance，得到全局的优化结果。可以使用如下的更新公式，将one-step的bootstrape引入更新：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyppnpcapzj30gh0563yu.jpg" alt="png"> </p>
+<p>给出对应的伪代码：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyppopro2vj30qc0ddjt3.jpg" alt="png"> </p>
+<p>如果将TD(0)替换为λ-return方法，加入Eligibility trace，就可以将backward view引入更新公式，伪代码如下：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyppst8ln2j30qb0g8acb.jpg" alt="png"> </p>
+<h2 id="Policy-Gradient-for-Continuing-Problems"><a href="#Policy-Gradient-for-Continuing-Problems" class="headerlink" title="Policy Gradient for Continuing Problems"></a>Policy Gradient for Continuing Problems</h2><p>前面使用的policy gradient theorem对应continuing task仍然适用，通过添加average reward，可以将episodic task的伪代码迁移到continuing task中使用：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fypq00qkg1j30qb0fhdhz.jpg" alt="png"></p>
+<p>对应的证明如下：</p>
+<p>第一部分的推导很常规，公式如下：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fypq7o8fcuj30ok074q3h.jpg" alt="png"> </p>
+<p>在episodic task中，J(Θ)使用的是start state的value，因为这个值不依赖于s，倒也不是说没有关系，但是不是s的函数，即J(Θ)最终是S空间的综合作用。采用一样的想法，continuing task使用r(Θ)作为J(Θ)，即average reward，对应的梯度如下，可以看到结果和episodic task一致，但是仍然应该明白它们对应的J(Θ)的意义是不同的：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fypqc374voj30l40cm3zc.jpg" alt="png"> </p>
+<p>这里涉及到continuing task的distribution问题，和episodic task不一样，这里的μ(s)不是离散的不同的值，而是一个在整个S空间上一致的函数，对应的递推公式如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fypqe821d9j30et02ca9y.jpg" alt="png"> </p>
+<h2 id="Policy-Parameterization-for-Continuous-Actions"><a href="#Policy-Parameterization-for-Continuous-Actions" class="headerlink" title="Policy Parameterization for Continuous Actions"></a>Policy Parameterization for Continuous Actions</h2><p>参数化的policy方法可以适用于action连续的问题。假设action的选取范围是一个实数范围，对应正态分布的选取概率：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fypqsdq38fj309802mt8l.jpg" alt="png"> </p>
+<p>可以将policy函数设置为参数化的p(x)，对应的公式如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fypquurbrbj30ct028wef.jpg" alt="png"> </p>
+<p>换句话说，主要是需要参数化对应的p(x)中的方差项和偏差项，一般使用如下的公式：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fypqwcu4lsj30fa02et8l.jpg" alt="png"> </p>
+<p>更新对应的梯度更新公式如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fypqygkie1j30hy04wwep.jpg" alt="png"> </p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/12/Chapter01-Introduction/" itemprop="url">
-              
-                <span itemprop="name">Chapter01 Introduction</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-12T20:36:12+08:00" content="2018-11-12">
-          11-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/10/some-config-on-next-theme/" itemprop="url">
-              
-                <span itemprop="name">some config on next theme</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-10T17:22:55+08:00" content="2018-11-10">
-          11-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/09/how-to-config-the-hexo/" itemprop="url">
-              
-                <span itemprop="name">my first try of hexo+github</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-09T15:48:47+08:00" content="2018-11-09">
-          11-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/11/08/hello-world/" itemprop="url">
-              
-                <span itemprop="name">Hello World</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-08T16:22:33+08:00" content="2018-11-08">
-          11-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/27/Chapter12-mountain-car/" rel="next" title="Chapter12 mountain car">
+                <i class="fa fa-chevron-left"></i> Chapter12 mountain car
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/28/Chapter13-short-corridor/" rel="prev" title="Chapter13 short corridor">
+                Chapter13 short corridor <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2018/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/2018/11/">1</a><span class="page-number current">2</span>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -549,6 +516,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -569,8 +540,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -641,6 +621,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Approximation-and-its-Advantages"><span class="nav-number">1.</span> <span class="nav-text">Policy Approximation and its Advantages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Policy-Gradient-Theorem"><span class="nav-number">2.</span> <span class="nav-text">The Policy Gradient Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REINFORCE-Monte-Carlo-Policy-Gradient"><span class="nav-number">3.</span> <span class="nav-text">REINFORCE: Monte Carlo Policy Gradient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REINFORCE-with-Baseline"><span class="nav-number">4.</span> <span class="nav-text">REINFORCE with Baseline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Actor–Critic-Methods"><span class="nav-number">5.</span> <span class="nav-text">Actor–Critic Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Gradient-for-Continuing-Problems"><span class="nav-number">6.</span> <span class="nav-text">Policy Gradient for Continuing Problems</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Parameterization-for-Continuous-Actions"><span class="nav-number">7.</span> <span class="nav-text">Policy Parameterization for Continuous Actions</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -781,6 +777,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

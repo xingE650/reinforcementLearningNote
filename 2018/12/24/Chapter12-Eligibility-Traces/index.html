@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Reinforcement Learning Note,">
 
 
 
@@ -79,15 +79,53 @@
 
 
 
-<meta name="keywords" content="Programming">
+<meta name="description" content="在以往的强化学习方法中我们看到，不管是使用纯粹采样的MC方法，还是基于Bellman equation的DP方法以及bootstrape方法，每个value(state or action)都依赖于其后发生的动作，即属于forward view的算法思想：   通过引入Eligibility trace，我们便能够将forward view的算法转变为backward view的算法。">
+<meta name="keywords" content="Reinforcement Learning Note">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter12 Eligibility Traces">
 <meta property="og:url" content="http://yoursite.com/2018/12/24/Chapter12-Eligibility-Traces/index.html">
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="在以往的强化学习方法中我们看到，不管是使用纯粹采样的MC方法，还是基于Bellman equation的DP方法以及bootstrape方法，每个value(state or action)都依赖于其后发生的动作，即属于forward view的算法思想：   通过引入Eligibility trace，我们便能够将forward view的算法转变为backward view的算法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-24T08:19:45.816Z">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl128e0rej30mc06smxv.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyl1ciprbgj30lc01igli.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyl1ecx6uij307y02c3yc.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyl1h2tmiwj30e802f745.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl20k9jruj30gd01mdfp.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyl2i4qvctj30as024dfp.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl2k238j8j306s01la9u.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl2p8x7yzj30lo091751.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyl2rbu8d2j30qb0dagn5.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyl2xrk7itj309d01xdfo.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyl31md7dlj30jv0240sn.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyl46twa6xj30jv0240sn.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyl4bx7sg0j30ah02f746.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyl4hbqhhqj30az01x0sk.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyl4ezlhlfj30j10dtaar.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl4kgpaumj30i20aq753.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyl4tj9t5rj309p054745.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyl59uz5qwj30ew02aa9w.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl5b3iwo1j30a501sdfn.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl5c7ob78j30qj0g2tap.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl5h6rr5yj308s02cdfp.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl5rt7n83j30cw022dfo.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl5wezu90j30lb0f1wfh.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fylay2wa71j30qw0fr0tt.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fylb1iktvsj30qh0jotb5.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fylb9p4exjj30qk0jbjti.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fyle2c3ob6j30e00193yd.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyle39r37sj30bi01f3yc.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyle4ctcnhj308z01hdfo.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyle6tdx9jj309i01cdfn.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyle8t4y0xj30i407l74o.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/large/0070VybLly1fyle9w5bucj309i0113yc.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/large/0070VybLly1fylefbj879j30h604f74j.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/large/0070VybLly1fyleifm7yqj30cb04vdg0.jpg">
+<meta property="og:updated_time" content="2018-12-27T12:47:38.796Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter12 Eligibility Traces">
+<meta name="twitter:description" content="在以往的强化学习方法中我们看到，不管是使用纯粹采样的MC方法，还是基于Bellman equation的DP方法以及bootstrape方法，每个value(state or action)都依赖于其后发生的动作，即属于forward view的算法思想：   通过引入Eligibility trace，我们便能够将forward view的算法转变为backward view的算法。">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/large/0070VybLly1fyl128e0rej30mc06smxv.jpg">
 
 
 
@@ -345,7 +383,98 @@
       
 
       
-        
+        <p>在以往的强化学习方法中我们看到，不管是使用纯粹采样的MC方法，还是基于Bellman equation的DP方法以及bootstrape方法，每个value(state or action)都依赖于其后发生的动作，即属于forward view的算法思想：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl128e0rej30mc06smxv.jpg" alt="png"> </p>
+<p>通过引入Eligibility trace，我们便能够将forward view的算法转变为backward view的算法。</p>
+<a id="more"></a>
+<h2 id="The-λ-return"><a href="#The-λ-return" class="headerlink" title="The λ-return"></a>The λ-return</h2><p>这个算法比较像MC method with approximation，后面的section会看到使用Eligibility trace的MC方法，这两者完全是不同的，所以我认为λ-return方法和TD(λ)不完全一致，两者结合可以得到true on-line算法，但是λ-return仍然是forward view的，而TD(λ)则是将backward view融入了bootstrape方法中的。</p>
+<p>回忆一下在n step-TD中使用的G：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyl1ciprbgj30lc01igli.jpg" alt="png"> </p>
+<p>如果使用不同的n，并将不同的n对应的G进行加权，就可以得到如下的混合的return，我们称之为λ-return：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyl1ecx6uij307y02c3yc.jpg" alt="png"> </p>
+<p>可以看到每个G赋给的weight总和=1。</p>
+<p>上面的λ-return通式对应于continuing task，对于episodic task，λ-return可以改写为如下公式，仍然保证了weight的总和为1：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyl1h2tmiwj30e802f745.jpg" alt="png"> </p>
+<p>如果使用λ-return完成function approximation的weight更新，则使用如下的更新公式，对应的算法称之为off-line λ-return算法：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl20k9jruj30gd01mdfp.jpg" alt="png"> </p>
+<p>这个更新公式通过λ将MC方法和n-step的TD方法联系在一起，如果λ趋于1，那么更新公式趋于MC方法，如果λ趋于0，那么更新公式趋于n-step TD方法，准确来说是one-step TD方法，因为受到λ的幂指数影响。</p>
+<p>通过random walk例子比较off-line λ-return和n-step TD的性能，例子可以参考<a href="https://xinge650.github.io/2018/12/27/Chapter12-19-states-random-walk/" target="_blank" rel="noopener">19-state Random walk</a>。</p>
+<p>目前为止算法仍然是forward view更新的，下一个section将会讨论第一个引入backward view更新的算法TD(λ)。</p>
+<h2 id="TD-λ"><a href="#TD-λ" class="headerlink" title="TD(λ)"></a>TD(λ)</h2><p>理解TD(λ)方法，主要要理解Eligibility trace z。z是和w维度相同的向量。w是一个long-memory的变量，也是我们在多个episode中训练的变量，z却是一个short-memory的变量，在每个episode开头将它初始化为0。一开始可能不理解z的作用，可以先看一下z是如何在w的更新中使用的：</p>
+<p>首先是z的更新：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyl2i4qvctj30as024dfp.jpg" alt="png"></p>
+<p>然后是z在w更新中的使用：</p>
+<p><span id="jump1">( _ゝ`)</span></p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl2k238j8j306s01la9u.jpg" alt="png"> </p>
+<p>其中的δ_t是one-step TD error，可以看到z替代了∇v̂(S_t,w_t)的位置，而且z和后者是同维度的，再结合z的更新公式，我们可以分析得到：z用来调整w各个分量更新的权重，如果令z更新公式里的λ=0，那么TD(λ)就和TD(0)方法一致了，但是z引入了“之前”的state的影响，使得更新算法具有了backward的视角：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl2p8x7yzj30lo091751.jpg" alt="png"> </p>
+<p>使用Eligibility trace z更新的伪代码如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyl2rbu8d2j30qb0dagn5.jpg" alt="png"> </p>
+<p>通过random-walk的例子可以比较TD(λ)和off-line λ-return算法的性能，例子参考<a href="https://xinge650.github.io/2018/12/27/Chapter12-19-states-random-walk/" target="_blank" rel="noopener">19-state Random walk</a>。</p>
+<p>关于TD(λ)的收敛性，可以证明在使用linear approximation function的on-policy训练算法的条件下，w收敛到最小VE的理想w的比例范围内：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyl2xrk7itj309d01xdfo.jpg" alt="png"> </p>
+<h2 id="n-step-Truncated-λ-return-Methods"><a href="#n-step-Truncated-λ-return-Methods" class="headerlink" title="n-step Truncated λ-return Methods"></a>n-step Truncated λ-return Methods</h2><p>在之前提到的λ-return中，因为越往后的state系数很小对应的影响很小，所以可以忽略其影响得到truncated λ-return：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyl31md7dlj30jv0240sn.jpg" alt="png"> </p>
+<p>使用1truncated λ-return进行w更新的算法称为TTD(λ)，更新公式如下：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyl46twa6xj30jv0240sn.jpg" alt="png"> </p>
+<p>TTD(λ)关于truncated λ-return可以使用下面的优化公式计算：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyl4bx7sg0j30ah02f746.jpg" alt="png"> </p>
+<p>注意δ’的w的下标：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyl4hbqhhqj30az01x0sk.jpg" alt="png"> </p>
+<p>给出backup diagram of truncated TD(λ)：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyl4ezlhlfj30j10dtaar.jpg" alt="png"> </p>
+<h2 id="Redoing-Updates-The-Online-λ-return-Algorithm"><a href="#Redoing-Updates-The-Online-λ-return-Algorithm" class="headerlink" title="Redoing Updates: The Online λ-return Algorithm"></a>Redoing Updates: The Online λ-return Algorithm</h2><p>上一个section提到的truncated TD(λ)方法可以改进为on-line算法，具体思路如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl4kgpaumj30i20aq753.jpg" alt="png"> </p>
+<p>即将h遍历1,2,3，…分别完成不同h的更新，每次更新的结束作为下一次更新的开始，比如h=1更新结果作为h=2的w初始值，这种算法称为on-line λ-return algorithm。</p>
+<p>关于on-line和off-line λ-return算法的性能比较，可以参考<a href="https://xinge650.github.io/2018/12/27/Chapter12-19-states-random-walk/" target="_blank" rel="noopener">19-state random-walk</a></p>
+<h2 id="True-Online-TD-λ"><a href="#True-Online-TD-λ" class="headerlink" title="True Online TD(λ)"></a>True Online TD(λ)</h2><p>通过上一个section，我们可以看到on-line算法表现的更好，但是给出的on-line λ-return算法计算复杂度很高，每次h的迭代量很大。我们发现，如果把更新结果写在一个下三角矩阵中，那么只有对角线上的值是有用的：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyl4tj9t5rj309p054745.jpg" alt="png"> </p>
+<p>使用下面的更新规则直接更新对角线上的w，得到true online TD(λ)算法：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyl59uz5qwj30ew02aa9w.jpg" alt="png"> </p>
+<p>其中的z为dutch trace，使用如下公式更新：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl5b3iwo1j30a501sdfn.jpg" alt="png"> </p>
+<p>true online TD(λ)算法的伪代码如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl5c7ob78j30qj0g2tap.jpg" alt="png"></p>
+<p>关于Eligibility trace有如下三种：</p>
+<p>1、TD(λ)使用的，称为<a href="#jump1">accumulating trace</a></p>
+<p>2、早期的算法中经常使用的，称为replacing trace，仅适用于0-1(binary)的feature vector，如Tile Coding产生的feature，公式如下：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl5h6rr5yj308s02cdfp.jpg" alt="png"> </p>
+<p>3、true on-line TD(λ)使用的dutch trace，这种Eligibility trace也是目前最常用的。</p>
+<h2 id="Dutch-Traces-in-Monte-Carlo-Learning"><a href="#Dutch-Traces-in-Monte-Carlo-Learning" class="headerlink" title="Dutch Traces in Monte Carlo Learning"></a>Dutch Traces in Monte Carlo Learning</h2><p>dutch trace一般在TD learning算法中使用，但是事实上它也可以在MC方法中使用，并带来计算上的优化。</p>
+<p>首先看一下基本的MC方法with approximation：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl5rt7n83j30cw022dfo.jpg" alt="png"> </p>
+<p>这里关于return G做如下假设：中间过程的reward都是0，只有到达terminal state的action才产生reward，所以G可以视为常数。</p>
+<p>一般的MC方法会在0-T之间更新T次上式，但是可以将公式展开得到如下一步更新公式：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyl5wezu90j30lb0f1wfh.jpg" alt="png"> </p>
+<p>其中a_T和z_T可以不依赖G独立的进行增量更新：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fylay2wa71j30qw0fr0tt.jpg" alt="png"></p>
+<p>这种方法可以获得更好的计算性能，因为可以不用使用额外的空间来存储episode中所有的feature vector，只用维护两个增量更新的变量即可；计算将分布到每一步中去，而不是在episode结束之后才开始。</p>
+<h2 id="Sarsa-λ"><a href="#Sarsa-λ" class="headerlink" title="Sarsa(λ)"></a>Sarsa(λ)</h2><p>将上面使用的state value改为action value，即可从TD(λ)算法推广得到Sarsa(λ)算法，直接给出伪代码如下:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fylb1iktvsj30qh0jotb5.jpg" alt="png"> </p>
+<p>Sarsa(λ)和n-step Sarsa算法的性能对比可以参考例子<a href="https://xinge650.github.io/2018/12/27/Chapter12-19-mountain-car/" target="_blank" rel="noopener">Example 12.2: Sarsa(λ) on Mountain Car</a></p>
+<p>同理从true on-line TD(λ)算法推广可以得到on-line Sarsa(λ)算法，伪代码如下：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fylb9p4exjj30qk0jbjti.jpg" alt="png"> </p>
+<p>例子同上。</p>
+<h2 id="Stable-Off-policy-Methods-with-Traces"><a href="#Stable-Off-policy-Methods-with-Traces" class="headerlink" title="Stable Off-policy Methods with Traces"></a>Stable Off-policy Methods with Traces</h2><h3 id="GTD-λ"><a href="#GTD-λ" class="headerlink" title="GTD(λ)"></a>GTD(λ)</h3><p>GTD算法的Eligibility trace版本，w更新规则：</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fyle2c3ob6j30e00193yd.jpg" alt="png"> </p>
+<p>δ：</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyle39r37sj30bi01f3yc.jpg" alt="png"> </p>
+<p>z_t使用accumulating trace：</p>
+<p><img src="https://wx3.sinaimg.cn/large/0070VybLly1fyle4ctcnhj308z01hdfo.jpg" alt="png"> </p>
+<p>v_t更新公式：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyle6tdx9jj309i01cdfn.jpg" alt="png"> </p>
+<h3 id="GQ-λ"><a href="#GQ-λ" class="headerlink" title="GQ(λ)"></a>GQ(λ)</h3><p>Gradient-TD algorithm for action values with eligibility traces:</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyle8t4y0xj30i407l74o.jpg" alt="png"> </p>
+<p>z_t：</p>
+<p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fyle9w5bucj309i0113yc.jpg" alt="png"> </p>
+<p>v_t的更新和GTD(λ)一致。</p>
+<h3 id="HTD-λ"><a href="#HTD-λ" class="headerlink" title="HTD(λ)"></a>HTD(λ)</h3><p>a hybrid state-value algorithm combining aspects of GTD(λ) and TD(λ),it is a strict generalization of TD(λ) to off-policy learning, meaning that if the<br>behavior policy happens to be the same as the target policy, then HTD(λ) becomes the same as TD(λ), which is not true for GTD(λ).</p>
+<p>update rule:</p>
+<p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fylefbj879j30h604f74j.jpg" alt="png"> </p>
+<p>可以看到维护了两个Eligibility trace。</p>
+<h3 id="Emphatic-TD-λ"><a href="#Emphatic-TD-λ" class="headerlink" title="Emphatic TD(λ)"></a>Emphatic TD(λ)</h3><p>extension of the one-step Emphatic-TD algorithm from Section 11.8 to eligibility traces(param is Θ):</p>
+<p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fyleifm7yqj30cb04vdg0.jpg" alt="png"> </p>
+
       
     </div>
     
@@ -359,6 +488,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reinforcement-Learning-Note/" rel="tag"># Reinforcement Learning Note</a>
+          
+        </div>
       
 
       
@@ -378,6 +513,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/27/Chapter12-19-states-random-walk/" rel="prev" title="Chapter12 19-states random-walk">
+                Chapter12 19-states random-walk <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -429,8 +568,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -447,7 +595,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">40</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -501,6 +649,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-λ-return"><span class="nav-number">1.</span> <span class="nav-text">The λ-return</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TD-λ"><span class="nav-number">2.</span> <span class="nav-text">TD(λ)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-Truncated-λ-return-Methods"><span class="nav-number">3.</span> <span class="nav-text">n-step Truncated λ-return Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redoing-Updates-The-Online-λ-return-Algorithm"><span class="nav-number">4.</span> <span class="nav-text">Redoing Updates: The Online λ-return Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#True-Online-TD-λ"><span class="nav-number">5.</span> <span class="nav-text">True Online TD(λ)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dutch-Traces-in-Monte-Carlo-Learning"><span class="nav-number">6.</span> <span class="nav-text">Dutch Traces in Monte Carlo Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sarsa-λ"><span class="nav-number">7.</span> <span class="nav-text">Sarsa(λ)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stable-Off-policy-Methods-with-Traces"><span class="nav-number">8.</span> <span class="nav-text">Stable Off-policy Methods with Traces</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GTD-λ"><span class="nav-number">8.1.</span> <span class="nav-text">GTD(λ)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GQ-λ"><span class="nav-number">8.2.</span> <span class="nav-text">GQ(λ)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTD-λ"><span class="nav-number">8.3.</span> <span class="nav-text">HTD(λ)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Emphatic-TD-λ"><span class="nav-number">8.4.</span> <span class="nav-text">Emphatic TD(λ)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
