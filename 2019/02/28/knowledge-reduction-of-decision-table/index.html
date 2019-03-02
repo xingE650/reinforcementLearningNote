@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rough set theory,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前面讨论了粗糙集理论的基础知识，这一部分将讨论知识表达系统的一种——决策表的知识约简算法。">
+<meta name="keywords" content="rough set theory">
+<meta property="og:type" content="article">
+<meta property="og:title" content="决策表的知识约简">
+<meta property="og:url" content="http://yoursite.com/2019/02/28/knowledge-reduction-of-decision-table/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="前面讨论了粗糙集理论的基础知识，这一部分将讨论知识表达系统的一种——决策表的知识约简算法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-02T07:38:48.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="决策表的知识约简">
+<meta name="twitter:description" content="前面讨论了粗糙集理论的基础知识，这一部分将讨论知识表达系统的一种——决策表的知识约简算法。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/28/knowledge-reduction-of-decision-table/">
+
+
+
+
+
+  <title>决策表的知识约简 | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+<!-- 图片轮播js文件cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+
+<!-- 自定义的js文件 -->
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/28/knowledge-reduction-of-decision-table/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">决策表的知识约简</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-28T17:12:36+08:00">
+                2019-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面讨论了粗糙集理论的基础知识，这一部分将讨论知识表达系统的一种——决策表的知识约简算法。</p>
+<a id="more"></a>
+<h2 id="决策表的基本概念"><a href="#决策表的基本概念" class="headerlink" title="决策表的基本概念"></a>决策表的基本概念</h2><h3 id="决策表的定义"><a href="#决策表的定义" class="headerlink" title="决策表的定义"></a>决策表的定义</h3><p>决策表是知识表达系统的一种，关于知识表达系统的定义可以参考<a href="https://xinge650.github.io/2019/02/28/rough-set-theory/#knowledge-representation" target="_blank" rel="noopener">上篇blog</a>，这里不再赘述，主要理解一下决策表的不同的特点：</p>
+<p>$A = C \cup D$，其中C称为条件属性集，每个C中的元素称为C的一个简单属性；D称为决策属性集，且有$C \cap D = \varnothing \, C \ne \varnothing \, D \ne \varnothing$。</p>
+<p>当$IND(C) \subseteq IND(D)$时，我们称决策表是相容的，因为不存在条件属性一致但是决策属性不同的样本。</p>
+<h3 id="决策规则"><a href="#决策规则" class="headerlink" title="决策规则"></a>决策规则</h3><p>给定一个决策表$DT = (U,C \cup D,V,f)$，令$X \in U/IND(C) , Y \in U/IND(D) , \forall x \in X , des(X) = \bigcap_{\forall \alpha \in C}(\alpha,\alpha(x))$表示等价类X的描述；$\forall y \in Y , des(Y) = \bigcap_{\forall \beta \in D}(\beta,\beta(Y))$表示等价类Y的描述，则定义：</p>
+<script type="math/tex; mode=display">r : des(X) \to des(Y) , X \cap Y \ne \varnothing</script><p>为从X到Y的决策规则。因为$IND(C) \subseteq IND(D)$，所以我认为上述公式应该满足$X \subseteq Y$。</p>
+<h2 id="决策表的属性约简算法"><a href="#决策表的属性约简算法" class="headerlink" title="决策表的属性约简算法"></a>决策表的属性约简算法</h2><h3 id="盲目删除属性约简算法"><a href="#盲目删除属性约简算法" class="headerlink" title="盲目删除属性约简算法"></a>盲目删除属性约简算法</h3><p>盲目删除算法的基本思路是：首先任意选择一个条件属性$\alpha_{i} \in C$，如果从决策表中删除该条件属性$\alpha_{i}$使得相对于D的正域没有改变，则说明属性$\alpha_{i}$是C中相对于决策D不必要的，从决策表中删除该属性以及其对应的属性值，然后继续重复上述步骤，直至不能删除其中的任一个元素为止，这时当前的条件属性集就是决策表的一个相对于D的属性约简。</p>
+<p>对应的算法流程如下：</p>
+<p>输入：$DT = (U,C\cup D,V,f)$</p>
+<p>输出：DT的一个相对约简B，$B \in RED_{D}(C)$</p>
+<p>(1) 令B = C</p>
+<p>(2) $\forall \alpha \in C$，若$\alpha \in B$，则令$Mark(\alpha) = 0$，否则令$Mark(\alpha) = 1$</p>
+<p>(3) 任选一个$\alpha \in B$，且$Mark(\alpha) = 0$，令$Mark(\alpha) = 1$，如果有</p>
+<script type="math/tex; mode=display">pos_{IND(B - \{\alpha\})}(D) = pos_{IND(B)}(D)</script><p>则从B中删除条件属性&alpha;，即$B \Leftarrow B-\{\alpha\}$，转到(2)，否则，转到(4)</p>
+<p>(4) 若$ \exists \alpha \in B$ 且$ Mark(\alpha) = 0$，转到(3)，否则输出$B \in RED_{D}(C)$，算法结束。</p>
+<p>盲目算法虽然可以得到一个相对约简，但是不一定能够得到一个满意的相对约简，即约简结果存在很大的随机性，当然也可以采用搜索策略得到所有可能的约简结果，然后验证是否属于$RED_{D}(C)$，但是搜索往往是一个组合爆炸问题，代价很高，效果并不理想。</p>
+<h3 id="基于Pawlak属性重要度的属性约简算法"><a href="#基于Pawlak属性重要度的属性约简算法" class="headerlink" title="基于Pawlak属性重要度的属性约简算法"></a>基于Pawlak属性重要度的属性约简算法</h3><p>首先讨论一下如何“启发式”的计算条件属性的重要度：给定一个DT，$B \subseteq C , \alpha \in C$，定义</p>
+<script type="math/tex; mode=display">sig(\alpha,B;D) = \frac{|pos_{B\cup \alpha}(D)| - |pos_{B}(D)|}{|U|}</script><p>为条件属性&alpha;对条件属性集B相对于决策属性D的重要度，因为分母是定值，所以计算的时候经常省略分母。</p>
+<p>事实上，我们还可以“启发性”的定义各种各样的属性重要度，它在启发式属性约简算法的构造中占有重要地位，如果重要度函数定义的合理，则可以提高决策表属性约简算法的效率。</p>
+<p>对应的算法流程如下：</p>
+<p>输入：$DT = (U,C\cup D,V,f)$</p>
+<p>输出：DT的一个相对约简B，$B \in RED_{D}(C)$</p>
+<p>(1) 计算C相对于D的核$CORE_{D}(C)$</p>
+<p>(2) 令$B = CORE_{D}(C)$，如果$pos_{B}(D) = pos_{C}(D)$，转到(5)</p>
+<p>(3) 取$\forall c_{i} \in C-B$，计算属性重要度$sig(c_{i},B;D)$，求得$c_{m} = argmax_{c_{i} \in C-B}sig(c_{i},B;D)$，若同时存在多个属性满足最大值，则从中选取一个划分集合最少的属性作为$c_{m}$，令$B = B\cup \{c_{m}\}$</p>
+<p>(4) 如果$pos_{B}(D) \ne pos_{C}(D)$，则转到(3)，否则转到(5)</p>
+<p>(5) 输出 $B \in RED_{D}(C)$，算法结束。</p>
+<h3 id="基于差别矩阵的决策表的属性约简算法"><a href="#基于差别矩阵的决策表的属性约简算法" class="headerlink" title="基于差别矩阵的决策表的属性约简算法"></a>基于差别矩阵的决策表的属性约简算法</h3><h4 id="差别矩阵的定义"><a href="#差别矩阵的定义" class="headerlink" title="差别矩阵的定义"></a>差别矩阵的定义</h4><p>决策表的差别矩阵：设DT是一个决策表，其中论域U是对象的一个非空有限集合，$U=\{x_{1},x_{2},…,x_{n}\},|U| = n$，则定义：</p>
+<script type="math/tex; mode=display">
+U_{n \times n} = (c_{ij})_{n \times n} = 
+    \begin{bmatrix}
+    c_{11} & c_{12} & \cdots & c_{1n} \\
+    c_{21} & c_{22} & \cdots & c_{2n} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    c_{n1} & c_{n2} & \cdots & c_{nn} \\    
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    c_{11} & * & \cdots & * \\
+    c_{21} & c_{22} & \cdots & * \\
+    \vdots & \vdots & \ddots & \vdots \\
+    c_{n1} & c_{n2} & \cdots & c_{nn} \\    
+    \end{bmatrix}
+\\  =
+    \begin{bmatrix}
+    c_{11} & c_{12} & \cdots & c_{1n} \\
+    * & c_{22} & \cdots & c_{2n} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    * & * & \cdots & c_{nn} \\    
+    \end{bmatrix}</script><p>为决策表的差别矩阵，矩阵元素的取值满足如下关系：</p>
+<script type="math/tex; mode=display">
+    c_{ij} = 
+    \begin{cases}
+    \{\alpha | (\alpha \in C) \wedge (f_{\alpha}(x_{i}) \ne f_{\alpha}(x_{j}))\} & & f_{D}(x_{i}) \ne f_{D}(x_{j}) \\
+    \varnothing & & f_{D}(x_{i}) \ne f_{D}(x_{j}) \wedge f_{C}(x_{i}) = f_{C}(x_{j})\\
+    - & & f_{D}(x_{i}) = f_{D}(x_{j})\\
+    \end{cases}</script><p>其中如果决策属性D对应相等的两个对象，我们没有必要研究它们存在的差异，所以对应的差别矩阵值为“$-$”；如果存在决策属性值D不同，但是条件属性C值相同的两个对象，那么该决策表一定是不相容的；只有那些决策属性值不同的对象间的不同条件属性才是我们应该研究的重点。</p>
+<h4 id="利用差别矩阵计算核"><a href="#利用差别矩阵计算核" class="headerlink" title="利用差别矩阵计算核"></a>利用差别矩阵计算核</h4><p>在一个<em>相容</em>决策表中，决策表的相对D核等于该决策表的差别矩阵中所有简单属性(单个属性)元素组成的集合，即：</p>
+<script type="math/tex; mode=display">CORE_{D}(C) = \{\alpha | (\alpha \in C) \wedge ((\exists c_{ij} \in M_{n \times n}) \wedge (c_{ij} = \{ \alpha \})) \}</script><p>证明：因为删除上述公式中的属性&alpha;，就无法正确分类对象$x_{i},x_{j}$，即属性&alpha;在C中是绝对必要的，这是充分条件；如果$CORE_{C}(D)$存在这之外的元素，假设为属性&beta;，删除&beta;不会导致差别矩阵的变化，即无法改变C的对象区分能力，所以&beta;是不必要的，所以不存在这样的&beta;，这是必要条件。</p>
+<h4 id="利用差别矩阵计算相对约简"><a href="#利用差别矩阵计算相对约简" class="headerlink" title="利用差别矩阵计算相对约简"></a>利用差别矩阵计算相对约简</h4><p>$\forall B \subseteq C$，若B满足如下两个条件：(1)$\forall c_{ij} \in M_{n \times n}$，当$ c_{ij} \ne \varnothing , c_{ij} \ne -$时，都有$B \cap c_{ij} \ne \varnothing $，(2)B是相对于D独立的。那么B是决策表的一个相对约简。</p>
+<p>证明：由条件(1)可得，属性簇B可以区分所以的决策属性D不同的论域元素$x_{i}$，即有$pos_{IND(B)}(D) \wedge pos_{IND(C)}(D)$成立，又因为$B \subseteq C$，所以必有$pos_{IND(C)}(D) \wedge pos_{IND(B)}(D)$，由此证明得到$pos_{IND(B)}(D) = pos_{IND(C)}(D)$。同时配合条件(2)的独立性，可得B是C上相对于D的一个约简。</p>
+<p>最后给出基于Skowron(差别矩阵的提出者)差别矩阵的决策表属性约简算法流程：</p>
+<p>输入：$DT = (U,C\cup D,V,f)$</p>
+<p>输出：DT的所有相对约简B，$B \in RED_{D}(C)$</p>
+<p>(1) 根据差别矩阵的定义，写出$M_{n \times n}$，因为差别矩阵存在对称性，所以一般写出下(上)矩阵即可</p>
+<p>(2) 搜索差别矩阵的所有元素，若没有&varnothing; ，则转到(3)，反之则为不相容决策表，退出算法</p>
+<p>(3) 搜索决策表差别矩阵中的所有单属性元素，求并得到$CORE_{D}(C)$</p>
+<p>(4) 求出所有包含$CORE_{D}(C)$的可能的属性集合，判断是否满足1、$\forall c_{ij} \in M_{n \times n}(DT)$，当$c_{ij} \ne \varnothing$时，是否有$B \cap c_{ij} \ne \varnothing$，以及2、B是否是独立的。若满足上述两个条件，则令$RED_{D}(C) = RED_{D}(C) \cup \{B\}$</p>
+<p>(5) 输出$RED_{D}(C)$，算法结束。</p>
+<p>该算法还有一个变种，即基于Skowron差别矩阵和<em>属性选择</em>的决策属性约简算法</p>
+<p>输入：$DT = (U,C\cup D,V,f)$</p>
+<p>输出：DT的一个相对约简B，$B \in RED_{D}(C)$</p>
+<p>(1) 求差别矩阵$M_{n \times n} = (c_{ij})_{n \times n}$</p>
+<p>(2) 计算决策表的相对核$CORE_{D}(C)$，令$B = CORE_{D}(C)$</p>
+<p>(3) 对任意的$c_{ij}$，如果$c_{ij} \cup B \ne \varnothing$，则 $c_{ij} = \varnothing$</p>
+<p>(4) 对任意的$c_{ij}$，如果都有$c_{ij} = \varnothing$，额转到(6)，否则转到(5)</p>
+<p>(5) 统计当前差别矩阵中每个属性出现的次数，选取出现次数最多的元素为$\alpha_{m}$，令$B = B \cup \{\alpha_{m}\}$，转到(3)</p>
+<p>(6) 输出 $B \in RED_{D}(C)$，算法结束。</p>
+<p>该变种算法属于一种启发式的思路，即“自下而上”的构造集合B，并在每步中选取<em>最重要的</em>——最有可能属于B的元素加入B，并验证新的集合B是否满足相对约简的条件。</p>
+<h2 id="决策表的值约简算法"><a href="#决策表的值约简算法" class="headerlink" title="决策表的值约简算法"></a>决策表的值约简算法</h2><p>给定一个决策表$DT = (U,C\cup D,V,f)$，经属性约简后得到一个相对约简的关系数据表$T(B) = (U_{B},B\cup D,V,f)$，将表T(B)中的每一个样本视为一条<em>决策规则</em>，这样T(B)就转换为一个决策规则集，在此基础上进行属性值的约简，得到抽象程度更高的决策规则。</p>
+<p>下面介绍一个最简单的属性值约简算法，即决策表的盲目删除值约简算法：</p>
+<p>输入： $T(B) = (U_{B},B\cup D,V,f)$</p>
+<p>输出： 规则集T(B)关于决策属性D的完全简化的一组规则集(值约简)$R \in \widehat{RED_{D}(C)}$</p>
+<p>(1) 设</p>
+<script type="math/tex; mode=display">
+    r_{i}:\bigwedge_{\forall \alpha \in B} (\alpha_{j},\upsilon_{ij}) \to \bigwedge_{\forall \beta \in D}(\beta_{k},\omega_{k}) \\
+    i = 1,2,\cdots,|U_{B}|; \\
+    1 \le j \le |B|; \\
+    1 \le k \le |D|; \\
+    R = \varnothing</script><p>(2) 对于规则集合${r_{i}| 1 \le i \le |U_{B}|}$中的每条规则$r_{i}$，如果从$r_{i}$中删除$(\alpha_{j},\upsilon_{ij})$，其余的规则也同时删除相同的列，及条件属性$\alpha_{j}$所在的列后，不会产生与$r_{i}$不相容的规则，则称属性$\alpha_{j}$下的值$\upsilon_{ij}$是不必要的，反之则为必要的，不能删除。接着上面的结果，继续删除决策规则$r_{i}$中不同属性下的其他值，直至获得规则$r_{i}$的一个完全约简规则$r_{i}^{<em>}$为止，然后令$R \Leftarrow R \cup \{r_{i}^{</em>}\}$，用上述的方法遍历所有的决策规则</p>
+<p>(3) 输出$R \in \widehat{RED_{D}(C)}$</p>
+<p>这种方法得到的结果存在很大的随机性，并不能保证得到的是一个满意的约简。通常需要一些启发式的知识来指导这一过程，比如归纳值约简算法、基于决策矩阵的决策表值约简算法、属性值增量约简算法等。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rough-set-theory/" rel="tag"># rough set theory</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/28/rough-set-theory/" rel="next" title="粗糙集理论">
+                <i class="fa fa-chevron-left"></i> 粗糙集理论
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.mohu.org/info/symbols/symbols.htm" title="latex-common-grammer" target="_blank">latex-common-grammer</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策表的基本概念"><span class="nav-number">1.</span> <span class="nav-text">决策表的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#决策表的定义"><span class="nav-number">1.1.</span> <span class="nav-text">决策表的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决策规则"><span class="nav-number">1.2.</span> <span class="nav-text">决策规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#决策表的属性约简算法"><span class="nav-number">2.</span> <span class="nav-text">决策表的属性约简算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#盲目删除属性约简算法"><span class="nav-number">2.1.</span> <span class="nav-text">盲目删除属性约简算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于Pawlak属性重要度的属性约简算法"><span class="nav-number">2.2.</span> <span class="nav-text">基于Pawlak属性重要度的属性约简算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于差别矩阵的决策表的属性约简算法"><span class="nav-number">2.3.</span> <span class="nav-text">基于差别矩阵的决策表的属性约简算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#差别矩阵的定义"><span class="nav-number">2.3.1.</span> <span class="nav-text">差别矩阵的定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#利用差别矩阵计算核"><span class="nav-number">2.3.2.</span> <span class="nav-text">利用差别矩阵计算核</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#利用差别矩阵计算相对约简"><span class="nav-number">2.3.3.</span> <span class="nav-text">利用差别矩阵计算相对约简</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#决策表的值约简算法"><span class="nav-number">3.</span> <span class="nav-text">决策表的值约简算法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

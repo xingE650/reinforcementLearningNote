@@ -388,9 +388,9 @@
         <p>这章在<a href="https://xinge650.github.io/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" target="_blank" rel="noopener">第9章 On-policy Prediction with Approximation</a>和<a href="https://xinge650.github.io/2018/12/15/Chapter10-On-policy-Control-with-Approximation/" target="_blank" rel="noopener">第10章 On-policy Control with Approximation</a>的基础上，讨论off-policy的approximation方法，主要讲解了off-policy with approximation的预测方法。在tubular方法里，从on-policy方法推广到off-policy方法基本是无痛的，收敛性也可以得到保障，但是这一章会讨论更多关于收敛性和可学习性(Learnable)的话题，理解这些不但可以帮助我们更好的理解off-policy的approximation方法，也可以更好的理解强化学习近似函数训练的本质。</p>
 <p>首先提出off-policy的两个挑战，其实是相对于on-policy算法遇到的一些问题。第一个是target of update，因为off-policy方法使用behavior policy产生的数据更新target policy，所以target in update rule需要做一些改动，这个工作是通过重要采样因子完成的；第二个是distribution of updates，这里的distribution该怎么理解？完成更新所使用的state的分布？老实说我并没有get到this，我能理解的只是，一些显而易见的梯度下降的损失函数，比如BE(Bellman Error)，可能不能保证训练结果，也就是weight的收敛，需要考虑其他的最小化目标。那么我对于distribution of update可以这样理解吗，就是最终学习到的weight会导致value function的分布更趋于哪种，是趋于BE最小，还是RE最小，还是PBE最小等等。换句话说，distribution和target，感觉是approximation function method和tabular method的本质区别，前者更新weight，更新的的是整体state(or action) value的分布，或者函数形式，而后者更新的只是某个具体的value的值。所以两个挑战，只是不同方法的不同表现形式吧？</p>
 <a id="more"></a>
-<pre><code>-----------------------------------------我是分割线( _ゝ`)-----------------------------------------
+<pre><code>                            -----------------------------------------我是分割线( _ゝ`)-----------------------------------------
 </code></pre><p>关于上面提到的distribution of update，我好像懂了。。。因为结合section:Examples of Off-policy Divergence我发现，作者认为on-policy更新时候使用的state，即更新使用的state分布，可以保证收敛，但是因为off-policy的更新取决于behavior policy和target policy，所以自然使用的更新state分布和on-policy不一样，所以导致了例子(就那两个state的短例子)的off-policy方法训练的发散。而且Rich Sutton大佬也说了，如果将counterexample中的DP方法的更新distribution改为on-policy的分布，即使用异步DP，结果就收敛了：</p>
-<font color="green">If we alter just the distribution of DP updates in Baird’s counterexample, from the uniform distribution to the on-policy distribution (which generally requires asynchronous updating), then convergence is guaranteed to a solution with error bounded by (9.14)…..The example shows that even the simplest combination of bootstrapping and function approximation can be unstable if the updates are not done according to the on-policy distribution.</font>
+<font color="green">If we alter just the distribution of DP updates in Baird’s counterexample, from the uniform distribution to the on-policy distribution (which generally requires asynchronous updating), then convergence is guaranteed to a solution with error bounded by (9.14).....The example shows that even the simplest combination of bootstrapping and function approximation can be unstable if the updates are not done according to the on-policy distribution.</font>
 
 <p>所以一开始我对distribution理解看来是错了( _ゝ`)，不过感觉思考的感觉挺有意思就留着吧。。。</p>
 <h2 id="Semi-gradient-Methods"><a href="#Semi-gradient-Methods" class="headerlink" title="Semi-gradient Methods"></a>Semi-gradient Methods</h2><p>这一部分将前面使用过的off-policy方法推广到approximation function上，主要以semi-gradient的形式，这也是在本书中使用的最多的weight update方法，但是需要注意有的方法可能不会收敛，具体的收敛性证明和改进会在后面的section讨论。</p>
@@ -423,7 +423,7 @@
 <h2 id="The-Deadly-Triad"><a href="#The-Deadly-Triad" class="headerlink" title="The Deadly Triad"></a>The Deadly Triad</h2><p>这个标题：死亡三巨头。看后的我是( _ゝ`)的。</p>
 <p>通过上面的例子总结得到，下面三个老哥在一起用，就有可能出现不稳定和发散的危险：</p>
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fydhvpyn2wj30qu07uabb.jpg" alt="png"> </p>
-<p>而且貌似去掉一种方法就可以避免发散)_(눈<em>눈」∠)</em>。那么去掉哪个那？</p>
+<p>而且貌似去掉一种方法就可以避免发散)_(눈_눈」∠)_。那么去掉哪个那？</p>
 <p>function approximation肯定不能去掉，靠这个来估计大型state空间问题那，至少也要用个linear function approximation那。</p>
 <p>去掉bootstrape当然可行，就是放弃了(小声：大量的)计算的性能( _ゝ`)，还有data efficiency，因为直接使用MC方法可以看到会受到一些不好的数据(噪声)的影响，因为毕竟是一致采样的，但是bootstrape方法引入了自举，之前学习到的value estimate可以在一定程度上衰减那些噪点的影响，一般会通过提高n-step方法中的n来降低bootstrape的使用，但是这个方法也是比较让人难以割舍的。</p>
 <p>最后考虑off-policy，大部分问题使用on-policy就可以很好的解决了，那是不是意味着可以取代了off-policy那？本书中不涉及这部分知识，但是现在有并行学习的方法，想要并行学习多个target policy，那当然要用off-policy方法了。</p>
@@ -642,7 +642,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -655,7 +655,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -685,6 +685,10 @@
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.mohu.org/info/symbols/symbols.htm" title="latex-common-grammer" target="_blank">latex-common-grammer</a>
                   </li>
                 
               </ul>
@@ -731,7 +735,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -1230,6 +1234,8 @@
   
 
   
+  
+
 
   
 

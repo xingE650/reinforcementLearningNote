@@ -363,15 +363,15 @@
 <p><img src="https://wx1.sinaimg.cn/large/0070VybLly1fxr353b9pjj30b007ewee.jpg" alt="png"> </p>
 <p>可以看到随着多个episode的迭代，使用的step数目逐渐收敛。</p>
 <pre><code>Optimal policy is:
-[&apos;R&apos;, &apos;D&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;L&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;U&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;G&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;R&apos;, &apos;U&apos;, &apos;U&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;U&apos;, &apos;D&apos;, &apos;L&apos;, &apos;L&apos;]
-[&apos;R&apos;, &apos;D&apos;, &apos;R&apos;, &apos;U&apos;, &apos;R&apos;, &apos;U&apos;, &apos;U&apos;, &apos;D&apos;, &apos;R&apos;, &apos;L&apos;]
-[&apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;L&apos;]
+[&#39;R&#39;, &#39;D&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;L&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;U&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;G&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;R&#39;, &#39;U&#39;, &#39;U&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;U&#39;, &#39;D&#39;, &#39;L&#39;, &#39;L&#39;]
+[&#39;R&#39;, &#39;D&#39;, &#39;R&#39;, &#39;U&#39;, &#39;R&#39;, &#39;U&#39;, &#39;U&#39;, &#39;D&#39;, &#39;R&#39;, &#39;L&#39;]
+[&#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;L&#39;]
 Wind strength for each column:
-[&apos;0&apos;, &apos;0&apos;, &apos;0&apos;, &apos;1&apos;, &apos;1&apos;, &apos;1&apos;, &apos;2&apos;, &apos;2&apos;, &apos;1&apos;, &apos;0&apos;]
+[&#39;0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;1&#39;, &#39;1&#39;, &#39;1&#39;, &#39;2&#39;, &#39;2&#39;, &#39;1&#39;, &#39;0&#39;]
 </code></pre><h2 id="二、问题描述"><a href="#二、问题描述" class="headerlink" title="二、问题描述"></a>二、问题描述</h2><p>这个问题在grid-world基础上做了一些改动，主要测试了3种算法的性能：Sarsa、Q-Learning、Expect Sarsa。</p>
 <p><img src="https://wx2.sinaimg.cn/large/0070VybLly1fxqb3l4ogvj30ei05pq32.jpg" alt="png"> </p>
 <p>在一般区域(非阴影部分)action的reward=-1，如果action导致next state落到cliff区域，则reward=-100，而且agent会回到start state。到达goal state的return=0。</p>
@@ -385,15 +385,15 @@ Wind strength for each column:
 </code></pre><p><img src="https://wx4.sinaimg.cn/large/0070VybLly1fxr38dg1asj30b407emxt.jpg" alt="png"></p>
 <p>最终训练结果Sarsa收敛到较安全的位于上部区域的路径(问题描述图片中的 safe path)，Q-Learning收敛到靠近cliff的路径(optimal path)，但是因为epsilon-greedy的behavior policy，所以会导致Q-Learning偶尔会落入cliff，所以最终的总的reward低于Sarsa。</p>
 <pre><code>Sarsa Optimal Policy:
-[&apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;R&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;R&apos;, &apos;R&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;U&apos;, &apos;R&apos;, &apos;R&apos;, &apos;L&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;L&apos;, &apos;U&apos;, &apos;U&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;G&apos;]
+[&#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;R&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;R&#39;, &#39;R&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;U&#39;, &#39;R&#39;, &#39;R&#39;, &#39;L&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;L&#39;, &#39;U&#39;, &#39;U&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;G&#39;]
 Q-Learning Optimal Policy:
-[&apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;R&apos;, &apos;R&apos;, &apos;U&apos;, &apos;D&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;, &apos;D&apos;, &apos;D&apos;]
-[&apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;R&apos;, &apos;D&apos;]
-[&apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;U&apos;, &apos;G&apos;]
+[&#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;R&#39;, &#39;R&#39;, &#39;U&#39;, &#39;D&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;, &#39;D&#39;, &#39;D&#39;]
+[&#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;R&#39;, &#39;D&#39;]
+[&#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;U&#39;, &#39;G&#39;]
 </code></pre><h2 id="Interim-and-asymptotic-performance-of-TD-control-methods-as-a-function-of-α"><a href="#Interim-and-asymptotic-performance-of-TD-control-methods-as-a-function-of-α" class="headerlink" title="Interim and asymptotic performance of TD control methods as a function of α"></a>Interim and asymptotic performance of TD control methods as a function of α</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Due to limited capacity of calculation of my machine, I can't complete this experiment</span></span><br><span class="line"><span class="comment"># with 100,000 episodes and 50,000 runs to get the fully averaged performance</span></span><br><span class="line"><span class="comment"># However even I only play for 1,000 episodes and 10 runs, the curves looks still good.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">figure_6_6</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># α</span></span><br><span class="line">    step_sizes = np.arange(<span class="number">0.1</span>, <span class="number">1.1</span>, <span class="number">0.1</span>)</span><br><span class="line">    episodes = <span class="number">1000</span></span><br><span class="line">    runs = <span class="number">10</span></span><br><span class="line">    <span class="comment"># Asymptotic: 渐进的</span></span><br><span class="line">    ASY_SARSA = <span class="number">0</span></span><br><span class="line">    ASY_EXPECTED_SARSA = <span class="number">1</span></span><br><span class="line">    ASY_QLEARNING = <span class="number">2</span></span><br><span class="line">    <span class="comment"># Interim: 暂时的</span></span><br><span class="line">    INT_SARSA = <span class="number">3</span></span><br><span class="line">    INT_EXPECTED_SARSA = <span class="number">4</span></span><br><span class="line">    INT_QLEARNING = <span class="number">5</span></span><br><span class="line">    methods = range(<span class="number">0</span>, <span class="number">6</span>)</span><br><span class="line"></span><br><span class="line">    performace = np.zeros((<span class="number">6</span>, len(step_sizes)))</span><br><span class="line">    <span class="keyword">for</span> run <span class="keyword">in</span> range(runs):</span><br><span class="line">        <span class="keyword">for</span> ind, step_size <span class="keyword">in</span> tqdm(list(zip(range(<span class="number">0</span>, len(step_sizes)), step_sizes))):</span><br><span class="line">            q_sarsa = np.zeros((WORLD_HEIGHT, WORLD_WIDTH, <span class="number">4</span>))</span><br><span class="line">            q_expected_sarsa = np.copy(q_sarsa)</span><br><span class="line">            q_q_learning = np.copy(q_sarsa)</span><br><span class="line">            <span class="keyword">for</span> ep <span class="keyword">in</span> range(episodes):</span><br><span class="line">                sarsa_reward = sarsa(q_sarsa, expected=<span class="keyword">False</span>, step_size=step_size)</span><br><span class="line">                expected_sarsa_reward = sarsa(q_expected_sarsa, expected=<span class="keyword">True</span>, step_size=step_size)</span><br><span class="line">                q_learning_reward = q_learning(q_q_learning, step_size=step_size)</span><br><span class="line">                performace[ASY_SARSA, ind] += sarsa_reward</span><br><span class="line">                performace[ASY_EXPECTED_SARSA, ind] += expected_sarsa_reward</span><br><span class="line">                performace[ASY_QLEARNING, ind] += q_learning_reward</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ep &lt; <span class="number">100</span>:</span><br><span class="line">                    performace[INT_SARSA, ind] += sarsa_reward</span><br><span class="line">                    performace[INT_EXPECTED_SARSA, ind] += expected_sarsa_reward</span><br><span class="line">                    performace[INT_QLEARNING, ind] += q_learning_reward</span><br><span class="line"></span><br><span class="line">    performace[:<span class="number">3</span>, :] /= episodes * runs</span><br><span class="line">    performace[<span class="number">3</span>:, :] /= <span class="number">100</span> * runs</span><br><span class="line">    labels = [<span class="string">'Asymptotic Sarsa'</span>, <span class="string">'Asymptotic Expected Sarsa'</span>, <span class="string">'Asymptotic Q-Learning'</span>,</span><br><span class="line">              <span class="string">'Interim Sarsa'</span>, <span class="string">'Interim Expected Sarsa'</span>, <span class="string">'Interim Q-Learning'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> method, label <span class="keyword">in</span> zip(methods, labels):</span><br><span class="line">        plt.plot(step_sizes, performace[method, :], label=label)</span><br><span class="line">    plt.xlabel(<span class="string">'alpha'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'reward per episode'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line"></span><br><span class="line">    plt.savefig(<span class="string">'./figure_6_6.png'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">figure_6_6()</span><br></pre></td></tr></table></figure>
 <pre><code>100%|██████████| 10/10 [00:41&lt;00:00,  4.57s/it]
 100%|██████████| 10/10 [00:41&lt;00:00,  4.53s/it]
@@ -527,7 +527,7 @@ Q-Learning Optimal Policy:
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -540,7 +540,7 @@ Q-Learning Optimal Policy:
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -570,6 +570,10 @@ Q-Learning Optimal Policy:
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.mohu.org/info/symbols/symbols.htm" title="latex-common-grammer" target="_blank">latex-common-grammer</a>
                   </li>
                 
               </ul>
@@ -616,7 +620,7 @@ Q-Learning Optimal Policy:
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -1115,6 +1119,8 @@ Q-Learning Optimal Policy:
   
 
   
+  
+
 
   
 

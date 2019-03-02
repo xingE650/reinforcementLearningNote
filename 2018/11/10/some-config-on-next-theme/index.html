@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
 <meta property="og:description" content="上次配置了hexo+github的个人博客，这次我做了一些偏好的配置。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-22T03:00:00.694Z">
+<meta property="og:updated_time" content="2019-03-02T07:52:34.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="some config on next theme">
 <meta name="twitter:description" content="上次配置了hexo+github的个人博客，这次我做了一些偏好的配置。">
@@ -367,6 +367,14 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"jump"</span>&gt;</span>跳转到的地方<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>在跳转的出发点，就是希望点一下跳转的地方放置锚点的链接：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[点击跳转](#jump)</span><br></pre></td></tr></table></figure>
+<h2 id="在Markdown内使用Latex格式公式"><a href="#在Markdown内使用Latex格式公式" class="headerlink" title="在Markdown内使用Latex格式公式"></a>在Markdown内使用Latex格式公式</h2><p>1、更换渲染引擎，从marked更换为kramed</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm uninstall hexo-renderer-marked --save</span><br><span class="line">$ npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
+<p>2、修改主题配置文件/theme/next/_config.yml，开启mathjax功能，并修改cdn值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mathjax:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  per_page: <span class="literal">true</span></span><br><span class="line"><span class="comment"># cdn: //cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span></span><br><span class="line">  cdn: //cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML</span><br></pre></td></tr></table></figure>
+<p>3、解决语义冲突，在hexo目录下找到文件node_modules/kramed/lib/rules/inline.js，找到如下位置进行修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//escape: /^\\([\\`*&#123;&#125;\[\]()<span class="comment">#$+\-.!_&gt;])/,</span></span><br><span class="line">escape: /^\\([`*\[\]()<span class="comment">#$+\-.!_&gt;])/,</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">//em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span><br><span class="line">em: /^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span><br></pre></td></tr></table></figure>
+<p>4、在写blog时候，在tags:下一行添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mathjax: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -487,7 +495,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -500,7 +508,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -532,6 +540,10 @@
                     <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.mohu.org/info/symbols/symbols.htm" title="latex-common-grammer" target="_blank">latex-common-grammer</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -551,7 +563,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#更换主题为next"><span class="nav-number">1.</span> <span class="nav-text">更换主题为next</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加搜索功能"><span class="nav-number">2.</span> <span class="nav-text">添加搜索功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加渐变更换的壁纸"><span class="nav-number">3.</span> <span class="nav-text">添加渐变更换的壁纸</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Markdown内添加html锚点来实现页面内跳转"><span class="nav-number">4.</span> <span class="nav-text">在Markdown内添加html锚点来实现页面内跳转</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#更换主题为next"><span class="nav-number">1.</span> <span class="nav-text">更换主题为next</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加搜索功能"><span class="nav-number">2.</span> <span class="nav-text">添加搜索功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加渐变更换的壁纸"><span class="nav-number">3.</span> <span class="nav-text">添加渐变更换的壁纸</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Markdown内添加html锚点来实现页面内跳转"><span class="nav-number">4.</span> <span class="nav-text">在Markdown内添加html锚点来实现页面内跳转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Markdown内使用Latex格式公式"><span class="nav-number">5.</span> <span class="nav-text">在Markdown内使用Latex格式公式</span></a></li></ol></div>
             
 
           </div>
@@ -576,7 +588,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -1075,6 +1087,8 @@
   
 
   
+  
+
 
   
 
