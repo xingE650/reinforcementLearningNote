@@ -7,6 +7,7 @@
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.8.0">
+<meta name="referrer" content="no-referrer">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -264,6 +265,130 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/08/config-for-arias/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/08/config-for-arias/" itemprop="url">config for aria2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-08T19:16:18+08:00">
+                2019-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>今天因为需要下载kaggle上的iwildcam比赛的数据集，折腾了一下aria2，下面记录一下过程备忘，and，之前的博客使用了大量的新浪图床的图片外链，最近发现新浪已经开始限制外链引用了，本文会给出解决方案，但是为了保险起见，近期最好将这些图片进行替换。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/05/08/config-for-arias/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -1389,131 +1514,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/19/Chapter11-Off-policy-Methods-with-Approximation/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xingE650">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Oppai>///<">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/19/Chapter11-Off-policy-Methods-with-Approximation/" itemprop="url">Chapter11 Off-policy Methods with Approximation</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-19T09:34:03+08:00">
-                2018-12-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>这章在<a href="https://xinge650.github.io/2018/12/08/Chapter09-On-policy-Prediction-with-Approximation/" target="_blank" rel="noopener">第9章 On-policy Prediction with Approximation</a>和<a href="https://xinge650.github.io/2018/12/15/Chapter10-On-policy-Control-with-Approximation/" target="_blank" rel="noopener">第10章 On-policy Control with Approximation</a>的基础上，讨论off-policy的approximation方法，主要讲解了off-policy with approximation的预测方法。在tubular方法里，从on-policy方法推广到off-policy方法基本是无痛的，收敛性也可以得到保障，但是这一章会讨论更多关于收敛性和可学习性(Learnable)的话题，理解这些不但可以帮助我们更好的理解off-policy的approximation方法，也可以更好的理解强化学习近似函数训练的本质。</p>
-<p>首先提出off-policy的两个挑战，其实是相对于on-policy算法遇到的一些问题。第一个是target of update，因为off-policy方法使用behavior policy产生的数据更新target policy，所以target in update rule需要做一些改动，这个工作是通过重要采样因子完成的；第二个是distribution of updates，这里的distribution该怎么理解？完成更新所使用的state的分布？老实说我并没有get到this，我能理解的只是，一些显而易见的梯度下降的损失函数，比如BE(Bellman Error)，可能不能保证训练结果，也就是weight的收敛，需要考虑其他的最小化目标。那么我对于distribution of update可以这样理解吗，就是最终学习到的weight会导致value function的分布更趋于哪种，是趋于BE最小，还是RE最小，还是PBE最小等等。换句话说，distribution和target，感觉是approximation function method和tabular method的本质区别，前者更新weight，更新的的是整体state(or action) value的分布，或者函数形式，而后者更新的只是某个具体的value的值。所以两个挑战，只是不同方法的不同表现形式吧？</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/12/19/Chapter11-Off-policy-Methods-with-Approximation/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1566,7 +1566,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1579,7 +1579,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
