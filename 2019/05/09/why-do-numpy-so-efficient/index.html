@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+<meta name="referrer" content="no-referrer">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="machine learning,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="之前在毕设中使用了numpy来完成进化算法的优化，比起使用python自带的数据类型list，速度提高了将近10倍，但是为什么numpy如此地高效，我在网上的博客看到的理解主要有两点：优化的存储管理和使用了低级语言完成性能优化。通过学习论文The NumPy Array: A Structure for Efficient Numerical Computation来详细了解一下其中的原理吧^_^">
+<meta name="keywords" content="machine learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="why do numpy so efficient">
+<meta property="og:url" content="http://yoursite.com/2019/05/09/why-do-numpy-so-efficient/index.html">
+<meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
+<meta property="og:description" content="之前在毕设中使用了numpy来完成进化算法的优化，比起使用python自带的数据类型list，速度提高了将近10倍，但是为什么numpy如此地高效，我在网上的博客看到的理解主要有两点：优化的存储管理和使用了低级语言完成性能优化。通过学习论文The NumPy Array: A Structure for Efficient Numerical Computation来详细了解一下其中的原理吧^_^">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-09T12:32:54.352Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="why do numpy so efficient">
+<meta name="twitter:description" content="之前在毕设中使用了numpy来完成进化算法的优化，比起使用python自带的数据类型list，速度提高了将近10倍，但是为什么numpy如此地高效，我在网上的博客看到的理解主要有两点：优化的存储管理和使用了低级语言完成性能优化。通过学习论文The NumPy Array: A Structure for Efficient Numerical Computation来详细了解一下其中的原理吧^_^">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/09/why-do-numpy-so-efficient/">
+
+
+
+
+
+  <title>why do numpy so efficient | Oppai>///<</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oppai>///<</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/09/why-do-numpy-so-efficient/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xingE650">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oppai>///<">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">why do numpy so efficient</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-09T10:17:32+08:00">
+                2019-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前在毕设中使用了numpy来完成进化算法的优化，比起使用python自带的数据类型list，速度提高了将近10倍，但是为什么numpy如此地高效，我在网上的博客看到的理解主要有两点：优化的存储管理和使用了低级语言完成性能优化。通过学习论文<a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=5725236" target="_blank" rel="noopener">The NumPy Array: A Structure for Efficient Numerical Computation</a>来详细了解一下其中的原理吧^_^。</p>
+<a id="more"></a>
+<h2 id="numpy-ndarray-structure-A-View-on-Memory"><a href="#numpy-ndarray-structure-A-View-on-Memory" class="headerlink" title="numpy.ndarray structure:A View on Memory"></a>numpy.ndarray structure:A View on Memory</h2><p>自己的标题感觉没有论文的标题更生动，所以就借用了。numpy.ndarray是numpy的基本数据类型，它使用如下的数据结构来管理内存：</p>
+<p>(1)data pointer: 存储ndarray在内存块中的首地址</p>
+<p>(2)data type description: 数据类型</p>
+<p>(3)shape: ndarray的shape属性</p>
+<p>(4)strides: 存储为了维度搜索所需要跳过的byte数。这个只看定义有点抽象，可以通过下面的例子来理解：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a=np.random.random((<span class="number">10</span>,<span class="number">10</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.dtype </span><br><span class="line">dtype(<span class="string">'float64'</span>) <span class="comment"># a每个元素是float64型的，占用8byte</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.strides <span class="comment"># 如果从a[0][1]跳转到a[1][0]则需要跳过10*8byte，从a[0][0]-&gt;a[0][1]则需要8byte</span></span><br><span class="line">(<span class="number">80</span>, <span class="number">8</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b=np.zeros((<span class="number">10</span>,<span class="number">10</span>)).astype(np.int)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c=np.zeros((<span class="number">10</span>,<span class="number">10</span>)).astype(np.byte)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b.dtype</span><br><span class="line">dtype(<span class="string">'int64'</span>) <span class="comment"># b是int64型的，和a的strides应该是一样的</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b.strides</span><br><span class="line">(<span class="number">80</span>, <span class="number">8</span>) <span class="comment"># 和c.strides一样</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c.dtype</span><br><span class="line">dtype(<span class="string">'int8'</span>) <span class="comment"># c是int8型的，所以同理推理可以得到c.strides=(10,1)</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c.strides</span><br><span class="line">(<span class="number">10</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>(5)flags: 定义的一些因素(factors),也是通过下面的例子看一下吧：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 环境承接上面</span></span><br><span class="line"><span class="comment"># factors的解释来自numpy官网</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c=np.zeros((<span class="number">10</span>,<span class="number">10</span>)).astype(np.byte)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c.flags</span><br><span class="line">  C_CONTIGUOUS : <span class="keyword">True</span> <span class="comment"># c在内存中是按照C语言数据格式存储的，即按照行在内存中逐个存储</span></span><br><span class="line">  F_CONTIGUOUS : <span class="keyword">False</span> <span class="comment"># c没有遵守Fortran的存储风格，即将列依次在内存中存储</span></span><br><span class="line">  OWNDATA : <span class="keyword">True</span> <span class="comment"># True表示c占有这块内存，False表示内存是从另外的对象处借来的</span></span><br><span class="line">  WRITEABLE : <span class="keyword">True</span> <span class="comment"># 代表这块内存区域是否是可写的，将它设置成False就可以是memory块变为read-only</span></span><br><span class="line">  ALIGNED : <span class="keyword">True</span> <span class="comment"># 数据和所以的元素都和根据硬件环境适当地对其</span></span><br><span class="line">  WRITEBACKIFCOPY : <span class="keyword">False</span> <span class="comment"># 后两个都是控制拷贝得到的array在改变数据时候对base array的操作</span></span><br><span class="line">  UPDATEIFCOPY : <span class="keyword">False</span> <span class="comment"># 还有一些factor没有显示，可以参考官网</span></span><br></pre></td></tr></table></figure>
+<p>stride的机制给array访问相同部分的内存块提供了一种有效的方法，通过下面的例子可以看到：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a=np.arange(<span class="number">9</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.strides</span><br><span class="line">(<span class="number">24</span>, <span class="number">8</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b=a[::<span class="number">2</span>,::<span class="number">2</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">2</span>],</span><br><span class="line">       [<span class="number">6</span>, <span class="number">8</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b.strides <span class="comment"># 0到6跨越了2行，所以对应stride是24*2=48</span></span><br><span class="line">(<span class="number">48</span>, <span class="number">16</span>)</span><br></pre></td></tr></table></figure>
+<p>a和b访问的是同一块内存块，我们称b是a的一个视图(view)。但是事实上创建one view of array不止可以通过切片操作，比如reshape，transpose，这些操作其实都是改变了array对象的strides，内存中的数据并没有发生变化，没有数据复制或者生成在这个过程中，所以这些view操作相当高效。下面给出transpose和reshape的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a=np.arange(<span class="number">12</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b=a.reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c=b.T</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.strides</span><br><span class="line">(<span class="number">8</span>,)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b.strides</span><br><span class="line">(<span class="number">32</span>, <span class="number">8</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c.strides</span><br><span class="line">(<span class="number">8</span>, <span class="number">32</span>)</span><br></pre></td></tr></table></figure>
+<p>其实每个numpy.ndarray就是a view of memory，内存在view数据操作中并没有发生任何变化。</p>
+<h2 id="Numerical-Operations-on-Arrays"><a href="#Numerical-Operations-on-Arrays" class="headerlink" title="Numerical Operations on Arrays"></a>Numerical Operations on Arrays</h2><p>在任何脚本语言(这一理念也适用于像C语言这样的低级语言吗)中，不当的使用for循环都会降低算法的性能，特别是对于大型数据集的每个元素应用简单计算(就像我毕设一开始使用的deap库。。。)，而一种提高性能的理念，就是通过矢量化(vectorization)的操作。其实这个思想在上matlab编程课的时候都老师也讲过，尽量通过矩阵运算来解决问题，而不是依赖for循环来操作。</p>
+<p>numpy的矢量化编程中最重要的一个操作就是广播(broadcast)，这个term对我并不陌生，事实上我经常在numpy的Error中见到它T_T：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ValueError: operands could not be broadcast together with shapes (3,4) (3,)</span><br></pre></td></tr></table></figure>
+<p>但是broadcast的思想才是numpy矢量化操作的灵魂，我觉得它的魅力和numpy的花样索引一样吸引人，那么不废话，我们先看看<a href="https://docs.scipy.org/doc/numpy/user/theory.broadcasting.html?highlight=broadcast" target="_blank" rel="noopener">官网对broadcast的说明</a>:</p>
+<p>broadcast描述了numpy在对不同维度的array进行数学运算时的操作。在了解broadcast之前，我在进行数学操作时都会保证array的维度匹配，这是最正常但是同时也是最耗时的操作，因为为了维度一致进行reshape，transpose这样的view操作还好，但是有的时候会进行一些数据的复制，对于大型数据来说会大大降低性能。如何用好broadcast，以及broadcast带来的性能提升有多少，我们先看下面一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 我比较懒，这个标题下的代码都是复制的官网</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> numpy <span class="keyword">import</span> array</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = array([<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = array([<span class="number">2.0</span>, <span class="number">2.0</span>, <span class="number">2.0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a * b</span><br><span class="line">array([ <span class="number">2.</span>,  <span class="number">4.</span>,  <span class="number">6.</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="number">2.0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a * b</span><br><span class="line">array([ <span class="number">2.</span>,  <span class="number">4.</span>,  <span class="number">6.</span>])</span><br></pre></td></tr></table></figure>
+<p>第二次a<em>b就用到了broadcast，我们可以简单地理解broadcast操作其实就是一个“expand”的过程，它将标量形式的b拓展成了和a维度一致的array。但是这个expand只是概念上的而不是物理上的，numpy is </em>smart* enough to use the original scalar value without actually making copies so that broadcasting operations are as memory and computationally efficient as possible. 而且因为操作了更少的内存单元，第二种操作理论上会提高计算性能，测试表明对于一个array with 1 million values，broadcast可以提高10%的性能(但是现在的计算机估计性能提升就没这么明显了，这也就是为什么我的stupid code也可以跑的虎虎生风)。</p>
+<p>对broadcast有了简明的认识之后，我们再来看看broadcast的一般规律：</p>
+<font color="green">broadcast rule: In order to broadcast, the size of the trailing axes for both arrays in an operation must either be the same size or one of them must be one.</font>
+
+<p>numpy在计算中都会检测是否满足上面的broadcast rule，如果不满足就会出现开头处的ValueError。这个规律也很好理解，只要我们计算的array满足对应维度要么相等，要么有一方为1就行了，下面给出几个awesome use of broadcast:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a=np.random.random([<span class="number">8</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="number">1</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b=np.random.random([  <span class="number">7</span>,<span class="number">1</span>,<span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>(a+b).shape</span><br><span class="line">(<span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>) <span class="comment"># amazing!</span></span><br><span class="line"><span class="comment"># 经常会在图像处理中这样用</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>image=np.random.random([<span class="number">256</span>,<span class="number">256</span>,<span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>scale=np.random.random([        <span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>(image*scale).shape</span><br><span class="line">(<span class="number">256</span>, <span class="number">256</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>其实论文里面也讲了规则，但是没有例子来的生动，论文给了下面几个例子我觉得还挺有意思的：</p>
+<h3 id="use-numpy-in-function"><a href="#use-numpy-in-function" class="headerlink" title="use numpy in function"></a>use numpy in function</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">return</span> x**<span class="number">2</span><span class="number">-3</span>*x+<span class="number">4</span></span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x=np.arange(<span class="number">1e5</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y=[f(i) <span class="keyword">for</span> i <span class="keyword">in</span> x]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y=f(x)</span><br></pre></td></tr></table></figure>
+<p>这个体现了numpy的矢量化编程理念，当你用for的时候，想一想能不能改进为矢量化操作呢？</p>
+<h3 id="using-broadcasting-to-create-a-gird"><a href="#using-broadcasting-to-create-a-gird" class="headerlink" title="using broadcasting to create a gird"></a>using broadcasting to create a gird</h3><p>这个看论文吧，就是broadcast操作的一种用法，注意如果使用broadcast的时候，你可以认为它是一种“expand”操作，因为这样好理解，你只要知道背后是使用了数学运算进行了优化就行。</p>
+<h3 id="computer-vision"><a href="#computer-vision" class="headerlink" title="computer vision"></a>computer vision</h3><p>这一部分主要讲了numpy.dot()的使用，还有numpy.newaxis这个小知识点。dot就是矩阵的点乘，线性代数里我们经常用，但是如果dot的对象超过2维，也就是对tensor进行dot运算，结果遵循怎样的数学计算？通过查阅<a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.dot.html?highlight=numpy%20dot#numpy.dot" target="_blank" rel="noopener">官网对应api</a>我找到如下公式:</p>
+<script type="math/tex; mode=display">dot(a,b)[i,j,k,m] = sum(a[i,j,:]) \ast b[k,:,m])</script><p>说实话看不太懂，等用到的时候再回来填坑吧。</p>
+<p>关于numpy.newaxis的用法很简单，用来在array中插入一个新的axis，主要用来配合broadcast使用，下面给几个简单的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a=np.arange(<span class="number">9</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b=a[np.newaxis,:]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b.shape</span><br><span class="line">(<span class="number">1</span>, <span class="number">9</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.shape</span><br><span class="line">(<span class="number">9</span>,)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b=a[np.newaxis,np.newaxis,:]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b.shape</span><br><span class="line">(<span class="number">1</span>, <span class="number">1</span>, <span class="number">9</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="Sharing-Data"><a href="#Sharing-Data" class="headerlink" title="Sharing Data"></a>Sharing Data</h2><p>本来以为下午就写好，结果这会都要去吃饭了。。。晚上还要看tensorflow的论文，估计也是看不完了，不得不说numpy的特性真的多到人眼花缭乱T_T。(PS:配aria2将近1d,结果发现是网站不稳定，多试试就好了，真是醉了)。</p>
+<p>晚上aria2出问题了，原因参考前一篇博客，现在我心态爆炸无心学习，这部分内容有空再补上吧，我要看看tensorflow的论文转换一下心情。这部分内容讲的是numpy如何高效利用外存，最常见的也就是磁盘，来存储数据，这里numpy使用了memory mapping方法。to be continuing …</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/08/config-for-arias/" rel="next" title="config for aria2">
+                <i class="fa fa-chevron-left"></i> config for aria2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/02/robotics-paper-learning/" rel="prev" title="robotics paper learning">
+                robotics paper learning <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://wx2.sinaimg.cn/large/0070VybLly1fxoqylcs4uj309708rgoa.jpg" alt="xingE650">
+            
+              <p class="site-author-name" itemprop="name">xingE650</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Helpful Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docs.scipy.org/doc/numpy/reference/index.html" title="numpy-reference" target="_blank">numpy-reference</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction" title="RL-book-code" target="_blank">RL-book-code</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.mohu.org/info/symbols/symbols.htm" title="latex-common-grammer" target="_blank">latex-common-grammer</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/tensorflow/models/tree/1af55e018eebce03fb61bba9959a04672536107d/research/slim#Pretrained" title="common-pretrained-models" target="_blank">common-pretrained-models</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#numpy-ndarray-structure-A-View-on-Memory"><span class="nav-number">1.</span> <span class="nav-text">numpy.ndarray structure:A View on Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Numerical-Operations-on-Arrays"><span class="nav-number">2.</span> <span class="nav-text">Numerical Operations on Arrays</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#use-numpy-in-function"><span class="nav-number">2.1.</span> <span class="nav-text">use numpy in function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-broadcasting-to-create-a-gird"><span class="nav-number">2.2.</span> <span class="nav-text">using broadcasting to create a gird</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#computer-vision"><span class="nav-number">2.3.</span> <span class="nav-text">computer vision</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sharing-Data"><span class="nav-number">3.</span> <span class="nav-text">Sharing Data</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xingE650</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <ul class="cb-slideshow">
+		<li>
+		<span>1</span></li>
+		<li>
+		<span>2</span></li>
+		<li>
+		<span>3</span></li>
+		<li>
+		<span>4</span></li>
+		<li>
+		<span>5</span></li>
+		<li>
+		<span>6</span></li>
+  </ul>
+
+<body oncopy="alert('be helpful to you(๑•̀ㅂ•́)و✧');return true;">
+</body>
+</body></html>

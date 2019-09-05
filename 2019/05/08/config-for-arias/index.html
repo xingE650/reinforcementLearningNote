@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="Oppai&gt;&#x2F;&#x2F;&#x2F;&lt;">
 <meta property="og:description" content="今天因为需要下载kaggle上的iwildcam比赛的数据集，折腾了一下aria2，下面记录一下过程备忘，and，之前的博客使用了大量的新浪图床的图片外链，最近发现新浪已经开始限制外链引用了，本文会给出解决方案，但是为了保险起见，近期最好将这些图片进行替换。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-08T12:00:14.220Z">
+<meta property="og:updated_time" content="2019-05-09T12:24:03.602Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="config for aria2">
 <meta name="twitter:description" content="今天因为需要下载kaggle上的iwildcam比赛的数据集，折腾了一下aria2，下面记录一下过程备忘，and，之前的博客使用了大量的新浪图床的图片外链，最近发现新浪已经开始限制外链引用了，本文会给出解决方案，但是为了保险起见，近期最好将这些图片进行替换。">
@@ -252,13 +252,6 @@
 </nav>
 
 
-<!-- 图片轮播js文件cdn -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
-
-<!-- 自定义的js文件 -->
-<script type="text/javascript" src="/js/src/custom.js"></script>
-
-
  </div>
     </header>
 
@@ -365,6 +358,7 @@
 <p>然后需要在chrome上下载插件：<a href="https://chrome.google.com/webstore/detail/%E6%B7%BB%E5%8A%A0%E5%88%B0aria2/nimeojfecmndgolmlmjghjmbpdkhhogl/related?hl=zh-CN" target="_blank" rel="noopener">添加到aria2</a><br>，并配置插件，配置方式很简单，如果没有修改aria2的配置文件的话，就可以直接使用插件的默认配置就行了。配置结束了点击插件图标将它打开就行了。</p>
 <h3 id="it-seems-that-sth-is-wrong"><a href="#it-seems-that-sth-is-wrong" class="headerlink" title="it seems that sth. is wrong"></a>it seems that sth. is wrong</h3><p>配置结束之后，我点击了kaggle上的Download All图标之后，显示aria2接收到了任务，命令行里程序也开始下载了，但是速度却非常慢，我修改了线程数什么的效果也不见好转。。。然后我就接着折腾了一下午，发现没什么用。</p>
 <p>所以配置失败了吗？说实话我也不知道，但是将近下午5点的时候我发现，下载速度突然提高到了2Mb/s，比chrome下载速度提高了不少。这里还要说一下的就是，在windows上使用迅雷插件将任务导出到迅雷下载，以及ubuntu上将任务导出到aria2上下载，chrome的下载任务都会不可逆地降速到0，然后任务就会失败。反正又能用了，毕竟使用这个下载可以断点续传，也只能这样了。</p>
+<p>这里再记录一个非常stupid的问题，今天我在aria2上下载数据集的时候，突然系统报错，说我的/目录磁盘空间不够了，我赶紧一看发现占用100%，然后一查是/media目录，也就是我挂载磁盘的位置挂了。我想不应该啊，这个位置不是应该挂载在我的windows的E盘上吗，怎么会让根目录爆了？百度了一下也没弄出什么名堂，折腾了快一个小时才发现/media目录下居然有两个文件夹！结果可想而知，我把aria2的下载目录搞成了没有挂载磁盘的那一个，所以一下载就提示根目录无空间。但是为什么呢？一想就明白了，是晚上开机的时候没有挂载磁盘就直接用aria2下载了，结果就直接在/media文件夹下新建和原来的磁盘挂载目录同名的目录，结果aria2报错之后我来挂载磁盘，磁盘就变成别的名字了，唉，自己实在太不小心了，以后还是自己指定下载位置吧，免得再出什么差错了。</p>
 <h2 id="about-the-picture-link-problem"><a href="#about-the-picture-link-problem" class="headerlink" title="about the picture link problem"></a>about the picture link problem</h2><p>最近几天发现我的github博客上的图片都加载不出来了，我一开始以为是新浪图床挂了，但是我将图片链接单独在浏览器中显示，发现图片仍然可以正常显示，直到今天看到一篇博客，作者说是最近新浪开始禁用外链引用的形式使用新浪图床了，解决方法就是在/themes/next/layout/_layout.swig的head标签中加入如下代码：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"referrer"</span> <span class="attr">content</span>=<span class="string">"no-referrer"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这样就可以绕过检测，图片又可以正常加载了。但是不知道什么时候又会有别的问题，所以还是尽量使用latex公式替换掉一些图片，尽量控制图片数量，然后考虑用github自带的服务器放图片吧。</p>
@@ -407,6 +401,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/09/why-do-numpy-so-efficient/" rel="prev" title="why do numpy so efficient">
+                why do numpy so efficient <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -485,7 +483,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -498,7 +496,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -532,6 +530,10 @@
                 
                   <li class="links-of-blogroll-item">
                     <a href="http://www.mohu.org/info/symbols/symbols.htm" title="latex-common-grammer" target="_blank">latex-common-grammer</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/tensorflow/models/tree/1af55e018eebce03fb61bba9959a04672536107d/research/slim#Pretrained" title="common-pretrained-models" target="_blank">common-pretrained-models</a>
                   </li>
                 
               </ul>
